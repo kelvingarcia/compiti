@@ -54,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
           left: 0,
           child: DecoratedBox(
             decoration: BoxDecoration(
-                color: Colors.grey[900],
+                color: Color(0xFF383838),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
@@ -82,10 +82,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                         DecoratedBox(
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.cyan,
-                              width: 1.0
-                            ),
+                            border: Border.all(color: Colors.cyan, width: 1.0),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Padding(
@@ -111,6 +108,200 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ],
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                height: MediaQuery.of(context).size.height * 0.3,
+                                color: Color(0xFF626262),
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height * 0.07,
+                                      color: Color(0xFF121212),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 8.0,
+                                          right: 8.0,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Row(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.category,
+                                                  color: Colors.white,
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 8.0),
+                                                  child: Text(
+                                                    'Teste Evento',
+                                                    style: TextStyle(
+                                                        color: Colors.white, fontSize: 16.0),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsets.only(right: 16.0),
+                                                  child: Icon(
+                                                    Icons.edit,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            'Mai 15',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            '08:00',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              color: Color(0xFF626262),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height * 0.07,
+                                    color: Color(0xFF121212),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 8.0,
+                                        right: 8.0,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.category,
+                                                color: Colors.white,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 8.0),
+                                                child: Text(
+                                                  'Teste Evento',
+                                                  style: TextStyle(
+                                                      color: Colors.white, fontSize: 16.0),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 16.0),
+                                                child: Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.delete,
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Mai 15',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          '08:00',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -121,3 +312,4 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+
