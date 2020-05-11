@@ -15,5 +15,4 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Refatorar código, isolando a barra de toggle e a caixa de evento.
 - Resolver problema do scroll dentro da Stack.
