@@ -1,4 +1,4 @@
-import 'package:compiti_2/screens/dashboard.dart';
+import 'file:///C:/Users/kelvi/OneDrive/Documentos/compiti_2/lib/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 void main() {
