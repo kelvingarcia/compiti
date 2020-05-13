@@ -7,13 +7,12 @@ class ItemEvento extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 16.0),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.3,
+//        height: MediaQuery.of(context).size.height * 0.3,
         color: Color(0xFF626262),
         child: Column(
           children: <Widget>[
             Container(
-              height:
-              MediaQuery.of(context).size.height * 0.07,
+              height: MediaQuery.of(context).size.height * 0.07,
               color: Color(0xFF121212),
               child: Padding(
                 padding: EdgeInsets.only(
@@ -21,8 +20,7 @@ class ItemEvento extends StatelessWidget {
                   right: 8.0,
                 ),
                 child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Row(
                       children: <Widget>[
@@ -34,8 +32,8 @@ class ItemEvento extends StatelessWidget {
                           padding: EdgeInsets.only(left: 8.0),
                           child: Text(
                             'Teste Evento',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 16.0),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 16.0),
                           ),
                         )
                       ],
@@ -43,8 +41,7 @@ class ItemEvento extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Padding(
-                          padding:
-                          EdgeInsets.only(right: 16.0),
+                          padding: EdgeInsets.only(right: 16.0),
                           child: Icon(
                             Icons.edit,
                             color: Colors.white,
@@ -63,8 +60,7 @@ class ItemEvento extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     'Mai 15',
@@ -92,7 +88,43 @@ class ItemEvento extends StatelessWidget {
                   fontSize: 16.0,
                 ),
               ),
-            )
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(24.0)),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text('Feito'),
+                      Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(24.0)),
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            child: Center(
+                              child: Text(
+                                'Agendado',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text('Não feito'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

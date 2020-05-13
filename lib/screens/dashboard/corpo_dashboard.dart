@@ -23,11 +23,12 @@ class _CorpoDashboardState extends State<CorpoDashboard> {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-          color: Color(0xFF383838),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
-          )),
+        color: Color(0xFF383838),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
+        ),
+      ),
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -41,7 +42,7 @@ class _CorpoDashboardState extends State<CorpoDashboard> {
                   padding: EdgeInsets.only(left: 16.0, right: 16.0),
                   itemCount: listaEventos.length,
                   itemBuilder: (context, int index) {
-                    if(index == listaEventos.length-1){
+                    if (index == listaEventos.length - 1) {
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.2,
                       );

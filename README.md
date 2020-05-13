@@ -15,6 +15,5 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Adicionar flags de feito, não feito e atraso nos cards dos eventos.
-- Fazer toggle da página inicial funcional
-- Implementar exibição do menu
+- Implementar funcionalidade do toggle do página inicial
+- Implementar toggle do status no card do evento
