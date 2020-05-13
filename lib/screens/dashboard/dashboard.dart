@@ -1,4 +1,4 @@
-import 'package:compiti_2/screens/dashboard/BarraSuperior.dart';
+import 'package:compiti_2/screens/dashboard/barra_superior.dart';
 import 'package:compiti_2/screens/dashboard/corpo_dashboard.dart';
 import 'package:flutter/material.dart';
 

@@ -1,8 +1,8 @@
-# compiti_2
+# compiti
 
 Compiti.
 
-## Getting Started
+## Sobre
 
 Projeto para Laboratório de Engenharia de Software.
 
@@ -15,4 +15,6 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Resolver problema do scroll dentro da Stack.
+- Adicionar flags de feito, não feito e atraso nos cards dos eventos.
+- Fazer toggle da página inicial funcional
+- Implementar exibição do menu

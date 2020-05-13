@@ -38,9 +38,14 @@ class _CorpoDashboardState extends State<CorpoDashboard> {
               ToggleDashboard(),
               Expanded(
                 child: ListView.builder(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.only(left: 16.0, right: 16.0),
                   itemCount: listaEventos.length,
                   itemBuilder: (context, int index) {
+                    if(index == listaEventos.length-1){
+                      return Container(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                      );
+                    }
                     return ItemEvento();
                   },
                 ),
