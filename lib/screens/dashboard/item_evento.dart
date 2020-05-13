@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
-class ItemEvento extends StatelessWidget {
+class ItemEvento extends StatefulWidget {
+  @override
+  _ItemEventoState createState() => _ItemEventoState();
+}
+
+class _ItemEventoState extends State<ItemEvento> {
+  double _toggleLeft = 95.0;
+  String _status = 'Agendado';
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -97,29 +105,68 @@ class ItemEvento extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24.0)),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.05,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  child: Stack(
                     children: <Widget>[
-                      Text('Feito'),
-                      Padding(
-                        padding: EdgeInsets.all(2.0),
+                      Positioned(
+                        top: 8,
+                        left: 20,
+                        child: GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              _toggleLeft = 2;
+                              _status = 'Feito';
+                            });
+                          },
+                          child: Text('Feito'),
+                        ),
+                      ),
+                      Positioned(
+                        top: 8,
+                        left: 125,
+                        child: GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              _toggleLeft = 95;
+                              _status = 'Agendado';
+                            });
+                          },
+                          child: Text('Agendado'),
+                        ),
+                      ),
+                      Positioned(
+                        top: 8,
+                        left: 225,
+                        child: GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              _toggleLeft = 202;
+                              _status = 'Não feito';
+                            });
+                          },
+                          child: Text('Não feito'),
+                        ),
+                      ),
+                      AnimatedPositioned(
+                        duration: Duration(milliseconds: 300),
+                        top: 1.5,
+                        left: _toggleLeft,
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(24.0)),
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
                           child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.05,
+                            height: MediaQuery.of(context).size.height * 0.045,
                             width: MediaQuery.of(context).size.width * 0.3,
                             child: Center(
                               child: Text(
-                                'Agendado',
+                                _status,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Text('Não feito'),
+                      )
                     ],
                   ),
                 ),
@@ -131,3 +178,29 @@ class ItemEvento extends StatelessWidget {
     );
   }
 }
+
+//Row(
+//mainAxisAlignment: MainAxisAlignment.spaceAround,
+//children: <Widget>[
+//Text('Feito'),
+//Padding(
+//padding: EdgeInsets.all(2.0),
+//child: DecoratedBox(
+//decoration: BoxDecoration(
+//color: Colors.black,
+//borderRadius: BorderRadius.circular(24.0)),
+//child: SizedBox(
+//height: MediaQuery.of(context).size.height * 0.05,
+//width: MediaQuery.of(context).size.width * 0.3,
+//child: Center(
+//child: Text(
+//'Agendado',
+//style: TextStyle(color: Colors.white),
+//),
+//),
+//),
+//),
+//),
+//Text('Não feito'),
+//],
+//)
