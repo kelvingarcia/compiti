@@ -14,13 +14,19 @@ class _ItemEventoState extends State<ItemEvento> {
     return Padding(
       padding: EdgeInsets.only(bottom: 16.0),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * 0.9,
 //        height: MediaQuery.of(context).size.height * 0.3,
         color: Color(0xFF626262),
         child: Column(
           children: <Widget>[
             Container(
-              height: MediaQuery.of(context).size.height * 0.07,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.07,
               color: Color(0xFF121212),
               child: Padding(
                 padding: EdgeInsets.only(
@@ -41,7 +47,7 @@ class _ItemEventoState extends State<ItemEvento> {
                           child: Text(
                             'Teste Evento',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 16.0),
+                            TextStyle(color: Colors.white, fontSize: 16.0),
                           ),
                         )
                       ],
@@ -104,14 +110,17 @@ class _ItemEventoState extends State<ItemEvento> {
                     color: Colors.grey[400],
                     borderRadius: BorderRadius.circular(24.0)),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.05,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
                         top: 8,
                         left: 20,
                         child: GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               _toggleLeft = 2;
                               _status = 'Feito';
@@ -124,7 +133,7 @@ class _ItemEventoState extends State<ItemEvento> {
                         top: 8,
                         left: 125,
                         child: GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               _toggleLeft = 95;
                               _status = 'Agendado';
@@ -137,7 +146,7 @@ class _ItemEventoState extends State<ItemEvento> {
                         top: 8,
                         left: 225,
                         child: GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               _toggleLeft = 202;
                               _status = 'Não feito';
@@ -150,18 +159,73 @@ class _ItemEventoState extends State<ItemEvento> {
                         duration: Duration(milliseconds: 300),
                         top: 1.5,
                         left: _toggleLeft,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(24.0),
-                          ),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.045,
-                            width: MediaQuery.of(context).size.width * 0.3,
-                            child: Center(
-                              child: Text(
-                                _status,
-                                style: TextStyle(color: Colors.white),
+                        child: GestureDetector(
+                          onHorizontalDragUpdate: (dragInfo) {
+                            setState(() {
+                              if (dragInfo.delta.dx < 0) {
+                                if (_toggleLeft == 95) {
+                                  _toggleLeft = 2;
+                                } else {
+                                  if (_toggleLeft == 202) {
+                                    _toggleLeft = 95;
+                                  }
+                                }
+                              } else {
+                                if (_toggleLeft == 95) {
+                                  _toggleLeft = 202;
+                                } else {
+                                  if (_toggleLeft == 2) {
+                                    _toggleLeft = 95;
+                                  }
+                                }
+                              }
+                            });
+                          },
+                          onHorizontalDragEnd: (dragInfo) {
+                            setState(() {
+                              if (_toggleLeft == 202 && _status == 'Feito') {
+                                _toggleLeft = 95;
+                                _status = 'Agendado';
+                              } else {
+                                if (_toggleLeft == 202 && _status == 'Agendado'){
+                                  _status = 'Não feito';
+                                } else {
+                                  if(_toggleLeft == 95 && (_status == 'Feito' || _status == 'Não feito')){
+                                    _status = 'Agendado';
+                                  } else {
+                                    if(_toggleLeft == 02 && _status == 'Agendado'){
+                                      _status = 'Feito';
+                                    } else {
+                                      if(_toggleLeft == 02 && _status == 'Não feito'){
+                                        _toggleLeft = 95;
+                                        _status = 'Agendado';
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            });
+                          },
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: SizedBox(
+                              height:
+                              MediaQuery
+                                  .of(context)
+                                  .size
+                                  .height * 0.045,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.3,
+                              child: Center(
+                                child: Text(
+                                  _status,
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ),
                           ),
@@ -178,29 +242,3 @@ class _ItemEventoState extends State<ItemEvento> {
     );
   }
 }
-
-//Row(
-//mainAxisAlignment: MainAxisAlignment.spaceAround,
-//children: <Widget>[
-//Text('Feito'),
-//Padding(
-//padding: EdgeInsets.all(2.0),
-//child: DecoratedBox(
-//decoration: BoxDecoration(
-//color: Colors.black,
-//borderRadius: BorderRadius.circular(24.0)),
-//child: SizedBox(
-//height: MediaQuery.of(context).size.height * 0.05,
-//width: MediaQuery.of(context).size.width * 0.3,
-//child: Center(
-//child: Text(
-//'Agendado',
-//style: TextStyle(color: Colors.white),
-//),
-//),
-//),
-//),
-//),
-//Text('Não feito'),
-//],
-//)

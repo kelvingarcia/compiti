@@ -16,4 +16,3 @@ Documentação do Flutter:
 Próximos passos:
 
 - Implementar funcionalidade do toggle do página inicial
-- Implementar toggle do status no card do evento
