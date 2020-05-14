@@ -16,3 +16,4 @@ Documentação do Flutter:
 Próximos passos:
 
 - Implementar funcionalidade do toggle do página inicial
+- Corrigir dragging da pagina inicial

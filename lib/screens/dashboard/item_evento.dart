@@ -8,6 +8,7 @@ class ItemEvento extends StatefulWidget {
 class _ItemEventoState extends State<ItemEvento> {
   double _toggleLeft = 95.0;
   String _status = 'Agendado';
+  int dragCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +119,7 @@ class _ItemEventoState extends State<ItemEvento> {
                     children: <Widget>[
                       Positioned(
                         top: 8,
-                        left: 20,
+                        left: 35,
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -161,6 +162,7 @@ class _ItemEventoState extends State<ItemEvento> {
                         left: _toggleLeft,
                         child: GestureDetector(
                           onHorizontalDragUpdate: (dragInfo) {
+                            dragCount++;
                             setState(() {
                               if (dragInfo.delta.dx < 0) {
                                 if (_toggleLeft == 95) {
@@ -183,7 +185,7 @@ class _ItemEventoState extends State<ItemEvento> {
                           },
                           onHorizontalDragEnd: (dragInfo) {
                             setState(() {
-                              if (_toggleLeft == 202 && _status == 'Feito') {
+                              if (_toggleLeft == 202 && _status == 'Feito' && dragCount < 15) {
                                 _toggleLeft = 95;
                                 _status = 'Agendado';
                               } else {
@@ -196,14 +198,23 @@ class _ItemEventoState extends State<ItemEvento> {
                                     if(_toggleLeft == 02 && _status == 'Agendado'){
                                       _status = 'Feito';
                                     } else {
-                                      if(_toggleLeft == 02 && _status == 'Não feito'){
+                                      if(_toggleLeft == 02 && _status == 'Não feito' && dragCount < 15){
                                         _toggleLeft = 95;
                                         _status = 'Agendado';
+                                      } else {
+                                        if(_toggleLeft == 202 && _status == 'Feito' && dragCount >= 15){
+                                          _status = 'Não feito';
+                                        } else {
+                                          if(_toggleLeft == 02 && _status == 'Não feito' && dragCount >= 15){
+                                            _status = 'Feito';
+                                          }
+                                        }
                                       }
                                     }
                                   }
                                 }
                               }
+                              dragCount = 0;
                             });
                           },
                           child: DecoratedBox(
