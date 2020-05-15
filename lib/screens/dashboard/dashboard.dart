@@ -12,7 +12,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   AnimationController _controller;
   double topCorpo = 100;
 
@@ -22,24 +22,33 @@ class _DashboardState extends State<Dashboard>
   double _hiddenCalendario;
   double _hiddenEventos;
 
-  bool calendarioPosition = false;
-  bool eventoPosition = false;
+  bool appStarted = true;
+  bool reverseAnimation = false;
+  bool forwardAnimation = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 400),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if(!calendarioPosition){
+    if(appStarted){
+      _leftEventos = 0;
+      _leftCalendario = 0;
+      _hiddenCalendario = MediaQuery.of(context).size.width;
+      _hiddenEventos = 0 - MediaQuery.of(context).size.width;
+    }
+    if(reverseAnimation){
+      _leftEventos = 0;
       _hiddenCalendario = MediaQuery.of(context).size.width;
     }
-    if(!eventoPosition){
+    if(forwardAnimation){
+      _leftCalendario = 0;
       _hiddenEventos = 0 - MediaQuery.of(context).size.width;
     }
     return Stack(
@@ -108,18 +117,18 @@ class _DashboardState extends State<Dashboard>
                           setState(() {
                             _leftEventos += dragInfo.delta.dx;
                             _hiddenCalendario += dragInfo.delta.dx;
-                            calendarioPosition = true;
+                            appStarted = false;
+                            forwardAnimation = false;
+                            reverseAnimation = false;
                           });
                         },
                         onHorizontalDragEnd: (dragInfo) {
                           setState(() {
                             if (_leftEventos > -65) {
-                              _leftEventos = 0;
-                              calendarioPosition = false;
+                              appStarted = true;
                             } else {
+                              forwardAnimation = true;
                               _controller.forward();
-                              _leftCalendario = 0;
-                              calendarioPosition = false;
                             }
                           });
                         },
@@ -158,18 +167,18 @@ class _DashboardState extends State<Dashboard>
                           setState(() {
                             _leftCalendario += dragInfo.delta.dx;
                             _hiddenEventos += dragInfo.delta.dx;
-                            eventoPosition = true;
+                            appStarted = false;
+                            forwardAnimation = false;
+                            reverseAnimation = false;
                           });
                         },
                         onHorizontalDragEnd: (dragInfo) {
                           setState(() {
                             if (_leftCalendario < 65) {
-                              _leftCalendario = 0;
-                              eventoPosition = false;
+                              appStarted = true;
                             } else {
+                              reverseAnimation = true;
                               _controller.reverse();
-                              _leftEventos = 0;
-                              eventoPosition = false;
                             }
                           });
                         },
