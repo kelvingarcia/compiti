@@ -1,5 +1,6 @@
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
-import 'package:compiti_2/screens/dashboard/corpo_dashboard.dart';
+import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
+import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -13,23 +14,36 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  AnimationController _controllerEvento;
+  AnimationController _controllerCalendario;
+  AnimationController _controllerDia;
   double topCorpo = 100;
 
   double _leftCalendario = 0;
   double _leftEventos = 0;
+  double _leftDia = 0;
 
   double _hiddenCalendario;
   double _hiddenEventos;
+  double _hiddenDia;
 
   bool appStarted = true;
   bool reverseAnimation = false;
   bool forwardAnimation = false;
+  bool diaAnimation = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _controllerEvento = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _controllerCalendario = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _controllerDia = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
@@ -40,16 +54,23 @@ class _DashboardState extends State<Dashboard>
     if(appStarted){
       _leftEventos = 0;
       _leftCalendario = 0;
+      _leftDia = 0;
       _hiddenCalendario = MediaQuery.of(context).size.width;
       _hiddenEventos = 0 - MediaQuery.of(context).size.width;
+      _hiddenDia = 0 - MediaQuery.of(context).size.width;
     }
     if(reverseAnimation){
       _leftEventos = 0;
       _hiddenCalendario = MediaQuery.of(context).size.width;
+      _hiddenDia = 0 - MediaQuery.of(context).size.width;
     }
     if(forwardAnimation){
       _leftCalendario = 0;
       _hiddenEventos = 0 - MediaQuery.of(context).size.width;
+    }
+    if(diaAnimation){
+      _leftDia = 0;
+      _hiddenEventos = MediaQuery.of(context).size.width;
     }
     return Stack(
       children: <Widget>[
@@ -89,6 +110,58 @@ class _DashboardState extends State<Dashboard>
                       rect: RelativeRectTween(
                         begin: RelativeRect.fromSize(
                           Rect.fromLTWH(
+                            _hiddenDia,
+                            50,
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                          Size(
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                        ),
+                        end: RelativeRect.fromSize(
+                          Rect.fromLTWH(
+                            _leftDia,
+                            50,
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                          Size(
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                        ),
+                      ).animate(_controllerDia),
+                      child: GestureDetector(
+                        onHorizontalDragUpdate: (dragInfo) {
+                          setState(() {
+                            _leftDia += dragInfo.delta.dx;
+                            _hiddenEventos += dragInfo.delta.dx;
+                            appStarted = false;
+                            forwardAnimation = false;
+                            reverseAnimation = false;
+                            diaAnimation = false;
+                          });
+                        },
+                        onHorizontalDragEnd: (dragInfo) {
+                          setState(() {
+                            if (_leftDia > -65) {
+                              diaAnimation = true;
+                            } else {
+                              reverseAnimation = true;
+                              _controllerEvento.reverse();
+                              _controllerDia.reverse();
+                            }
+                          });
+                        },
+                        child: TodosEventos(),
+                      ),
+                    ),
+                    PositionedTransition(
+                      rect: RelativeRectTween(
+                        begin: RelativeRect.fromSize(
+                          Rect.fromLTWH(
                             _leftEventos,
                             50,
                             MediaQuery.of(context).size.width,
@@ -111,28 +184,37 @@ class _DashboardState extends State<Dashboard>
                             MediaQuery.of(context).size.height,
                           ),
                         ),
-                      ).animate(_controller),
+                      ).animate(_controllerEvento),
                       child: GestureDetector(
                         onHorizontalDragUpdate: (dragInfo) {
                           setState(() {
                             _leftEventos += dragInfo.delta.dx;
                             _hiddenCalendario += dragInfo.delta.dx;
+                            _hiddenDia += dragInfo.delta.dx;
                             appStarted = false;
                             forwardAnimation = false;
                             reverseAnimation = false;
+                            diaAnimation = false;
                           });
                         },
                         onHorizontalDragEnd: (dragInfo) {
                           setState(() {
-                            if (_leftEventos > -65) {
+                            if ((_leftEventos > -65 && _leftEventos < 0) || (_leftEventos > 0 && _leftEventos < 65)) {
                               appStarted = true;
                             } else {
-                              forwardAnimation = true;
-                              _controller.forward();
+                              if(_leftEventos < 0) {
+                                forwardAnimation = true;
+                                _controllerEvento.forward();
+                                _controllerCalendario.forward();
+                              } else {
+                                diaAnimation = true;
+                                _controllerEvento.forward();
+                                _controllerDia.forward();
+                              }
                             }
                           });
                         },
-                        child: CorpoDashboard(),
+                        child: EventosDia(),
                       ),
                     ),
                     PositionedTransition(
@@ -161,7 +243,7 @@ class _DashboardState extends State<Dashboard>
                             MediaQuery.of(context).size.height,
                           ),
                         ),
-                      ).animate(_controller),
+                      ).animate(_controllerCalendario),
                       child: GestureDetector(
                         onHorizontalDragUpdate: (dragInfo) {
                           setState(() {
@@ -170,6 +252,7 @@ class _DashboardState extends State<Dashboard>
                             appStarted = false;
                             forwardAnimation = false;
                             reverseAnimation = false;
+                            diaAnimation = false;
                           });
                         },
                         onHorizontalDragEnd: (dragInfo) {
@@ -178,7 +261,8 @@ class _DashboardState extends State<Dashboard>
                               appStarted = true;
                             } else {
                               reverseAnimation = true;
-                              _controller.reverse();
+                              _controllerEvento.reverse();
+                              _controllerCalendario.reverse();
                             }
                           });
                         },

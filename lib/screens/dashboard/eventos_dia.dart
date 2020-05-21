@@ -3,12 +3,12 @@ import 'package:compiti_2/screens/dashboard/item_evento.dart';
 import 'package:compiti_2/screens/dashboard/toggle_dashboard.dart';
 import 'package:flutter/material.dart';
 
-class CorpoDashboard extends StatefulWidget {
+class EventosDia extends StatefulWidget {
   @override
-  _CorpoDashboardState createState() => _CorpoDashboardState();
+  _EventosDiaState createState() => _EventosDiaState();
 }
 
-class _CorpoDashboardState extends State<CorpoDashboard> {
+class _EventosDiaState extends State<EventosDia> {
   List<Evento> listaEventos = List();
 
   @override

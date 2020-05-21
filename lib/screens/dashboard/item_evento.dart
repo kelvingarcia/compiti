@@ -19,7 +19,6 @@ class _ItemEventoState extends State<ItemEvento> {
             .of(context)
             .size
             .width * 0.9,
-//        height: MediaQuery.of(context).size.height * 0.3,
         color: Color(0xFF626262),
         child: Column(
           children: <Widget>[
