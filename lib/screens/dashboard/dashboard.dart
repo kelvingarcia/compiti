@@ -2,6 +2,7 @@ import 'package:compiti_2/models/toggle_status.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
 import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
+import 'package:compiti_2/screens/form/evento_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -269,7 +270,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                         onHorizontalDragEnd: (dragInfo) {
                           setState(() {
                             if (_leftCalendario < 75) {
-                              appStarted = true;
+                              forwardAnimation = true;
                             } else {
                               reverseAnimation = true;
                               _controllerDia.reverse();
@@ -283,6 +284,21 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                   ],
                 ),
               ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 15,
+          width: MediaQuery.of(context).size.width,
+          child: Center(
+            child: FloatingActionButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Material(child: EventoForm()),
+                ),
+              ),
+              backgroundColor: Colors.cyan,
+              child: Icon(Icons.add),
             ),
           ),
         ),
@@ -354,14 +370,14 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     });
   }
 
-  void mesFromEventos(){
+  void mesFromEventos() {
     setState(() {
       appStarted = false;
       forwardAnimation = false;
       eventosAnimation = false;
       reverseAnimation = true;
       _controllerDia.reverse();
-      _controllerEventos.reverse().whenComplete((){
+      _controllerEventos.reverse().whenComplete(() {
         setState(() {
           appStarted = false;
           reverseAnimation = false;
