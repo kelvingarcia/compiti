@@ -15,4 +15,4 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Refatorar dashboard para integrar funcionalidade do toggle ao dashboard
+- Criar as telas de cadastro

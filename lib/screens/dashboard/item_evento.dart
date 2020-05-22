@@ -156,7 +156,7 @@ class _ItemEventoState extends State<ItemEvento> {
                         ),
                       ),
                       AnimatedPositioned(
-                        duration: Duration(milliseconds: 300),
+                        duration: Duration(milliseconds: 200),
                         top: 1.5,
                         left: _toggleLeft,
                         child: GestureDetector(

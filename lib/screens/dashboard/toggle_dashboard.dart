@@ -3,7 +3,7 @@ import 'package:compiti_2/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class ToggleDashboard extends StatefulWidget {
-  Dashboard dashboard;
+  DashboardState dashboard;
 
   ToggleDashboard({this.dashboard});
 
@@ -45,6 +45,13 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
           GestureDetector(
             onTap: () {
               setState(() {
+                if(toggleStatus == ToggleStatus.dia) {
+                  widget.dashboard.eventosFromDia();
+                } else {
+                  if(toggleStatus == ToggleStatus.mes){
+                    widget.dashboard.eventosFromMes();
+                  }
+                }
                 toggleStatus = ToggleStatus.eventos;
               });
             },
@@ -68,6 +75,13 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
           GestureDetector(
             onTap: () {
               setState(() {
+                if(toggleStatus == ToggleStatus.eventos){
+                  widget.dashboard.diaFromEventos();
+                } else {
+                  if(toggleStatus == ToggleStatus.mes){
+                    widget.dashboard.diaFromMes();
+                  }
+                }
                 toggleStatus = ToggleStatus.dia;
               });
             },
@@ -91,6 +105,13 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
           GestureDetector(
             onTap: (){
               setState(() {
+                if(toggleStatus == ToggleStatus.dia) {
+                  widget.dashboard.mesFromDia();
+                } else {
+                  if(toggleStatus == ToggleStatus.eventos){
+                    widget.dashboard.mesFromEventos();
+                  }
+                }
                 toggleStatus = ToggleStatus.mes;
               });
             },
