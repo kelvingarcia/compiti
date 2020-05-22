@@ -1,3 +1,4 @@
+import 'package:compiti_2/models/toggle_status.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
 import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
@@ -16,28 +17,29 @@ class Dashboard extends StatefulWidget {
 }
 
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
-  AnimationController _controllerEvento;
-  AnimationController _controllerCalendario;
+  ToggleStatus toggleStatus;
   AnimationController _controllerDia;
+  AnimationController _controllerCalendario;
+  AnimationController _controllerEventos;
   double topCorpo = 100;
 
   double _leftCalendario = 0;
-  double _leftEventos = 0;
   double _leftDia = 0;
+  double _leftEventos = 0;
 
   double _hiddenCalendario;
-  double _hiddenEventos;
   double _hiddenDia;
+  double _hiddenEventos;
 
   bool appStarted = true;
   bool reverseAnimation = false;
   bool forwardAnimation = false;
-  bool diaAnimation = false;
+  bool eventosAnimation = false;
 
   @override
   void initState() {
     super.initState();
-    _controllerEvento = AnimationController(
+    _controllerDia = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animationTime),
     );
@@ -45,7 +47,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: widget.animationTime),
     );
-    _controllerDia = AnimationController(
+    _controllerEventos = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animationTime),
     );
@@ -54,25 +56,29 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (appStarted) {
-      _leftEventos = 0;
+      _leftDia = 0;
       _leftCalendario = 0;
+      _leftEventos = 0;
+      _hiddenCalendario = MediaQuery.of(context).size.width;
+      _hiddenDia = 0 - MediaQuery.of(context).size.width;
+      _hiddenEventos = 0 - MediaQuery.of(context).size.width;
+      toggleStatus = ToggleStatus.dia;
+    }
+    if (reverseAnimation) {
       _leftDia = 0;
       _hiddenCalendario = MediaQuery.of(context).size.width;
       _hiddenEventos = 0 - MediaQuery.of(context).size.width;
-      _hiddenDia = 0 - MediaQuery.of(context).size.width;
-    }
-    if (reverseAnimation) {
-      _leftEventos = 0;
-      _hiddenCalendario = MediaQuery.of(context).size.width;
-      _hiddenDia = 0 - MediaQuery.of(context).size.width;
+      toggleStatus = ToggleStatus.dia;
     }
     if (forwardAnimation) {
       _leftCalendario = 0;
-      _hiddenEventos = 0 - MediaQuery.of(context).size.width;
+      _hiddenDia = 0 - MediaQuery.of(context).size.width;
+      toggleStatus = ToggleStatus.mes;
     }
-    if (diaAnimation) {
-      _leftDia = 0;
-      _hiddenEventos = MediaQuery.of(context).size.width;
+    if (eventosAnimation) {
+      _leftEventos = 0;
+      _hiddenDia = MediaQuery.of(context).size.width;
+      toggleStatus = ToggleStatus.eventos;
     }
     return Stack(
       children: <Widget>[
@@ -114,7 +120,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                       rect: RelativeRectTween(
                         begin: RelativeRect.fromSize(
                           Rect.fromLTWH(
-                            _hiddenDia,
+                            _hiddenEventos,
                             50,
                             MediaQuery.of(context).size.width,
                             MediaQuery.of(context).size.height,
@@ -126,7 +132,59 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                         ),
                         end: RelativeRect.fromSize(
                           Rect.fromLTWH(
+                            _leftEventos,
+                            50,
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                          Size(
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                        ),
+                      ).animate(_controllerEventos),
+                      child: GestureDetector(
+                        onHorizontalDragUpdate: (dragInfo) {
+                          setState(() {
+                            _leftEventos += dragInfo.delta.dx;
+                            _hiddenDia += dragInfo.delta.dx;
+                            appStarted = false;
+                            forwardAnimation = false;
+                            reverseAnimation = false;
+                            eventosAnimation = false;
+                          });
+                        },
+                        onHorizontalDragEnd: (dragInfo) {
+                          setState(() {
+                            if (_leftEventos > -75) {
+                              eventosAnimation = true;
+                            } else {
+                              reverseAnimation = true;
+                              _controllerDia.reverse();
+                              _controllerEventos.reverse();
+                            }
+                          });
+                        },
+                        child: TodosEventos(),
+                      ),
+                    ),
+                    PositionedTransition(
+                      rect: RelativeRectTween(
+                        begin: RelativeRect.fromSize(
+                          Rect.fromLTWH(
                             _leftDia,
+                            50,
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                          Size(
+                            MediaQuery.of(context).size.width,
+                            MediaQuery.of(context).size.height,
+                          ),
+                        ),
+                        end: RelativeRect.fromSize(
+                          Rect.fromLTWH(
+                            _hiddenDia,
                             50,
                             MediaQuery.of(context).size.width,
                             MediaQuery.of(context).size.height,
@@ -141,80 +199,28 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                         onHorizontalDragUpdate: (dragInfo) {
                           setState(() {
                             _leftDia += dragInfo.delta.dx;
+                            _hiddenCalendario += dragInfo.delta.dx;
                             _hiddenEventos += dragInfo.delta.dx;
                             appStarted = false;
                             forwardAnimation = false;
                             reverseAnimation = false;
-                            diaAnimation = false;
+                            eventosAnimation = false;
                           });
                         },
                         onHorizontalDragEnd: (dragInfo) {
                           setState(() {
-                            if (_leftDia > -75) {
-                              diaAnimation = true;
-                            } else {
-                              reverseAnimation = true;
-                              _controllerEvento.reverse();
-                              _controllerDia.reverse();
-                            }
-                          });
-                        },
-                        child: TodosEventos(),
-                      ),
-                    ),
-                    PositionedTransition(
-                      rect: RelativeRectTween(
-                        begin: RelativeRect.fromSize(
-                          Rect.fromLTWH(
-                            _leftEventos,
-                            50,
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                          Size(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                        ),
-                        end: RelativeRect.fromSize(
-                          Rect.fromLTWH(
-                            _hiddenEventos,
-                            50,
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                          Size(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                        ),
-                      ).animate(_controllerEvento),
-                      child: GestureDetector(
-                        onHorizontalDragUpdate: (dragInfo) {
-                          setState(() {
-                            _leftEventos += dragInfo.delta.dx;
-                            _hiddenCalendario += dragInfo.delta.dx;
-                            _hiddenDia += dragInfo.delta.dx;
-                            appStarted = false;
-                            forwardAnimation = false;
-                            reverseAnimation = false;
-                            diaAnimation = false;
-                          });
-                        },
-                        onHorizontalDragEnd: (dragInfo) {
-                          setState(() {
-                            if ((_leftEventos > -75 && _leftEventos < 0) ||
-                                (_leftEventos > 0 && _leftEventos < 75)) {
+                            if ((_leftDia > -75 && _leftDia < 0) ||
+                                (_leftDia > 0 && _leftDia < 75)) {
                               appStarted = true;
                             } else {
-                              if (_leftEventos < 0) {
+                              if (_leftDia < 0) {
                                 forwardAnimation = true;
-                                _controllerEvento.forward();
+                                _controllerDia.forward();
                                 _controllerCalendario.forward();
                               } else {
-                                diaAnimation = true;
-                                _controllerEvento.forward();
+                                eventosAnimation = true;
                                 _controllerDia.forward();
+                                _controllerEventos.forward();
                               }
                             }
                           });
@@ -253,11 +259,11 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                         onHorizontalDragUpdate: (dragInfo) {
                           setState(() {
                             _leftCalendario += dragInfo.delta.dx;
-                            _hiddenEventos += dragInfo.delta.dx;
+                            _hiddenDia += dragInfo.delta.dx;
                             appStarted = false;
                             forwardAnimation = false;
                             reverseAnimation = false;
-                            diaAnimation = false;
+                            eventosAnimation = false;
                           });
                         },
                         onHorizontalDragEnd: (dragInfo) {
@@ -266,7 +272,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                               appStarted = true;
                             } else {
                               reverseAnimation = true;
-                              _controllerEvento.reverse();
+                              _controllerDia.reverse();
                               _controllerCalendario.reverse();
                             }
                           });
@@ -288,10 +294,10 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     setState(() {
       appStarted = false;
       forwardAnimation = false;
-      diaAnimation = false;
+      eventosAnimation = false;
       reverseAnimation = true;
-      _controllerEvento.reverse();
       _controllerDia.reverse();
+      _controllerEventos.reverse();
     });
   }
 
@@ -299,9 +305,9 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     setState(() {
       appStarted = false;
       reverseAnimation = false;
-      diaAnimation = false;
+      eventosAnimation = false;
       forwardAnimation = true;
-      _controllerEvento.forward();
+      _controllerDia.forward();
       _controllerCalendario.forward();
     });
   }
@@ -311,9 +317,9 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       appStarted = false;
       forwardAnimation = false;
       reverseAnimation = false;
-      diaAnimation = true;
-      _controllerEvento.forward();
+      eventosAnimation = true;
       _controllerDia.forward();
+      _controllerEventos.forward();
     });
   }
 
@@ -321,9 +327,9 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     setState(() {
       appStarted = false;
       forwardAnimation = false;
-      diaAnimation = false;
+      eventosAnimation = false;
       reverseAnimation = true;
-      _controllerEvento.reverse();
+      _controllerDia.reverse();
       _controllerCalendario.reverse();
     });
   }
@@ -332,17 +338,17 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     setState(() {
       appStarted = false;
       forwardAnimation = false;
-      diaAnimation = false;
+      eventosAnimation = false;
       reverseAnimation = true;
-      _controllerEvento.reverse();
+      _controllerDia.reverse();
       _controllerCalendario.reverse().whenComplete(() {
         setState(() {
           appStarted = false;
           forwardAnimation = false;
           reverseAnimation = false;
-          diaAnimation = true;
-          _controllerEvento.forward();
+          eventosAnimation = true;
           _controllerDia.forward();
+          _controllerEventos.forward();
         });
       });
     });
@@ -352,16 +358,16 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     setState(() {
       appStarted = false;
       forwardAnimation = false;
-      diaAnimation = false;
+      eventosAnimation = false;
       reverseAnimation = true;
-      _controllerEvento.reverse();
-      _controllerDia.reverse().whenComplete((){
+      _controllerDia.reverse();
+      _controllerEventos.reverse().whenComplete((){
         setState(() {
           appStarted = false;
           reverseAnimation = false;
-          diaAnimation = false;
+          eventosAnimation = false;
           forwardAnimation = true;
-          _controllerEvento.forward();
+          _controllerDia.forward();
           _controllerCalendario.forward();
         });
       });

@@ -15,21 +15,20 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
   Color _borderEventos;
   Color _borderDia;
   Color _borderMes;
-  ToggleStatus toggleStatus = ToggleStatus.dia;
 
   @override
   Widget build(BuildContext context) {
-    if(toggleStatus == ToggleStatus.dia){
+    if(widget.dashboard.toggleStatus == ToggleStatus.dia){
       _borderEventos = Color(0xFF383838);
       _borderMes = Color(0xFF383838);
       _borderDia = Colors.cyan;
     } else {
-      if(toggleStatus == ToggleStatus.eventos){
+      if(widget.dashboard.toggleStatus == ToggleStatus.eventos){
         _borderEventos = Colors.cyan;
         _borderMes = Color(0xFF383838);
         _borderDia = Color(0xFF383838);
       } else {
-        if(toggleStatus == ToggleStatus.mes){
+        if(widget.dashboard.toggleStatus == ToggleStatus.mes){
           _borderEventos = Color(0xFF383838);
           _borderMes = Colors.cyan;
           _borderDia = Color(0xFF383838);
@@ -45,14 +44,14 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
           GestureDetector(
             onTap: () {
               setState(() {
-                if(toggleStatus == ToggleStatus.dia) {
+                if(widget.dashboard.toggleStatus == ToggleStatus.dia) {
                   widget.dashboard.eventosFromDia();
                 } else {
-                  if(toggleStatus == ToggleStatus.mes){
+                  if(widget.dashboard.toggleStatus == ToggleStatus.mes){
                     widget.dashboard.eventosFromMes();
                   }
                 }
-                toggleStatus = ToggleStatus.eventos;
+                widget.dashboard.toggleStatus = ToggleStatus.eventos;
               });
             },
             child: DecoratedBox(
@@ -75,14 +74,14 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
           GestureDetector(
             onTap: () {
               setState(() {
-                if(toggleStatus == ToggleStatus.eventos){
+                if(widget.dashboard.toggleStatus == ToggleStatus.eventos){
                   widget.dashboard.diaFromEventos();
                 } else {
-                  if(toggleStatus == ToggleStatus.mes){
+                  if(widget.dashboard.toggleStatus == ToggleStatus.mes){
                     widget.dashboard.diaFromMes();
                   }
                 }
-                toggleStatus = ToggleStatus.dia;
+                widget.dashboard.toggleStatus = ToggleStatus.dia;
               });
             },
             child: DecoratedBox(
@@ -105,14 +104,14 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
           GestureDetector(
             onTap: (){
               setState(() {
-                if(toggleStatus == ToggleStatus.dia) {
+                if(widget.dashboard.toggleStatus == ToggleStatus.dia) {
                   widget.dashboard.mesFromDia();
                 } else {
-                  if(toggleStatus == ToggleStatus.eventos){
+                  if(widget.dashboard.toggleStatus == ToggleStatus.eventos){
                     widget.dashboard.mesFromEventos();
                   }
                 }
-                toggleStatus = ToggleStatus.mes;
+                widget.dashboard.toggleStatus = ToggleStatus.mes;
               });
             },
             child: DecoratedBox(
