@@ -1,4 +1,5 @@
 import 'package:compiti_2/models/evento.dart';
+import 'package:compiti_2/models/evento_status.dart';
 import 'package:compiti_2/screens/dashboard/item_evento.dart';
 import 'package:compiti_2/screens/dashboard/toggle_dashboard.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class _EventosDiaState extends State<EventosDia> {
   @override
   void initState() {
     for (int i = 0; i < 15; i++) {
-      listaEventos.add(Evento('teste', 'teste'));
+      listaEventos.add(Evento(0, 'teste', 'teste', 'teste', 'TimeOfDay.now()', DateTime.now(), DateTime.now(), EventoStatus.agendado));
     }
     super.initState();
   }

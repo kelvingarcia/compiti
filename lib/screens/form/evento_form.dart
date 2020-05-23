@@ -1,6 +1,22 @@
+import 'package:compiti_2/database/evento_dao.dart';
+import 'package:compiti_2/models/evento.dart';
+import 'package:compiti_2/models/evento_status.dart';
 import 'package:flutter/material.dart';
 
-class EventoForm extends StatelessWidget {
+class EventoForm extends StatefulWidget {
+  @override
+  _EventoFormState createState() => _EventoFormState();
+}
+
+class _EventoFormState extends State<EventoForm> {
+  final TextEditingController _tituloController = TextEditingController();
+  final TextEditingController _descricaoController = TextEditingController();
+  final TextEditingController _horaInicialController = TextEditingController();
+  final TextEditingController _horaFinalController = TextEditingController();
+  final TextEditingController _dataInicialController = TextEditingController();
+  final TextEditingController _dataFinalController = TextEditingController();
+  final EventoDao _dao = EventoDao();
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -33,6 +49,7 @@ class EventoForm extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 24.0),
                     child: TextField(
+                      controller: _tituloController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         labelText: 'Título',
@@ -42,17 +59,109 @@ class EventoForm extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 24.0),
                     child: TextField(
+                      controller: _descricaoController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         labelText: 'Descrição',
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 24.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: _horaInicialController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Hora inicial',
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _horaFinalController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Hora final',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 24.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: _dataInicialController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Data inicial',
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _dataFinalController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Data final',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 24.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        RaisedButton(
+                          child: Text('Adicionar'),
+                          onPressed: () {
+                            var dataInicialSplit = _dataInicialController.text.split('/');
+                            var dataFinalSplit = _dataFinalController.text.split('/');
+                            _dao.save(
+                              Evento(
+                                0,
+                                _tituloController.text,
+                                _descricaoController.text,
+                                _horaInicialController.text,
+                                _horaFinalController.text,
+                                DateTime(
+                                  int.parse(dataInicialSplit.elementAt(2)),
+                                  int.parse(dataInicialSplit.elementAt(1)),
+                                  int.parse(dataInicialSplit.elementAt(0)),
+                                ),
+                                DateTime(
+                                  int.parse(dataFinalSplit.elementAt(2)),
+                                  int.parse(dataFinalSplit.elementAt(1)),
+                                  int.parse(dataFinalSplit.elementAt(0)),
+                                ),
+                                EventoStatus.agendado,
+                              ),
+                            ).then((id) => Navigator.pop(context));
+                          },
+                        ),
+                        RaisedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('Cancelar'),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
