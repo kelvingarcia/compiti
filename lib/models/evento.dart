@@ -6,8 +6,8 @@ class Evento {
   final int id;
   final String titulo;
   final String descricao;
-  final String horaInicial;
-  final String horaFinal;
+  final TimeOfDay horaInicial;
+  final TimeOfDay horaFinal;
   final DateTime dataInicial;
   final DateTime dataFinal;
   final EventoStatus eventoStatus;

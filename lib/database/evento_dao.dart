@@ -57,12 +57,34 @@ class EventoDao {
           row[_dataInicial].toString().substring(0, 10).split('-');
       var dataFinalSplit =
           row[_dataFinal].toString().substring(0, 10).split('-');
+      var horaInicialSplit = row[_horaInicial].toString().substring(10, 15).split(':');
+      var horaFinalSplit = row[_horaFinal].toString().substring(10, 15).split(':');
+      EventoStatus eventoStatus;
+      if(row[_status] == 'EventoStatus.agendado'){
+        eventoStatus = EventoStatus.agendado;
+      } else {
+        if(row[_status] == 'EventoStatus.nao_feito'){
+          eventoStatus = EventoStatus.nao_feito;
+        } else {
+          eventoStatus = EventoStatus.feito;
+        }
+      }
       final Evento evento = Evento(
         row[_id],
         row[_titulo],
         row[_descricao],
-        row[_horaInicial],
-        row[_horaFinal],
+        TimeOfDay(
+          hour: int.parse(
+              horaInicialSplit.elementAt(0)),
+          minute: int.parse(
+              horaInicialSplit.elementAt(1)),
+        ),
+        TimeOfDay(
+          hour: int.parse(
+              horaFinalSplit.elementAt(0)),
+          minute: int.parse(
+              horaFinalSplit.elementAt(1)),
+        ),
         DateTime(
           int.parse(dataInicialSplit.elementAt(0)),
           int.parse(dataInicialSplit.elementAt(1)),
@@ -73,7 +95,7 @@ class EventoDao {
           int.parse(dataFinalSplit.elementAt(1)),
           int.parse(dataFinalSplit.elementAt(2)),
         ),
-        EventoStatus.agendado,
+        eventoStatus,
       );
       eventos.add(evento);
     }

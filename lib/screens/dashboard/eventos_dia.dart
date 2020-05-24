@@ -15,7 +15,7 @@ class _EventosDiaState extends State<EventosDia> {
   @override
   void initState() {
     for (int i = 0; i < 15; i++) {
-      listaEventos.add(Evento(0, 'teste', 'teste', 'teste', 'TimeOfDay.now()', DateTime.now(), DateTime.now(), EventoStatus.agendado));
+      listaEventos.add(Evento(0, 'teste', 'teste', TimeOfDay.now(), TimeOfDay.now(), DateTime.now(), DateTime.now(), EventoStatus.agendado));
     }
     super.initState();
   }

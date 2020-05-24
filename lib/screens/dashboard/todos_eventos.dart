@@ -21,7 +21,7 @@ class _TodosEventosState extends State<TodosEventos> {
   @override
   void initState() {
     for (int i = 0; i < 15; i++) {
-      listaEventos.add(Evento(0, 'teste', 'teste', 'TimeOfDay.now()', 'TimeOfDay.now()', DateTime.now(), DateTime.now(), EventoStatus.agendado));
+      listaEventos.add(Evento(0, 'teste', 'teste', TimeOfDay.now(), TimeOfDay.now(), DateTime.now(), DateTime.now(), EventoStatus.agendado));
     }
     super.initState();
   }

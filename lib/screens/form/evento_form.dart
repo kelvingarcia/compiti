@@ -73,7 +73,6 @@ class _EventoFormState extends State<EventoForm> {
                         Expanded(
                           child: TextField(
                             controller: _horaInicialController,
-                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               labelText: 'Hora inicial',
@@ -83,7 +82,6 @@ class _EventoFormState extends State<EventoForm> {
                         Expanded(
                           child: TextField(
                             controller: _horaFinalController,
-                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               labelText: 'Hora final',
@@ -126,28 +124,46 @@ class _EventoFormState extends State<EventoForm> {
                         RaisedButton(
                           child: Text('Adicionar'),
                           onPressed: () {
-                            var dataInicialSplit = _dataInicialController.text.split('/');
-                            var dataFinalSplit = _dataFinalController.text.split('/');
-                            _dao.save(
-                              Evento(
-                                0,
-                                _tituloController.text,
-                                _descricaoController.text,
-                                _horaInicialController.text,
-                                _horaFinalController.text,
-                                DateTime(
-                                  int.parse(dataInicialSplit.elementAt(2)),
-                                  int.parse(dataInicialSplit.elementAt(1)),
-                                  int.parse(dataInicialSplit.elementAt(0)),
-                                ),
-                                DateTime(
-                                  int.parse(dataFinalSplit.elementAt(2)),
-                                  int.parse(dataFinalSplit.elementAt(1)),
-                                  int.parse(dataFinalSplit.elementAt(0)),
-                                ),
-                                EventoStatus.agendado,
-                              ),
-                            ).then((id) => Navigator.pop(context));
+                            var dataInicialSplit =
+                                _dataInicialController.text.split('/');
+                            var dataFinalSplit =
+                                _dataFinalController.text.split('/');
+                            var horaInicialSplit =
+                                _horaInicialController.text.split(':');
+                            var horaFinalSplit =
+                                _horaFinalController.text.split(':');
+                            _dao
+                                .save(
+                                  Evento(
+                                    0,
+                                    _tituloController.text,
+                                    _descricaoController.text,
+                                    TimeOfDay(
+                                      hour: int.parse(
+                                          horaInicialSplit.elementAt(0)),
+                                      minute: int.parse(
+                                          horaInicialSplit.elementAt(1)),
+                                    ),
+                                    TimeOfDay(
+                                      hour: int.parse(
+                                          horaFinalSplit.elementAt(0)),
+                                      minute: int.parse(
+                                          horaFinalSplit.elementAt(1)),
+                                    ),
+                                    DateTime(
+                                      int.parse(dataInicialSplit.elementAt(2)),
+                                      int.parse(dataInicialSplit.elementAt(1)),
+                                      int.parse(dataInicialSplit.elementAt(0)),
+                                    ),
+                                    DateTime(
+                                      int.parse(dataFinalSplit.elementAt(2)),
+                                      int.parse(dataFinalSplit.elementAt(1)),
+                                      int.parse(dataFinalSplit.elementAt(0)),
+                                    ),
+                                    EventoStatus.agendado,
+                                  ),
+                                )
+                                .then((id) => Navigator.pop(context));
                           },
                         ),
                         RaisedButton(
