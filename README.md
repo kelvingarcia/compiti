@@ -15,4 +15,5 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Criar as telas de cadastro
+- Checar informações da tela de cadastro e item evento
+- Corrigir escape do Future Builder

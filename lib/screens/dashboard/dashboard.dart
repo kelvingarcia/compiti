@@ -1,4 +1,5 @@
 import 'package:compiti_2/database/evento_dao.dart';
+import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/toggle_status.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
@@ -13,6 +14,9 @@ import 'toggle_dashboard.dart';
 
 class Dashboard extends StatefulWidget {
   int animationTime = 200;
+  List<Evento> listaEventos;
+
+  Dashboard(this.listaEventos);
 
   @override
   DashboardState createState() => DashboardState();
@@ -167,7 +171,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                             }
                           });
                         },
-                        child: TodosEventos(),
+                        child: TodosEventos(widget.listaEventos),
                       ),
                     ),
                     PositionedTransition(
@@ -227,7 +231,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                             }
                           });
                         },
-                        child: EventosDia(),
+                        child: EventosDia(widget.listaEventos),
                       ),
                     ),
                     PositionedTransition(

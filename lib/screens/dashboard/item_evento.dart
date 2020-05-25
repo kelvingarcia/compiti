@@ -1,17 +1,37 @@
+import 'package:compiti_2/models/evento.dart';
+import 'package:compiti_2/models/evento_status.dart';
 import 'package:flutter/material.dart';
 
 class ItemEvento extends StatefulWidget {
+  Evento evento;
+
+  ItemEvento(this.evento);
+
   @override
   _ItemEventoState createState() => _ItemEventoState();
 }
 
 class _ItemEventoState extends State<ItemEvento> {
-  double _toggleLeft = 95.0;
-  String _status = 'Agendado';
+  double _toggleLeft;
+  String _status;
   int dragCount = 0;
 
   @override
   Widget build(BuildContext context) {
+    if(widget.evento.eventoStatus == EventoStatus.agendado){
+      _toggleLeft = 95.0;
+      _status = 'Agendado';
+    } else {
+      if(widget.evento.eventoStatus == EventoStatus.nao_feito){
+        _toggleLeft = 202;
+        _status = 'Não feito';
+      } else {
+        _toggleLeft = 02;
+        _status = 'Feito';
+      }
+    }
+    var dataInicial = widget.evento.dataInicial.toString().substring(0, 10);
+    var horaInicial = widget.evento.horaInicial.toString().substring(10, 15);
     return Padding(
       padding: EdgeInsets.only(bottom: 16.0),
       child: Container(
@@ -21,6 +41,7 @@ class _ItemEventoState extends State<ItemEvento> {
             .width * 0.9,
         color: Color(0xFF626262),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
               height: MediaQuery
@@ -45,7 +66,7 @@ class _ItemEventoState extends State<ItemEvento> {
                         Padding(
                           padding: EdgeInsets.only(left: 8.0),
                           child: Text(
-                            'Teste Evento',
+                            widget.evento.titulo,
                             style:
                             TextStyle(color: Colors.white, fontSize: 16.0),
                           ),
@@ -77,14 +98,14 @@ class _ItemEventoState extends State<ItemEvento> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'Mai 15',
+                    dataInicial,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16.0,
                     ),
                   ),
                   Text(
-                    '08:00',
+                    horaInicial,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16.0,
@@ -96,7 +117,7 @@ class _ItemEventoState extends State<ItemEvento> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+                widget.evento.descricao,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
