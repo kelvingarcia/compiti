@@ -1,5 +1,3 @@
-import 'package:compiti_2/database/evento_dao.dart';
-import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/toggle_status.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
@@ -13,16 +11,16 @@ import 'barra_superior.dart';
 import 'toggle_dashboard.dart';
 
 class Dashboard extends StatefulWidget {
-  int animationTime = 200;
-  List<Evento> listaEventos;
-
-  Dashboard(this.listaEventos);
+  final int animationTime = 200;
 
   @override
   DashboardState createState() => DashboardState();
 }
 
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
+  TodosEventos todosEventos = TodosEventos();
+  EventosDia eventosDia = EventosDia();
+
   ToggleStatus toggleStatus;
   AnimationController _controllerDia;
   AnimationController _controllerCalendario;
@@ -171,7 +169,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                             }
                           });
                         },
-                        child: TodosEventos(widget.listaEventos),
+                        child: todosEventos,
                       ),
                     ),
                     PositionedTransition(
@@ -231,7 +229,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                             }
                           });
                         },
-                        child: EventosDia(widget.listaEventos),
+                        child: eventosDia,
                       ),
                     ),
                     PositionedTransition(
@@ -299,7 +297,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             child: FloatingActionButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => Material(child: EventoForm()),
+                  builder: (context) => Material(child: EventoForm(todosEventos.todosEventosState, eventosDia.eventosDiaState)),
                 ),
               ),
               backgroundColor: Colors.cyan,

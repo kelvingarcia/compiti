@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:compiti_2/screens/dashboard/dashboard.dart';
 
-class BarraSuperior extends StatelessWidget {
-  DashboardState parent;
+class BarraSuperior extends StatefulWidget {
+  final DashboardState parent;
 
   BarraSuperior({this.parent});
 
+  @override
+  _BarraSuperiorState createState() => _BarraSuperiorState();
+}
+
+class _BarraSuperiorState extends State<BarraSuperior> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -24,13 +29,13 @@ class BarraSuperior extends StatelessWidget {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      if (this.parent.topCorpo == 100.0) {
-                        this.parent.setState(() {
-                          this.parent.topCorpo = 400.0;
+                      if (this.widget.parent.topCorpo == 100.0) {
+                        this.widget.parent.setState(() {
+                          this.widget.parent.topCorpo = 400.0;
                         });
                       } else {
-                        this.parent.setState(() {
-                          this.parent.topCorpo = 100.0;
+                        this.widget.parent.setState(() {
+                          this.widget.parent.topCorpo = 100.0;
                         });
                       }
                     },

@@ -1,9 +1,16 @@
 import 'package:compiti_2/database/evento_dao.dart';
 import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/evento_status.dart';
+import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
+import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
 import 'package:flutter/material.dart';
 
 class EventoForm extends StatefulWidget {
+  final TodosEventosState todosEventosState;
+  final EventosDiaState eventosDiaState;
+
+  EventoForm(this.todosEventosState, this.eventosDiaState);
+
   @override
   _EventoFormState createState() => _EventoFormState();
 }
@@ -163,7 +170,11 @@ class _EventoFormState extends State<EventoForm> {
                                     EventoStatus.agendado,
                                   ),
                                 )
-                                .then((id) => Navigator.pop(context));
+                                .then((id) {
+                                  widget.eventosDiaState.atualizaLista();
+                                  widget.todosEventosState.atualizaLista();
+                                  Navigator.pop(context);
+                                });
                           },
                         ),
                         RaisedButton(

@@ -3,7 +3,7 @@ import 'package:compiti_2/models/evento_status.dart';
 import 'package:flutter/material.dart';
 
 class ItemEvento extends StatefulWidget {
-  Evento evento;
+  final Evento evento;
 
   ItemEvento(this.evento);
 

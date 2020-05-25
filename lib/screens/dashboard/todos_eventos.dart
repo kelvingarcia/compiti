@@ -1,21 +1,22 @@
 import 'package:compiti_2/database/evento_dao.dart';
-import 'package:compiti_2/models/evento_status.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/evento.dart';
 import 'item_evento.dart';
 
 class TodosEventos extends StatefulWidget {
-  List<Evento> listaEventos;
-
-  TodosEventos(this.listaEventos);
+  TodosEventosState todosEventosState;
 
   @override
-  _TodosEventosState createState() => _TodosEventosState();
+  TodosEventosState createState() {
+    todosEventosState = TodosEventosState();
+    return todosEventosState;
+  }
 }
 
-class _TodosEventosState extends State<TodosEventos> {
+class TodosEventosState extends State<TodosEventos> {
   EventoDao _dao = EventoDao();
+  List<Evento> eventos = List();
   Color _corRealizadas;
   Color _corTextoRealizadas;
   Color _corNaoRealizadas ;
@@ -25,6 +26,7 @@ class _TodosEventosState extends State<TodosEventos> {
 
   @override
   void initState() {
+    this.atualizaLista();
     super.initState();
   }
 
@@ -95,47 +97,16 @@ class _TodosEventosState extends State<TodosEventos> {
             ),
           ),
           Expanded(
-            child: FutureBuilder<List<Evento>>(
-              initialData: List(),
-              future: _dao.findAll(),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    break;
-                  case ConnectionState.waiting:
-                    break;
-                  case ConnectionState.active:
-                    break;
-                  case ConnectionState.done:
-                    final List<Evento> eventos = snapshot.data;
-                    eventos.add(eventos.last);
-                    return ListView.builder(
-                      padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                      itemCount: eventos.length,
-                      itemBuilder: (context, int index) {
-                        if (index == eventos.length-1) {
-                          return Container(
-                            height: MediaQuery.of(context).size.height * 0.2,
-                          );
-                        }
-                        return ItemEvento(eventos.elementAt(index));
-                      },
-                    );
-                    break;
+            child: ListView.builder(
+              padding: EdgeInsets.only(left: 16.0, right: 16.0),
+              itemCount: eventos.length+1,
+              itemBuilder: (context, int index) {
+                if (index == eventos.length) {
+                  return Container(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                  );
                 }
-                widget.listaEventos.add(widget.listaEventos.last);
-                return ListView.builder(
-                  padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                  itemCount: widget.listaEventos.length,
-                  itemBuilder: (context, int index) {
-                    if (index == widget.listaEventos.length-1) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height * 0.2,
-                      );
-                    }
-                    return ItemEvento(widget.listaEventos.elementAt(index));
-                  },
-                );
+                return ItemEvento(eventos.elementAt(index));
               },
             ),
           ),
@@ -143,4 +114,13 @@ class _TodosEventosState extends State<TodosEventos> {
       ),
     );
   }
+
+  void atualizaLista(){
+    _dao.findAll().then((lista) {
+      setState(() {
+        eventos = lista;
+      });
+    });
+  }
 }
+

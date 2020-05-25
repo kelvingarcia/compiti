@@ -3,7 +3,7 @@ import 'package:compiti_2/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class ToggleDashboard extends StatefulWidget {
-  DashboardState dashboard;
+  final DashboardState dashboard;
 
   ToggleDashboard({this.dashboard});
 
