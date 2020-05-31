@@ -1,3 +1,4 @@
+import 'package:compiti_2/database/evento_dao.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard/dashboard.dart';
@@ -7,6 +8,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  final EventoDao _dao = EventoDao();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

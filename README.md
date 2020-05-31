@@ -15,5 +15,4 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Checar informações da tela de cadastro e item evento
-- Corrigir escape do Future Builder
+- Implementar controller com EventoDto e Agendamento
