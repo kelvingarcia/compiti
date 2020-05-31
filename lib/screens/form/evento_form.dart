@@ -126,128 +126,15 @@ class _EventoFormState extends State<EventoForm> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 24.0),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              customBorder: CircleBorder(),
-                              onTap: () {},
-                              child: Container(
-                                width: 35.0,
-                                height: 35.0,
-                                child: Center(
-                                  child: Text('D'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              customBorder: CircleBorder(),
-                              onTap: () {},
-                              child: Container(
-                                width: 35.0,
-                                height: 35.0,
-                                child: Center(
-                                  child: Text('S'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              customBorder: CircleBorder(),
-                              onTap: () {},
-                              child: Container(
-                                width: 35.0,
-                                height: 35.0,
-                                child: Center(
-                                  child: Text('T'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              customBorder: CircleBorder(),
-                              onTap: () {},
-                              child: Container(
-                                width: 35.0,
-                                height: 35.0,
-                                child: Center(
-                                  child: Text('Q'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              customBorder: CircleBorder(),
-                              onTap: () {},
-                              child: Container(
-                                width: 35.0,
-                                height: 35.0,
-                                child: Center(
-                                  child: Text('Q'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              customBorder: CircleBorder(),
-                              onTap: () {},
-                              child: Container(
-                                width: 35.0,
-                                height: 35.0,
-                                child: Center(
-                                  child: Text('S'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              customBorder: CircleBorder(),
-                              onTap: () {},
-                              child: Container(
-                                width: 35.0,
-                                height: 35.0,
-                                child: Center(
-                                  child: Text('S'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: Container(
+                      height: 50,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 7,
+                        itemBuilder: (context, index) {
+                          return SemanaButton(index);
+                        },
+                      ),
                     ),
                   ),
                   Padding(
@@ -320,29 +207,76 @@ class _EventoFormState extends State<EventoForm> {
   }
 }
 
-//class SemanaButton extends StatelessWidget {
-//  final String _texto;
-//
-//  SemanaButton(this._texto);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Padding(
-//      padding: EdgeInsets.all(8.0),
-//      child: Material(
-//        borderRadius: BorderRadius.circular(20),
-//        child: InkWell(
-//          customBorder: CircleBorder(),
-//          onTap: () => debugPrint('clicou'),
-//          child: Container(
-//            width: 35.0,
-//            height: 35.0,
-//            child: Center(
-//              child: Text(_texto),
-//            ),
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//}
+class SemanaButton extends StatefulWidget {
+  final int _dia;
+
+  SemanaButton(this._dia);
+
+  @override
+  _SemanaButtonState createState() => _SemanaButtonState();
+}
+
+class _SemanaButtonState extends State<SemanaButton> {
+  String _textoDia;
+  Color _color = Colors.white;
+  Color _colorSplash = Colors.white;
+
+  @override
+  Widget build(BuildContext context) {
+    switch(widget._dia) {
+      case 0:
+        _textoDia = 'D';
+        break;
+      case 1:
+        _textoDia = 'S';
+        break;
+      case 2:
+        _textoDia = 'T';
+        break;
+      case 3:
+        _textoDia = 'Q';
+        break;
+      case 4:
+        _textoDia = 'Q';
+        break;
+      case 5:
+        _textoDia = 'S';
+        break;
+      case 6:
+        _textoDia = 'S';
+        break;
+      default:
+        _textoDia = 'S';
+        break;
+    }
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Material(
+        color: _color,
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          splashColor: _colorSplash,
+          customBorder: CircleBorder(),
+          onTap: () {
+            setState(() {
+              if(_color == Colors.white) {
+                _color = Colors.cyan;
+                _colorSplash = Colors.cyan;
+              } else {
+                _color = Colors.white;
+                _colorSplash = Colors.white;
+              }
+            });
+          },
+          child: Container(
+            width: 35.0,
+            height: 35.0,
+            child: Center(
+              child: Text(_textoDia),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

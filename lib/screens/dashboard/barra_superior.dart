@@ -27,24 +27,27 @@ class _BarraSuperiorState extends State<BarraSuperior> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      if (this.widget.parent.topCorpo == 100.0) {
-                        this.widget.parent.setState(() {
-                          this.widget.parent.topCorpo = 400.0;
-                        });
-                      } else {
-                        this.widget.parent.setState(() {
-                          this.widget.parent.topCorpo = 100.0;
-                        });
-                      }
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                        size: 32.0,
+                  Material(
+                    color: Colors.cyan,
+                    child: InkWell(
+                      onTap: () {
+                        if (this.widget.parent.topCorpo == 100.0) {
+                          this.widget.parent.setState(() {
+                            this.widget.parent.topCorpo = 400.0;
+                          });
+                        } else {
+                          this.widget.parent.setState(() {
+                            this.widget.parent.topCorpo = 100.0;
+                          });
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                          size: 32.0,
+                        ),
                       ),
                     ),
                   ),
