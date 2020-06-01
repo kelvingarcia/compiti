@@ -1,6 +1,6 @@
-import 'package:compiti_2/database/evento_dao.dart';
-import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/evento_status.dart';
+import 'package:compiti_2/controllers/controlador_agendamento.dart';
+import 'package:compiti_2/models/evento_dto.dart';
+import 'package:compiti_2/models/semana.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
 import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,17 +13,18 @@ class EventoForm extends StatefulWidget {
   EventoForm(this.todosEventosState, this.eventosDiaState);
 
   @override
-  _EventoFormState createState() => _EventoFormState();
+  EventoFormState createState() => EventoFormState();
 }
 
-class _EventoFormState extends State<EventoForm> {
+class EventoFormState extends State<EventoForm> {
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _descricaoController = TextEditingController();
   final TextEditingController _horaInicialController = TextEditingController();
   final TextEditingController _horaFinalController = TextEditingController();
   final TextEditingController _dataInicialController = TextEditingController();
   final TextEditingController _dataFinalController = TextEditingController();
-  final EventoDao _dao = EventoDao();
+  final ControladorAgendamento controladorAgendamento = ControladorAgendamento();
+  List<Semana> diasDaSemana = List();
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +133,7 @@ class _EventoFormState extends State<EventoForm> {
                         scrollDirection: Axis.horizontal,
                         itemCount: 7,
                         itemBuilder: (context, index) {
-                          return SemanaButton(index);
+                          return SemanaButton(index, this);
                         },
                       ),
                     ),
@@ -153,10 +154,9 @@ class _EventoFormState extends State<EventoForm> {
                                 _horaInicialController.text.split(':');
                             var horaFinalSplit =
                                 _horaFinalController.text.split(':');
-                            _dao
-                                .save(
-                              Evento(
-                                0,
+                            controladorAgendamento
+                                .salvarEventoAgendamento(
+                              EventoDto(
                                 _tituloController.text,
                                 _descricaoController.text,
                                 TimeOfDay(
@@ -180,14 +180,11 @@ class _EventoFormState extends State<EventoForm> {
                                   int.parse(dataFinalSplit.elementAt(1)),
                                   int.parse(dataFinalSplit.elementAt(0)),
                                 ),
-                                EventoStatus.agendado,
+                                diasDaSemana,
                               ),
-                            )
-                                .then((id) {
-                              widget.eventosDiaState.atualizaLista();
-                              widget.todosEventosState.atualizaLista();
-                              Navigator.pop(context);
-                            });
+                              widget,
+                            );
+                            Navigator.pop(context);
                           },
                         ),
                         RaisedButton(
@@ -205,12 +202,69 @@ class _EventoFormState extends State<EventoForm> {
       ],
     );
   }
+
+  void addDiaDaSemana(int dia){
+    switch(dia) {
+      case 0:
+        diasDaSemana.add(Semana.domingo);
+        break;
+      case 1:
+        diasDaSemana.add(Semana.segunda);
+        break;
+      case 2:
+        diasDaSemana.add(Semana.terca);
+        break;
+      case 3:
+        diasDaSemana.add(Semana.quarta);
+        break;
+      case 4:
+        diasDaSemana.add(Semana.quinta);
+        break;
+      case 5:
+        diasDaSemana.add(Semana.sexta);
+        break;
+      case 6:
+        diasDaSemana.add(Semana.sabado);
+        break;
+      default:
+        break;
+    }
+  }
+
+  void removeDiaDaSemana(int dia){
+    switch(dia) {
+      case 0:
+        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.domingo));
+        break;
+      case 1:
+        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.segunda));
+        break;
+      case 2:
+        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.terca));
+        break;
+      case 3:
+        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.quarta));
+        break;
+      case 4:
+        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.quinta));
+        break;
+      case 5:
+        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.sexta));
+        break;
+      case 6:
+        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.sabado));
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 class SemanaButton extends StatefulWidget {
   final int _dia;
+  final EventoFormState eventoFormState;
 
-  SemanaButton(this._dia);
+  SemanaButton(this._dia, this.eventoFormState);
 
   @override
   _SemanaButtonState createState() => _SemanaButtonState();
@@ -262,9 +316,11 @@ class _SemanaButtonState extends State<SemanaButton> {
               if(_color == Colors.white) {
                 _color = Colors.cyan;
                 _colorSplash = Colors.cyan;
+                widget.eventoFormState.addDiaDaSemana(widget._dia);
               } else {
                 _color = Colors.white;
                 _colorSplash = Colors.white;
+                widget.eventoFormState.removeDiaDaSemana(widget._dia);
               }
             });
           },

@@ -13,4 +13,9 @@ class EventoDto {
 
   EventoDto(this.titulo, this.descricao, this.horaInicial, this.horaFinal,
       this.dataInicial, this.dataFinal, this.diasDaSemana);
+
+  @override
+  String toString() {
+    return 'EventoDto{titulo: $titulo, descricao: $descricao, horaInicial: $horaInicial, horaFinal: $horaFinal, dataInicial: $dataInicial, dataFinal: $dataFinal, diasDaSemana: $diasDaSemana}';
+  }
 }

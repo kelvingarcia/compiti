@@ -1,53 +1,36 @@
-import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/evento_status.dart';
+import 'package:compiti_2/models/agendamento.dart';
 import 'package:flutter/material.dart';
 
 class ItemEvento extends StatefulWidget {
-  final Evento evento;
+  final Agendamento agendamento;
 
-  ItemEvento(this.evento);
+  ItemEvento(this.agendamento);
 
   @override
   _ItemEventoState createState() => _ItemEventoState();
 }
 
 class _ItemEventoState extends State<ItemEvento> {
-  double _toggleLeft;
-  String _status;
+  double _toggleLeft = 95;
+  String _status = 'Agendado';
   int dragCount = 0;
 
   @override
   Widget build(BuildContext context) {
-    if(widget.evento.eventoStatus == EventoStatus.agendado){
-      _toggleLeft = 95.0;
-      _status = 'Agendado';
-    } else {
-      if(widget.evento.eventoStatus == EventoStatus.nao_feito){
-        _toggleLeft = 202;
-        _status = 'Não feito';
-      } else {
-        _toggleLeft = 02;
-        _status = 'Feito';
-      }
-    }
-    var dataInicial = widget.evento.dataInicial.toString().substring(0, 10);
-    var horaInicial = widget.evento.horaInicial.toString().substring(10, 15);
+    var dataInicial = widget.agendamento.data.toString().substring(0, 10);
+    var horaInicial =
+        widget.agendamento.horaInicial.toString().substring(10, 15);
+    var horaFinal = widget.agendamento.horaFinal.toString().substring(10, 15);
     return Padding(
       padding: EdgeInsets.only(bottom: 16.0),
       child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.9,
+        width: MediaQuery.of(context).size.width * 0.9,
         color: Color(0xFF626262),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.07,
+              height: MediaQuery.of(context).size.height * 0.07,
               color: Color(0xFF121212),
               child: Padding(
                 padding: EdgeInsets.only(
@@ -66,9 +49,9 @@ class _ItemEventoState extends State<ItemEvento> {
                         Padding(
                           padding: EdgeInsets.only(left: 8.0),
                           child: Text(
-                            widget.evento.titulo,
+                            widget.agendamento.evento.titulo,
                             style:
-                            TextStyle(color: Colors.white, fontSize: 16.0),
+                                TextStyle(color: Colors.white, fontSize: 16.0),
                           ),
                         )
                       ],
@@ -104,12 +87,23 @@ class _ItemEventoState extends State<ItemEvento> {
                       fontSize: 16.0,
                     ),
                   ),
-                  Text(
-                    horaInicial,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        horaInicial,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      Text(
+                        horaFinal,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -117,7 +111,7 @@ class _ItemEventoState extends State<ItemEvento> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                widget.evento.descricao,
+                widget.agendamento.evento.descricao,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -131,10 +125,7 @@ class _ItemEventoState extends State<ItemEvento> {
                     color: Colors.grey[400],
                     borderRadius: BorderRadius.circular(24.0)),
                 child: SizedBox(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.05,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -205,27 +196,39 @@ class _ItemEventoState extends State<ItemEvento> {
                           },
                           onHorizontalDragEnd: (dragInfo) {
                             setState(() {
-                              if (_toggleLeft == 202 && _status == 'Feito' && dragCount < 15) {
+                              if (_toggleLeft == 202 &&
+                                  _status == 'Feito' &&
+                                  dragCount < 15) {
                                 _toggleLeft = 95;
                                 _status = 'Agendado';
                               } else {
-                                if (_toggleLeft == 202 && _status == 'Agendado'){
+                                if (_toggleLeft == 202 &&
+                                    _status == 'Agendado') {
                                   _status = 'Não feito';
                                 } else {
-                                  if(_toggleLeft == 95 && (_status == 'Feito' || _status == 'Não feito')){
+                                  if (_toggleLeft == 95 &&
+                                      (_status == 'Feito' ||
+                                          _status == 'Não feito')) {
                                     _status = 'Agendado';
                                   } else {
-                                    if(_toggleLeft == 02 && _status == 'Agendado'){
+                                    if (_toggleLeft == 02 &&
+                                        _status == 'Agendado') {
                                       _status = 'Feito';
                                     } else {
-                                      if(_toggleLeft == 02 && _status == 'Não feito' && dragCount < 15){
+                                      if (_toggleLeft == 02 &&
+                                          _status == 'Não feito' &&
+                                          dragCount < 15) {
                                         _toggleLeft = 95;
                                         _status = 'Agendado';
                                       } else {
-                                        if(_toggleLeft == 202 && _status == 'Feito' && dragCount >= 15){
+                                        if (_toggleLeft == 202 &&
+                                            _status == 'Feito' &&
+                                            dragCount >= 15) {
                                           _status = 'Não feito';
                                         } else {
-                                          if(_toggleLeft == 02 && _status == 'Não feito' && dragCount >= 15){
+                                          if (_toggleLeft == 02 &&
+                                              _status == 'Não feito' &&
+                                              dragCount >= 15) {
                                             _status = 'Feito';
                                           }
                                         }
@@ -244,14 +247,8 @@ class _ItemEventoState extends State<ItemEvento> {
                             ),
                             child: SizedBox(
                               height:
-                              MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height * 0.045,
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * 0.3,
+                                  MediaQuery.of(context).size.height * 0.045,
+                              width: MediaQuery.of(context).size.width * 0.3,
                               child: Center(
                                 child: Text(
                                   _status,

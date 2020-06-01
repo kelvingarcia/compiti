@@ -1,8 +1,53 @@
+import 'package:compiti_2/database/agendamento_dao.dart';
+import 'package:compiti_2/database/evento_dao.dart';
+import 'package:compiti_2/models/agendamento.dart';
+import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/evento_dto.dart';
+import 'package:compiti_2/models/evento_status.dart';
+import 'package:compiti_2/screens/form/evento_form.dart';
 
 class ControladorAgendamento {
+  final EventoDao _eventoDao = EventoDao();
+  final AgendamentoDao _agendamentoDao = AgendamentoDao();
 
-  void salvarEventoAgendamento(EventoDto eventodto){
-
+  Future<void> salvarEventoAgendamento(
+      EventoDto eventoDto, EventoForm eventoForm) async {
+    DateTime dataAgendamento =
+        eventoDto.dataInicial.subtract(Duration(days: 1));
+    final int id = await _eventoDao.save(Evento(
+      0,
+      eventoDto.titulo,
+      eventoDto.descricao,
+      eventoDto.horaInicial,
+      eventoDto.horaFinal,
+      eventoDto.dataInicial,
+      eventoDto.dataFinal,
+    ));
+    final Evento evento = await _eventoDao.find(id);
+    for (int i = 0;
+        i <= eventoDto.dataFinal.difference(eventoDto.dataInicial).inDays;
+        i++) {
+      bool diaValidado = false;
+      dataAgendamento = dataAgendamento.add(Duration(days: 1));
+      eventoDto.diasDaSemana.forEach((dia) {
+        if(dataAgendamento.weekday-1 == dia.index){
+          diaValidado = true;
+        }
+      });
+      if(diaValidado) {
+        await _agendamentoDao.save(
+          Agendamento(
+            0,
+            dataAgendamento,
+            eventoDto.horaInicial,
+            eventoDto.horaFinal,
+            evento,
+            EventoStatus.agendado,
+          ),
+        );
+      }
+    }
+    eventoForm.eventosDiaState.atualizaLista();
+    eventoForm.todosEventosState.atualizaLista();
   }
 }

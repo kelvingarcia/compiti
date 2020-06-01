@@ -1,3 +1,4 @@
+import 'package:compiti_2/database/agendamento_dao.dart';
 import 'package:compiti_2/database/evento_dao.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -8,6 +9,7 @@ Future<Database> getDatabase() async {
     path,
     onCreate: (db, version) {
       db.execute(EventoDao.tableSql);
+      db.execute(AgendamentoDao.tableSql);
     },
     version: 1,
   );

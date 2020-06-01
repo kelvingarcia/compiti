@@ -1,5 +1,5 @@
-import 'package:compiti_2/database/evento_dao.dart';
-import 'package:compiti_2/models/evento.dart';
+import 'package:compiti_2/database/agendamento_dao.dart';
+import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/screens/dashboard/item_evento.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +15,8 @@ class EventosDia extends StatefulWidget {
 }
 
 class EventosDiaState extends State<EventosDia> {
-  EventoDao _dao = EventoDao();
-  List<Evento> eventos = List();
+  AgendamentoDao _dao = AgendamentoDao();
+  List<Agendamento> agendamentos = List();
 
   @override
   void initState() {
@@ -37,9 +37,9 @@ class EventosDiaState extends State<EventosDia> {
           .width,
       child: ListView.builder(
         padding: EdgeInsets.only(left: 16.0, right: 16.0),
-        itemCount: eventos.length + 1,
+        itemCount: agendamentos.length + 1,
         itemBuilder: (context, int index) {
-          if (index == eventos.length) {
+          if (index == agendamentos.length) {
             return Container(
               height: MediaQuery
                   .of(context)
@@ -47,7 +47,7 @@ class EventosDiaState extends State<EventosDia> {
                   .height * 0.3,
             );
           }
-          return ItemEvento(eventos.elementAt(index));
+          return ItemEvento(agendamentos.elementAt(index));
         },
       ),
     );
@@ -56,7 +56,7 @@ class EventosDiaState extends State<EventosDia> {
   void atualizaLista() {
     _dao.findAll().then((lista) {
       setState(() {
-        eventos = lista;
+        agendamentos = lista;
       });
     });
   }

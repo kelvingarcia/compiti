@@ -1,7 +1,7 @@
-import 'package:compiti_2/database/evento_dao.dart';
+import 'package:compiti_2/database/agendamento_dao.dart';
+import 'package:compiti_2/models/agendamento.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/evento.dart';
 import 'item_evento.dart';
 
 class TodosEventos extends StatefulWidget {
@@ -15,8 +15,8 @@ class TodosEventos extends StatefulWidget {
 }
 
 class TodosEventosState extends State<TodosEventos> {
-  EventoDao _dao = EventoDao();
-  List<Evento> eventos = List();
+  AgendamentoDao _dao = AgendamentoDao();
+  List<Agendamento> agendamentos = List();
   Color _corRealizadas;
   Color _corTextoRealizadas;
   Color _corNaoRealizadas ;
@@ -99,14 +99,14 @@ class TodosEventosState extends State<TodosEventos> {
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.only(left: 16.0, right: 16.0),
-              itemCount: eventos.length+1,
+              itemCount: agendamentos.length+1,
               itemBuilder: (context, int index) {
-                if (index == eventos.length) {
+                if (index == agendamentos.length) {
                   return Container(
                     height: MediaQuery.of(context).size.height * 0.3,
                   );
                 }
-                return ItemEvento(eventos.elementAt(index));
+                return ItemEvento(agendamentos.elementAt(index));
               },
             ),
           ),
@@ -118,7 +118,7 @@ class TodosEventosState extends State<TodosEventos> {
   void atualizaLista(){
     _dao.findAll().then((lista) {
       setState(() {
-        eventos = lista;
+        agendamentos = lista;
       });
     });
   }

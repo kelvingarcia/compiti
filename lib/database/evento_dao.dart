@@ -1,5 +1,4 @@
 import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/evento_status.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -13,8 +12,7 @@ class EventoDao {
       '$_horaInicial TEXT,'
       '$_horaFinal TEXT,'
       '$_dataInicial TEXT,'
-      '$_dataFinal TEXT,'
-      '$_status TEXT)';
+      '$_dataFinal TEXT)';
   static const String _tableName = 'events';
   static const String _id = 'id';
   static const String _titulo = 'titulo';
@@ -23,7 +21,6 @@ class EventoDao {
   static const String _horaFinal = 'hora_final';
   static const String _dataInicial = 'data_inicial';
   static const String _dataFinal = 'data_final';
-  static const String _status = 'status';
 
   Future<int> save(Evento evento) async {
     final Database db = await getDatabase();
@@ -38,6 +35,13 @@ class EventoDao {
     return eventos;
   }
 
+  Future<Evento> find(int id) async {
+    final Database db = await getDatabase();
+    final List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_tableName where id=$id');
+    List<Evento> eventos = _toList(result);
+    return eventos.removeLast();
+  }
+
   Map<String, dynamic> _toMap(Evento evento) {
     final Map<String, dynamic> eventoMap = Map();
     eventoMap[_titulo] = evento.titulo;
@@ -46,7 +50,6 @@ class EventoDao {
     eventoMap[_horaFinal] = evento.horaFinal.toString();
     eventoMap[_dataInicial] = evento.dataInicial.toString();
     eventoMap[_dataFinal] = evento.dataFinal.toString();
-    eventoMap[_status] = evento.eventoStatus.toString();
     return eventoMap;
   }
 
@@ -59,16 +62,15 @@ class EventoDao {
           row[_dataFinal].toString().substring(0, 10).split('-');
       var horaInicialSplit = row[_horaInicial].toString().substring(10, 15).split(':');
       var horaFinalSplit = row[_horaFinal].toString().substring(10, 15).split(':');
-      EventoStatus eventoStatus;
-      if(row[_status] == 'EventoStatus.agendado'){
-        eventoStatus = EventoStatus.agendado;
-      } else {
-        if(row[_status] == 'EventoStatus.nao_feito'){
-          eventoStatus = EventoStatus.nao_feito;
-        } else {
-          eventoStatus = EventoStatus.feito;
-        }
-      }
+//      if(row[_status] == 'EventoStatus.agendado'){
+//        eventoStatus = EventoStatus.agendado;
+//      } else {
+//        if(row[_status] == 'EventoStatus.nao_feito'){
+//          eventoStatus = EventoStatus.nao_feito;
+//        } else {
+//          eventoStatus = EventoStatus.feito;
+//        }
+//      }
       final Evento evento = Evento(
         row[_id],
         row[_titulo],
@@ -95,7 +97,6 @@ class EventoDao {
           int.parse(dataFinalSplit.elementAt(1)),
           int.parse(dataFinalSplit.elementAt(2)),
         ),
-        eventoStatus,
       );
       eventos.add(evento);
     }
