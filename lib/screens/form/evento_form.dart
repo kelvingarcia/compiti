@@ -183,6 +183,7 @@ class EventoFormState extends State<EventoForm> {
                                 diasDaSemana,
                               ),
                               widget,
+                              context
                             );
                             Navigator.pop(context);
                           },

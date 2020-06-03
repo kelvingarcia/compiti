@@ -69,7 +69,7 @@ class _BarraSuperiorState extends State<BarraSuperior> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    'Item Menu',
+                    'Testa Notificação',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16.0,
