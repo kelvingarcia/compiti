@@ -56,6 +56,8 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: widget.animationTime),
     );
+    eventosDia.dashboardState = this;
+    todosEventos.dashboardState = this;
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:compiti_2/database/agendamento_dao.dart';
 import 'package:compiti_2/models/agendamento.dart';
+import 'package:compiti_2/screens/dashboard/dashboard.dart';
 import 'package:compiti_2/screens/dashboard/item_evento.dart';
 import 'package:flutter/material.dart';
 
@@ -7,8 +8,9 @@ import 'package:flutter/material.dart';
 class EventosDia extends StatefulWidget {
   EventosDiaState eventosDiaState;
   DateTime data;
+  DashboardState dashboardState;
 
-  EventosDia({this.data});
+  EventosDia({this.data, this.dashboardState});
 
   @override
   EventosDiaState createState() {
@@ -72,7 +74,7 @@ class EventosDiaState extends State<EventosDia> {
                         .height * 0.3,
                   );
                 }
-                return ItemEvento(agendamentos.elementAt(index));
+                return ItemEvento(agendamentos.elementAt(index), widget.dashboardState);
               },
             ),
           ),

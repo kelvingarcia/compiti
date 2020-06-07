@@ -62,15 +62,6 @@ class EventoDao {
           row[_dataFinal].toString().substring(0, 10).split('-');
       var horaInicialSplit = row[_horaInicial].toString().substring(10, 15).split(':');
       var horaFinalSplit = row[_horaFinal].toString().substring(10, 15).split(':');
-//      if(row[_status] == 'EventoStatus.agendado'){
-//        eventoStatus = EventoStatus.agendado;
-//      } else {
-//        if(row[_status] == 'EventoStatus.nao_feito'){
-//          eventoStatus = EventoStatus.nao_feito;
-//        } else {
-//          eventoStatus = EventoStatus.feito;
-//        }
-//      }
       final Evento evento = Evento(
         row[_id],
         row[_titulo],
@@ -101,6 +92,12 @@ class EventoDao {
       eventos.add(evento);
     }
     return eventos;
+  }
+
+  Future<void> deleteEvento(Evento evento) async{
+    final Database db = await getDatabase();
+    int id = evento.id;
+    await db.rawQuery('DELETE FROM $_tableName where id=$id');
   }
 
   void deleteAll() async {

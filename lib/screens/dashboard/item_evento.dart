@@ -1,10 +1,15 @@
+import 'package:compiti_2/controllers/controlador_agendamento.dart';
 import 'package:compiti_2/models/agendamento.dart';
+import 'package:compiti_2/models/opcao.dart';
 import 'package:flutter/material.dart';
+
+import 'dashboard.dart';
 
 class ItemEvento extends StatefulWidget {
   final Agendamento agendamento;
+  DashboardState dashboardState;
 
-  ItemEvento(this.agendamento);
+  ItemEvento(this.agendamento, this.dashboardState);
 
   @override
   _ItemEventoState createState() => _ItemEventoState();
@@ -14,10 +19,12 @@ class _ItemEventoState extends State<ItemEvento> {
   double _toggleLeft = 95;
   String _status = 'Agendado';
   int dragCount = 0;
+  ControladorAgendamento _controladorAgendamento = ControladorAgendamento();
 
   @override
   Widget build(BuildContext context) {
-    var dataInicial = widget.agendamento.dataInicial.toString().substring(0, 10);
+    var dataInicial =
+        widget.agendamento.dataInicial.toString().substring(0, 10);
     var horaInicial =
         widget.agendamento.dataInicial.toString().substring(11, 16);
     var horaFinal = widget.agendamento.dataFinal.toString().substring(11, 16);
@@ -65,9 +72,18 @@ class _ItemEventoState extends State<ItemEvento> {
                             color: Colors.white,
                           ),
                         ),
-                        Icon(
-                          Icons.delete,
-                          color: Colors.white,
+                        InkWell(
+                          onTap: () {
+                            if(widget.agendamento.evento.dataFinal.difference(widget.agendamento.evento.dataInicial).inDays > 0){
+                              _deletarMaisDeUm();
+                            } else {
+                              _deletarUm();
+                            }
+                          },
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -267,6 +283,111 @@ class _ItemEventoState extends State<ItemEvento> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _deletarMaisDeUm() async {
+    switch (await showDialog<Opcao>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Selecione uma opção: '),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, Opcao.agendamento);
+                },
+                child: const Text('Deletar somente esse evento'),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, Opcao.evento);
+                },
+                child: const Text('Deletar todos os eventos dessa série'),
+              ),
+            ],
+          );
+        })) {
+      case Opcao.evento:
+        _deletarTodos();
+        break;
+      case Opcao.agendamento:
+        _deletarUm();
+        break;
+    }
+  }
+
+  Future<void> _deletarTodos() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Atenção'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Tem certeza que deseja deletar todos os eventos dessa série?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Sim'),
+              onPressed: () {
+                _controladorAgendamento.deletaTodosAgendamentosComEvento(widget.agendamento, widget.dashboardState);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deletarUm() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Atenção'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Tem certeza que deseja deletar este evento?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Sim'),
+              onPressed: () {
+                if(widget.agendamento.evento.dataFinal.difference(widget.agendamento.evento.dataInicial).inDays > 0){
+                  _controladorAgendamento.deletaUmAgendamento(widget.agendamento, widget.dashboardState);
+                } else {
+                  _controladorAgendamento.deletaUmAgendamentoComEvento(widget.agendamento, widget.dashboardState);
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

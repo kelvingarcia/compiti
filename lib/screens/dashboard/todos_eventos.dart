@@ -2,10 +2,14 @@ import 'package:compiti_2/database/agendamento_dao.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:flutter/material.dart';
 
+import 'dashboard.dart';
 import 'item_evento.dart';
 
 class TodosEventos extends StatefulWidget {
   TodosEventosState todosEventosState;
+  DashboardState dashboardState;
+
+  TodosEventos({this.dashboardState});
 
   @override
   TodosEventosState createState() {
@@ -106,7 +110,7 @@ class TodosEventosState extends State<TodosEventos> {
                     height: MediaQuery.of(context).size.height * 0.3,
                   );
                 }
-                return ItemEvento(agendamentos.elementAt(index));
+                return ItemEvento(agendamentos.elementAt(index), widget.dashboardState);
               },
             ),
           ),

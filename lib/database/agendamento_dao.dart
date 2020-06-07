@@ -2,7 +2,6 @@ import 'package:compiti_2/database/evento_dao.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/evento_status.dart';
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'app_database.dart';
@@ -76,6 +75,18 @@ class AgendamentoDao {
         await db.rawQuery('SELECT * FROM $_tableName where id=$id');
     List<Agendamento> agendamentos = await _toList(result);
     return agendamentos.removeLast();
+  }
+
+  Future<void> deleteAgendamento(Agendamento agendamento) async{
+    final Database db = await getDatabase();
+    int id = agendamento.id;
+    await db.rawQuery('DELETE FROM $_tableName where id=$id');
+  }
+
+  Future<void> deleteFromEvento(Evento evento) async {
+    final Database db = await getDatabase();
+    int id = evento.id;
+    await db.rawQuery('DELETE FROM $_tableName where $_evento=$id');
   }
 
   void deleteAll() async {

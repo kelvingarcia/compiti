@@ -1,0 +1,4 @@
+enum Opcao{
+  evento,
+  agendamento
+}

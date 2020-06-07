@@ -5,6 +5,7 @@ import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/evento_dto.dart';
 import 'package:compiti_2/models/evento_status.dart';
+import 'package:compiti_2/screens/dashboard/dashboard.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -61,5 +62,25 @@ class ControladorAgendamento {
     }
     eventoForm.eventosDiaState.atualizaLista();
     eventoForm.todosEventosState.atualizaLista();
+  }
+
+  Future<void> deletaUmAgendamento(Agendamento agendamento, DashboardState dashboardState) async {
+    await _agendamentoDao.deleteAgendamento(agendamento);
+    dashboardState.eventosDia.eventosDiaState.atualizaLista();
+    dashboardState.todosEventos.todosEventosState.atualizaLista();
+  }
+
+  Future<void> deletaUmAgendamentoComEvento(Agendamento agendamento, DashboardState dashboardState) async {
+    await _agendamentoDao.deleteAgendamento(agendamento);
+    await _eventoDao.deleteEvento(agendamento.evento);
+    dashboardState.eventosDia.eventosDiaState.atualizaLista();
+    dashboardState.todosEventos.todosEventosState.atualizaLista();
+  }
+
+  Future<void> deletaTodosAgendamentosComEvento(Agendamento agendamento, DashboardState dashboardState) async {
+    await _agendamentoDao.deleteFromEvento(agendamento.evento);
+    await _eventoDao.deleteEvento(agendamento.evento);
+    dashboardState.eventosDia.eventosDiaState.atualizaLista();
+    dashboardState.todosEventos.todosEventosState.atualizaLista();
   }
 }
