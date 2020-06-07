@@ -1,21 +1,20 @@
-import 'package:flutter/material.dart';
 
 import 'evento.dart';
 import 'evento_status.dart';
 
 class Agendamento {
   final int id;
-  final DateTime data;
-  final TimeOfDay horaInicial;
-  final TimeOfDay horaFinal;
+  final DateTime dataInicial;
+  final DateTime dataFinal;
   final Evento evento;
   final EventoStatus eventoStatus;
 
-  Agendamento(this.id, this.data, this.horaInicial, this.horaFinal, this.evento,
+
+  Agendamento(this.id, this.dataInicial, this.dataFinal, this.evento,
       this.eventoStatus);
 
   @override
   String toString() {
-    return 'Agendamento{id: $id, data: $data, horaInicial: $horaInicial, horaFinal: $horaFinal, eventoStatus: $eventoStatus}';
+    return 'Agendamento{id: $id, dataInicial: $dataInicial, dataFinal: $dataFinal, evento: $evento, eventoStatus: $eventoStatus}';
   }
 }

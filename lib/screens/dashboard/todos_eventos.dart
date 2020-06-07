@@ -19,10 +19,10 @@ class TodosEventosState extends State<TodosEventos> {
   List<Agendamento> agendamentos = List();
   Color _corRealizadas;
   Color _corTextoRealizadas;
-  Color _corNaoRealizadas ;
+  Color _corNaoRealizadas;
+
   Color _corTextoNaoRealizadas;
   bool realizadas = false;
-
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class TodosEventosState extends State<TodosEventos> {
 
   @override
   Widget build(BuildContext context) {
-    if(realizadas){
+    if (realizadas) {
       _corRealizadas = Colors.grey[400];
       _corTextoRealizadas = Colors.black;
       _corNaoRealizadas = Color(0xFF626262);
@@ -54,7 +54,7 @@ class TodosEventosState extends State<TodosEventos> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       realizadas = true;
                     });
@@ -74,7 +74,7 @@ class TodosEventosState extends State<TodosEventos> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       realizadas = false;
                     });
@@ -99,7 +99,7 @@ class TodosEventosState extends State<TodosEventos> {
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.only(left: 16.0, right: 16.0),
-              itemCount: agendamentos.length+1,
+              itemCount: agendamentos.length + 1,
               itemBuilder: (context, int index) {
                 if (index == agendamentos.length) {
                   return Container(
@@ -115,12 +115,12 @@ class TodosEventosState extends State<TodosEventos> {
     );
   }
 
-  void atualizaLista(){
+  void atualizaLista() {
     _dao.findAll().then((lista) {
       setState(() {
+        lista.sort((a, b) => a.dataInicial.compareTo(b.dataInicial));
         agendamentos = lista;
       });
     });
   }
 }
-

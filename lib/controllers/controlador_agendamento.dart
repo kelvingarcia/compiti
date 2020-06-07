@@ -42,9 +42,8 @@ class ControladorAgendamento {
         await _agendamentoDao.save(
           Agendamento(
             0,
-            dataAgendamento,
-            eventoDto.horaInicial,
-            eventoDto.horaFinal,
+            dataAgendamento.add(Duration(hours: eventoDto.horaInicial.hour, minutes: eventoDto.horaInicial.minute)),
+            dataAgendamento.add(Duration(hours: eventoDto.horaFinal.hour, minutes: eventoDto.horaFinal.minute)),
             evento,
             EventoStatus.agendado,
           ),

@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 
 class EventosDia extends StatefulWidget {
   EventosDiaState eventosDiaState;
+  DateTime data;
+
+  EventosDia({this.data});
 
   @override
   EventosDiaState createState() {
@@ -20,6 +23,10 @@ class EventosDiaState extends State<EventosDia> {
 
   @override
   void initState() {
+    if (widget.data == null) {
+      var now = DateTime.now();
+      widget.data = DateTime(now.year, now.month, now.day);
+    }
     this.atualizaLista();
     super.initState();
   }
@@ -35,30 +42,66 @@ class EventosDiaState extends State<EventosDia> {
           .of(context)
           .size
           .width,
-      child: ListView.builder(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0),
-        itemCount: agendamentos.length + 1,
-        itemBuilder: (context, int index) {
-          if (index == agendamentos.length) {
-            return Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.3,
-            );
-          }
-          return ItemEvento(agendamentos.elementAt(index));
-        },
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.07,
+              color: Colors.grey[400],
+              child: Center(
+                child: Text(
+                  widget.data.toString().substring(0, 10),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.only(left: 16.0, right: 16.0),
+              itemCount: agendamentos.length + 1,
+              itemBuilder: (context, int index) {
+                if (index == agendamentos.length) {
+                  return Container(
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.3,
+                  );
+                }
+                return ItemEvento(agendamentos.elementAt(index));
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
   void atualizaLista() {
     _dao.findAll().then((lista) {
-      setState(() {
-        agendamentos = lista;
+      listaDoDia(lista).then((listaDoDia) {
+        setState(() {
+          listaDoDia.sort((a, b) => a.dataInicial.compareTo(b.dataInicial));
+          agendamentos = listaDoDia;
+        });
       });
     });
   }
+
+  Future<List<Agendamento>> listaDoDia(List<Agendamento> lista) async {
+    List<Agendamento> listaDoDia = List();
+    lista.forEach((agendamento) {
+      if ((agendamento.dataInicial.isAfter(widget.data) || agendamento.dataInicial.isAtSameMomentAs(widget.data)) && agendamento.dataInicial.isBefore(widget.data.add(Duration(days: 1)))) {
+        listaDoDia.add(agendamento);
+      }
+    });
+    return listaDoDia;
+  }
+
+
 }
 

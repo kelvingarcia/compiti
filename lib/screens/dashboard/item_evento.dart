@@ -17,10 +17,10 @@ class _ItemEventoState extends State<ItemEvento> {
 
   @override
   Widget build(BuildContext context) {
-    var dataInicial = widget.agendamento.data.toString().substring(0, 10);
+    var dataInicial = widget.agendamento.dataInicial.toString().substring(0, 10);
     var horaInicial =
-        widget.agendamento.horaInicial.toString().substring(10, 15);
-    var horaFinal = widget.agendamento.horaFinal.toString().substring(10, 15);
+        widget.agendamento.dataInicial.toString().substring(11, 16);
+    var horaFinal = widget.agendamento.dataFinal.toString().substring(11, 16);
     return Padding(
       padding: EdgeInsets.only(bottom: 16.0),
       child: Container(
