@@ -77,6 +77,15 @@ class AgendamentoDao {
     return agendamentos.removeLast();
   }
 
+  Future<List<Agendamento>> findByEvento(Evento evento) async {
+    final Database db = await getDatabase();
+    final int id = evento.id;
+    final List<Map<String, dynamic>> result =
+    await db.rawQuery('SELECT * FROM $_tableName where evento=$id');
+    List<Agendamento> agendamentos = await _toList(result);
+    return agendamentos;
+  }
+
   Future<void> deleteAgendamento(Agendamento agendamento) async{
     final Database db = await getDatabase();
     int id = agendamento.id;

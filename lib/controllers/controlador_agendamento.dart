@@ -5,6 +5,7 @@ import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/evento_dto.dart';
 import 'package:compiti_2/models/evento_status.dart';
+import 'package:compiti_2/models/semana.dart';
 import 'package:compiti_2/screens/dashboard/dashboard.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 import 'package:flutter/cupertino.dart';
@@ -82,5 +83,52 @@ class ControladorAgendamento {
     await _eventoDao.deleteEvento(agendamento.evento);
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
+  }
+
+  void diasDaSemana(Evento evento, EventoFormState eventoFormState) async {
+    List<Semana> listaSemana = List();
+    var segunda = Semana.segunda;
+    var terca = Semana.terca;
+    var quarta = Semana.quarta;
+    var quinta = Semana.quinta;
+    var sexta = Semana.sexta;
+    var sabado = Semana.sabado;
+    var domingo = Semana.domingo;
+    List<Agendamento> lista = await _agendamentoDao.findByEvento(evento);
+    lista.forEach((agendamento) {
+      switch(agendamento.dataInicial.weekday){
+        case 1:
+          if(!listaSemana.contains(segunda))
+            listaSemana.add(segunda);
+          break;
+        case 2:
+          if(!listaSemana.contains(terca))
+            listaSemana.add(terca);
+          break;
+        case 3:
+          if(!listaSemana.contains(quarta))
+            listaSemana.add(quarta);
+          break;
+        case 4:
+          if(!listaSemana.contains(quinta))
+            listaSemana.add(quinta);
+          break;
+        case 5:
+          if(!listaSemana.contains(sexta))
+            listaSemana.add(sexta);
+          break;
+        case 6:
+          if(!listaSemana.contains(sabado))
+            listaSemana.add(sabado);
+          break;
+        case 7:
+          if(!listaSemana.contains(domingo))
+            listaSemana.add(domingo);
+          break;
+        default:
+          break;
+      }
+    });
+    eventoFormState.atualizaDiasDaSemana(listaSemana);
   }
 }

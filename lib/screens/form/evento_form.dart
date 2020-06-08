@@ -1,4 +1,5 @@
 import 'package:compiti_2/controllers/controlador_agendamento.dart';
+import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/evento_dto.dart';
 import 'package:compiti_2/models/semana.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
@@ -9,8 +10,9 @@ import 'package:flutter/material.dart';
 class EventoForm extends StatefulWidget {
   final TodosEventosState todosEventosState;
   final EventosDiaState eventosDiaState;
+  final Evento evento;
 
-  EventoForm(this.todosEventosState, this.eventosDiaState);
+  EventoForm(this.todosEventosState, this.eventosDiaState, {this.evento});
 
   @override
   EventoFormState createState() => EventoFormState();
@@ -25,6 +27,23 @@ class EventoFormState extends State<EventoForm> {
   final TextEditingController _dataFinalController = TextEditingController();
   final ControladorAgendamento controladorAgendamento = ControladorAgendamento();
   List<Semana> diasDaSemana = List();
+  List<SemanaButtonState> listaSemanaButton = List();
+
+  @override
+  void initState() {
+    if(widget.evento != null){
+      controladorAgendamento.diasDaSemana(widget.evento, this);
+      _tituloController.text = widget.evento.titulo;
+      _descricaoController.text = widget.evento.descricao;
+      _horaInicialController.text = widget.evento.horaInicial.toString().substring(10, 15);
+      _horaFinalController.text = widget.evento.horaFinal.toString().substring(10, 15);
+      var dataInicialSplit = widget.evento.dataInicial.toString().substring(0, 10).split('-');
+      var dataFinalSplit = widget.evento.dataFinal.toString().substring(0, 10).split('-');
+      _dataInicialController.text = dataInicialSplit.elementAt(2) + '/' + dataInicialSplit.elementAt(1) + '/' + dataInicialSplit.elementAt(0);
+      _dataFinalController.text = dataFinalSplit.elementAt(2) + '/' + dataFinalSplit.elementAt(1) + '/' + dataFinalSplit.elementAt(0);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +223,19 @@ class EventoFormState extends State<EventoForm> {
     );
   }
 
+  void atualizaDiasDaSemana(List<Semana> listaSemana){
+    setState(() {
+      listaSemana.forEach((dia) {
+        listaSemanaButton.forEach((button) {
+          if(dia.index == button.index){
+            button.marcaDia();
+          }
+        });
+      });
+      diasDaSemana = listaSemana;
+    });
+  }
+
   void addDiaDaSemana(int dia){
     switch(dia) {
       case 0:
@@ -268,40 +300,62 @@ class SemanaButton extends StatefulWidget {
   SemanaButton(this._dia, this.eventoFormState);
 
   @override
-  _SemanaButtonState createState() => _SemanaButtonState();
+  SemanaButtonState createState() => SemanaButtonState();
 }
 
-class _SemanaButtonState extends State<SemanaButton> {
+class SemanaButtonState extends State<SemanaButton> {
   String _textoDia;
+  int index;
   Color _color = Colors.white;
   Color _colorSplash = Colors.white;
+  
+  @override
+  void initState() {
+    widget.eventoFormState.listaSemanaButton.add(this);
+    super.initState();
+  }
+  
+  void marcaDia(){
+    setState(() {
+      _color = Colors.cyan;
+      _colorSplash = Colors.cyan;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     switch(widget._dia) {
       case 0:
         _textoDia = 'D';
+        index = 7;
         break;
       case 1:
         _textoDia = 'S';
+        index = 0;
         break;
       case 2:
         _textoDia = 'T';
+        index = 1;
         break;
       case 3:
         _textoDia = 'Q';
+        index = 2;
         break;
       case 4:
         _textoDia = 'Q';
+        index = 3;
         break;
       case 5:
         _textoDia = 'S';
+        index = 4;
         break;
       case 6:
         _textoDia = 'S';
+        index = 5;
         break;
       default:
         _textoDia = 'S';
+        index = 6;
         break;
     }
     return Padding(

@@ -1,6 +1,7 @@
 import 'package:compiti_2/controllers/controlador_agendamento.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/opcao.dart';
+import 'package:compiti_2/screens/form/evento_form.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard.dart';
@@ -67,14 +68,35 @@ class _ItemEventoState extends State<ItemEvento> {
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(right: 16.0),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => Material(
+                                    child: EventoForm(
+                                      widget.dashboardState.todosEventos
+                                          .todosEventosState,
+                                      widget.dashboardState.eventosDia
+                                          .eventosDiaState,
+                                      evento: widget.agendamento.evento,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         InkWell(
                           onTap: () {
-                            if(widget.agendamento.evento.dataFinal.difference(widget.agendamento.evento.dataInicial).inDays > 0){
+                            if (widget.agendamento.evento.dataFinal
+                                    .difference(
+                                        widget.agendamento.evento.dataInicial)
+                                    .inDays >
+                                0) {
                               _deletarMaisDeUm();
                             } else {
                               _deletarUm();
@@ -342,7 +364,8 @@ class _ItemEventoState extends State<ItemEvento> {
             FlatButton(
               child: Text('Sim'),
               onPressed: () {
-                _controladorAgendamento.deletaTodosAgendamentosComEvento(widget.agendamento, widget.dashboardState);
+                _controladorAgendamento.deletaTodosAgendamentosComEvento(
+                    widget.agendamento, widget.dashboardState);
                 Navigator.of(context).pop();
               },
             ),
@@ -362,8 +385,7 @@ class _ItemEventoState extends State<ItemEvento> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
-                    'Tem certeza que deseja deletar este evento?'),
+                Text('Tem certeza que deseja deletar este evento?'),
               ],
             ),
           ),
@@ -377,10 +399,15 @@ class _ItemEventoState extends State<ItemEvento> {
             FlatButton(
               child: Text('Sim'),
               onPressed: () {
-                if(widget.agendamento.evento.dataFinal.difference(widget.agendamento.evento.dataInicial).inDays > 0){
-                  _controladorAgendamento.deletaUmAgendamento(widget.agendamento, widget.dashboardState);
+                if (widget.agendamento.evento.dataFinal
+                        .difference(widget.agendamento.evento.dataInicial)
+                        .inDays >
+                    0) {
+                  _controladorAgendamento.deletaUmAgendamento(
+                      widget.agendamento, widget.dashboardState);
                 } else {
-                  _controladorAgendamento.deletaUmAgendamentoComEvento(widget.agendamento, widget.dashboardState);
+                  _controladorAgendamento.deletaUmAgendamentoComEvento(
+                      widget.agendamento, widget.dashboardState);
                 }
                 Navigator.of(context).pop();
               },
