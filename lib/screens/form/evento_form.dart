@@ -1,4 +1,5 @@
 import 'package:compiti_2/controllers/controlador_agendamento.dart';
+import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/evento_dto.dart';
 import 'package:compiti_2/models/semana.dart';
@@ -11,8 +12,10 @@ class EventoForm extends StatefulWidget {
   final TodosEventosState todosEventosState;
   final EventosDiaState eventosDiaState;
   final Evento evento;
+  final Agendamento agendamento;
 
-  EventoForm(this.todosEventosState, this.eventosDiaState, {this.evento});
+  EventoForm(this.todosEventosState, this.eventosDiaState,
+      {this.evento, this.agendamento});
 
   @override
   EventoFormState createState() => EventoFormState();
@@ -25,22 +28,58 @@ class EventoFormState extends State<EventoForm> {
   final TextEditingController _horaFinalController = TextEditingController();
   final TextEditingController _dataInicialController = TextEditingController();
   final TextEditingController _dataFinalController = TextEditingController();
-  final ControladorAgendamento controladorAgendamento = ControladorAgendamento();
+  final ControladorAgendamento controladorAgendamento =
+      ControladorAgendamento();
   List<Semana> diasDaSemana = List();
   List<SemanaButtonState> listaSemanaButton = List();
 
   @override
   void initState() {
-    if(widget.evento != null){
-      controladorAgendamento.diasDaSemana(widget.evento, this);
+    if (widget.evento != null) {
       _tituloController.text = widget.evento.titulo;
       _descricaoController.text = widget.evento.descricao;
-      _horaInicialController.text = widget.evento.horaInicial.toString().substring(10, 15);
-      _horaFinalController.text = widget.evento.horaFinal.toString().substring(10, 15);
-      var dataInicialSplit = widget.evento.dataInicial.toString().substring(0, 10).split('-');
-      var dataFinalSplit = widget.evento.dataFinal.toString().substring(0, 10).split('-');
-      _dataInicialController.text = dataInicialSplit.elementAt(2) + '/' + dataInicialSplit.elementAt(1) + '/' + dataInicialSplit.elementAt(0);
-      _dataFinalController.text = dataFinalSplit.elementAt(2) + '/' + dataFinalSplit.elementAt(1) + '/' + dataFinalSplit.elementAt(0);
+      _horaInicialController.text =
+          widget.evento.horaInicial.toString().substring(10, 15);
+      _horaFinalController.text =
+          widget.evento.horaFinal.toString().substring(10, 15);
+      if (widget.agendamento == null) {
+        debugPrint('entrou no if do evento');
+        var dataInicialSplit =
+            widget.evento.dataInicial.toString().substring(0, 10).split('-');
+        _dataInicialController.text = dataInicialSplit.elementAt(2) +
+            '/' +
+            dataInicialSplit.elementAt(1) +
+            '/' +
+            dataInicialSplit.elementAt(0);
+        var dataFinalSplit =
+            widget.evento.dataFinal.toString().substring(0, 10).split('-');
+        _dataFinalController.text = dataFinalSplit.elementAt(2) +
+            '/' +
+            dataFinalSplit.elementAt(1) +
+            '/' +
+            dataFinalSplit.elementAt(0);
+        controladorAgendamento.diasDaSemana(widget.evento, this);
+        debugPrint(widget.evento.toString());
+      } else {
+        debugPrint('entrou no else do agendamento');
+        var dataInicialSplit =
+            widget.agendamento.dataInicial.toString().substring(0, 10).split('-');
+        _dataInicialController.text = dataInicialSplit.elementAt(2) +
+            '/' +
+            dataInicialSplit.elementAt(1) +
+            '/' +
+            dataInicialSplit.elementAt(0);
+        var dataFinalSplit =
+            widget.agendamento.dataFinal.toString().substring(0, 10).split('-');
+        _dataFinalController.text = dataFinalSplit.elementAt(2) +
+            '/' +
+            dataFinalSplit.elementAt(1) +
+            '/' +
+            dataFinalSplit.elementAt(0);
+        diasDaSemana = controladorAgendamento.diasDaSemanaAgendamento(
+            widget.agendamento, this);
+        debugPrint(widget.agendamento.toString());
+      }
     }
     super.initState();
   }
@@ -173,37 +212,45 @@ class EventoFormState extends State<EventoForm> {
                                 _horaInicialController.text.split(':');
                             var horaFinalSplit =
                                 _horaFinalController.text.split(':');
-                            controladorAgendamento
-                                .salvarEventoAgendamento(
-                              EventoDto(
-                                _tituloController.text,
-                                _descricaoController.text,
-                                TimeOfDay(
-                                  hour:
-                                      int.parse(horaInicialSplit.elementAt(0)),
-                                  minute:
-                                      int.parse(horaInicialSplit.elementAt(1)),
-                                ),
-                                TimeOfDay(
-                                  hour: int.parse(horaFinalSplit.elementAt(0)),
-                                  minute:
-                                      int.parse(horaFinalSplit.elementAt(1)),
-                                ),
-                                DateTime(
-                                  int.parse(dataInicialSplit.elementAt(2)),
-                                  int.parse(dataInicialSplit.elementAt(1)),
-                                  int.parse(dataInicialSplit.elementAt(0)),
-                                ),
-                                DateTime(
-                                  int.parse(dataFinalSplit.elementAt(2)),
-                                  int.parse(dataFinalSplit.elementAt(1)),
-                                  int.parse(dataFinalSplit.elementAt(0)),
-                                ),
-                                diasDaSemana,
+                            EventoDto eventoDto = EventoDto(
+                              _tituloController.text,
+                              _descricaoController.text,
+                              TimeOfDay(
+                                hour: int.parse(horaInicialSplit.elementAt(0)),
+                                minute:
+                                    int.parse(horaInicialSplit.elementAt(1)),
                               ),
-                              widget,
-                              context
+                              TimeOfDay(
+                                hour: int.parse(horaFinalSplit.elementAt(0)),
+                                minute: int.parse(horaFinalSplit.elementAt(1)),
+                              ),
+                              DateTime(
+                                int.parse(dataInicialSplit.elementAt(2)),
+                                int.parse(dataInicialSplit.elementAt(1)),
+                                int.parse(dataInicialSplit.elementAt(0)),
+                              ),
+                              DateTime(
+                                int.parse(dataFinalSplit.elementAt(2)),
+                                int.parse(dataFinalSplit.elementAt(1)),
+                                int.parse(dataFinalSplit.elementAt(0)),
+                              ),
+                              diasDaSemana,
                             );
+                            if (widget.evento == null) {
+                              controladorAgendamento.salvarEventoAgendamento(
+                                  eventoDto, widget, context);
+                            } else {
+                              if (widget.agendamento == null) {
+                                controladorAgendamento.editarEventoAgendamento(
+                                    eventoDto, widget, context, widget.evento);
+                              } else {
+                                controladorAgendamento.editarSomenteAgendamento(
+                                    eventoDto,
+                                    widget,
+                                    context,
+                                    widget.agendamento);
+                              }
+                            }
                             Navigator.pop(context);
                           },
                         ),
@@ -223,11 +270,11 @@ class EventoFormState extends State<EventoForm> {
     );
   }
 
-  void atualizaDiasDaSemana(List<Semana> listaSemana){
+  void atualizaDiasDaSemana(List<Semana> listaSemana) {
     setState(() {
       listaSemana.forEach((dia) {
         listaSemanaButton.forEach((button) {
-          if(dia.index == button.index){
+          if (dia.index == button.index) {
             button.marcaDia();
           }
         });
@@ -236,8 +283,8 @@ class EventoFormState extends State<EventoForm> {
     });
   }
 
-  void addDiaDaSemana(int dia){
-    switch(dia) {
+  void addDiaDaSemana(int dia) {
+    switch (dia) {
       case 0:
         diasDaSemana.add(Semana.domingo);
         break;
@@ -264,8 +311,8 @@ class EventoFormState extends State<EventoForm> {
     }
   }
 
-  void removeDiaDaSemana(int dia){
-    switch(dia) {
+  void removeDiaDaSemana(int dia) {
+    switch (dia) {
       case 0:
         diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.domingo));
         break;
@@ -308,23 +355,12 @@ class SemanaButtonState extends State<SemanaButton> {
   int index;
   Color _color = Colors.white;
   Color _colorSplash = Colors.white;
-  
-  @override
-  void initState() {
-    widget.eventoFormState.listaSemanaButton.add(this);
-    super.initState();
-  }
-  
-  void marcaDia(){
-    setState(() {
-      _color = Colors.cyan;
-      _colorSplash = Colors.cyan;
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
-    switch(widget._dia) {
+  void initState() {
+    super.initState();
+    widget.eventoFormState.listaSemanaButton.add(this);
+    switch (widget._dia) {
       case 0:
         _textoDia = 'D';
         index = 7;
@@ -358,6 +394,25 @@ class SemanaButtonState extends State<SemanaButton> {
         index = 6;
         break;
     }
+    if (widget.eventoFormState.diasDaSemana != null) {
+      widget.eventoFormState.diasDaSemana.forEach((dia) {
+        if (dia.index == this.index) {
+          _color = Colors.cyan;
+          _colorSplash = Colors.cyan;
+        }
+      });
+    }
+  }
+
+  void marcaDia() {
+    setState(() {
+      _color = Colors.cyan;
+      _colorSplash = Colors.cyan;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Material(
@@ -368,7 +423,7 @@ class SemanaButtonState extends State<SemanaButton> {
           customBorder: CircleBorder(),
           onTap: () {
             setState(() {
-              if(_color == Colors.white) {
+              if (_color == Colors.white) {
                 _color = Colors.cyan;
                 _colorSplash = Colors.cyan;
                 widget.eventoFormState.addDiaDaSemana(widget._dia);

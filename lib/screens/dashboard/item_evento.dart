@@ -70,19 +70,27 @@ class _ItemEventoState extends State<ItemEvento> {
                           padding: EdgeInsets.only(right: 16.0),
                           child: InkWell(
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => Material(
-                                    child: EventoForm(
-                                      widget.dashboardState.todosEventos
-                                          .todosEventosState,
-                                      widget.dashboardState.eventosDia
-                                          .eventosDiaState,
-                                      evento: widget.agendamento.evento,
+                              if (widget.agendamento.evento.dataFinal
+                                  .difference(
+                                  widget.agendamento.evento.dataInicial)
+                                  .inDays >
+                                  0) {
+                                _editarMaisDeUm();
+                              } else {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => Material(
+                                      child: EventoForm(
+                                        widget.dashboardState.todosEventos
+                                            .todosEventosState,
+                                        widget.dashboardState.eventosDia
+                                            .eventosDiaState,
+                                        evento: widget.agendamento.evento,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
+                              }
                             },
                             child: Icon(
                               Icons.edit,
@@ -335,6 +343,62 @@ class _ItemEventoState extends State<ItemEvento> {
         break;
       case Opcao.agendamento:
         _deletarUm();
+        break;
+    }
+  }
+
+  Future<void> _editarMaisDeUm() async {
+    switch (await showDialog<Opcao>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Selecione uma opção: '),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, Opcao.agendamento);
+                },
+                child: const Text('Editar somente esse evento'),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, Opcao.evento);
+                },
+                child: const Text('Editar todos os eventos dessa série'),
+              ),
+            ],
+          );
+        })) {
+      case Opcao.evento:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Material(
+              child: EventoForm(
+                widget.dashboardState.todosEventos
+                    .todosEventosState,
+                widget.dashboardState.eventosDia
+                    .eventosDiaState,
+                evento: widget.agendamento.evento,
+              ),
+            ),
+          ),
+        );
+        break;
+      case Opcao.agendamento:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Material(
+              child: EventoForm(
+                widget.dashboardState.todosEventos
+                    .todosEventosState,
+                widget.dashboardState.eventosDia
+                    .eventosDiaState,
+                evento: widget.agendamento.evento,
+                agendamento: widget.agendamento,
+              ),
+            ),
+          ),
+        );
         break;
     }
   }

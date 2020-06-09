@@ -28,6 +28,12 @@ class EventoDao {
     return db.insert(_tableName, eventoMap);
   }
 
+  void editar(Evento evento) async {
+    final Database db = await getDatabase();
+    Map<String, dynamic> eventoMap = _toMap(evento);
+    await db.update(_tableName, eventoMap, where: "id = ?", whereArgs: [evento.id]);
+  }
+
   Future<List<Evento>> findAll() async {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result = await db.query(_tableName);
