@@ -1,5 +1,6 @@
 import 'package:compiti_2/database/agendamento_dao.dart';
 import 'package:compiti_2/models/agendamento.dart';
+import 'package:compiti_2/models/evento_status.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard.dart';
@@ -21,6 +22,7 @@ class TodosEventos extends StatefulWidget {
 class TodosEventosState extends State<TodosEventos> {
   AgendamentoDao _dao = AgendamentoDao();
   List<Agendamento> agendamentos = List();
+  List<Agendamento> listaAux = List();
   Color _corRealizadas;
   Color _corTextoRealizadas;
   Color _corNaoRealizadas;
@@ -61,6 +63,7 @@ class TodosEventosState extends State<TodosEventos> {
                   onTap: () {
                     setState(() {
                       realizadas = true;
+                      this.fitraLista();
                     });
                   },
                   child: Container(
@@ -81,6 +84,7 @@ class TodosEventosState extends State<TodosEventos> {
                   onTap: () {
                     setState(() {
                       realizadas = false;
+                      this.fitraLista();
                     });
                   },
                   child: Container(
@@ -103,14 +107,14 @@ class TodosEventosState extends State<TodosEventos> {
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.only(left: 16.0, right: 16.0),
-              itemCount: agendamentos.length + 1,
+              itemCount: listaAux.length + 1,
               itemBuilder: (context, int index) {
-                if (index == agendamentos.length) {
+                if (index == listaAux.length) {
                   return Container(
                     height: MediaQuery.of(context).size.height * 0.3,
                   );
                 }
-                return ItemEvento(agendamentos.elementAt(index), widget.dashboardState);
+                return ItemEvento(listaAux.elementAt(index), widget.dashboardState);
               },
             ),
           ),
@@ -124,7 +128,20 @@ class TodosEventosState extends State<TodosEventos> {
       setState(() {
         lista.sort((a, b) => a.dataInicial.compareTo(b.dataInicial));
         agendamentos = lista;
+        this.fitraLista();
+        widget.dashboardState.atualizouBanco = true;
       });
+    });
+  }
+
+  void fitraLista(){
+    setState(() {      
+      listaAux.clear();
+      if(realizadas){
+        listaAux = agendamentos.where((agendamento) => agendamento.eventoStatus == EventoStatus.feito).toList();
+      } else {
+        listaAux = agendamentos.where((agendamento) => agendamento.eventoStatus != EventoStatus.feito).toList();
+      }
     });
   }
 }

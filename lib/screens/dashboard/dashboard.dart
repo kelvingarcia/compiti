@@ -20,9 +20,10 @@ class Dashboard extends StatefulWidget {
 }
 
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
+  bool atualizouBanco = false;
+
   TodosEventos todosEventos = TodosEventos();
   EventosDia eventosDia = EventosDia();
-  List<ItemEventoState> listaItemEvento = List();
 
   ToggleStatus toggleStatus;
   AnimationController _controllerDia;

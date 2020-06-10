@@ -42,11 +42,11 @@ class ItemEventoState extends State<ItemEvento> {
       default:
         break;
     }
-    widget.dashboardState.listaItemEvento.add(this);
   }
 
-  void atualizaPosicaoStatus(){
-    setState(() {   
+  @override
+  Widget build(BuildContext context) {
+    if(widget.dashboardState.atualizouBanco){
       switch(widget.agendamento.eventoStatus){
         case EventoStatus.agendado:
           _status = 'Agendado';
@@ -63,12 +63,7 @@ class ItemEventoState extends State<ItemEvento> {
         default:
           break;
       }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    debugPrint('buildou o item evento');
+    }
     var dataInicial =
         widget.agendamento.dataInicial.toString().substring(0, 10);
     var horaInicial =
@@ -224,6 +219,7 @@ class ItemEventoState extends State<ItemEvento> {
                         left: 35,
                         child: GestureDetector(
                           onTap: () {
+                            widget.dashboardState.atualizouBanco = false;
                             setState(() {
                               _toggleLeft = 2;
                               _status = 'Feito';
@@ -238,6 +234,7 @@ class ItemEventoState extends State<ItemEvento> {
                         left: 125,
                         child: GestureDetector(
                           onTap: () {
+                            widget.dashboardState.atualizouBanco = false;
                             setState(() {
                               _toggleLeft = 95;
                               _status = 'Agendado';
@@ -252,6 +249,7 @@ class ItemEventoState extends State<ItemEvento> {
                         left: 225,
                         child: GestureDetector(
                           onTap: () {
+                            widget.dashboardState.atualizouBanco = false;
                             setState(() {
                               _toggleLeft = 202;
                               _status = 'Não feito';
@@ -267,6 +265,7 @@ class ItemEventoState extends State<ItemEvento> {
                         left: _toggleLeft,
                         child: GestureDetector(
                           onHorizontalDragUpdate: (dragInfo) {
+                            widget.dashboardState.atualizouBanco = false;
                             dragCount++;
                             setState(() {
                               if (dragInfo.delta.dx < 0) {
@@ -366,7 +365,7 @@ class ItemEventoState extends State<ItemEvento> {
   }
 
   void atualizaStatus(){
-    Future.delayed(Duration(seconds: 2), (){
+    Future.delayed(Duration(seconds: 1), (){
       _controladorAgendamento.editaStatus(widget.agendamento, _status, widget.dashboardState);
     });
   }

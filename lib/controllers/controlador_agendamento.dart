@@ -222,13 +222,6 @@ class ControladorAgendamento {
         break;
     }
     _agendamentoDao.editar(agendamento);
-    // Future.delayed(Duration(milliseconds: 100), (){
-    //   dashboardState.eventosDia.eventosDiaState.atualizaLista();
-    //   dashboardState.todosEventos.todosEventosState.atualizaLista();
-    //   Future.delayed(Duration(milliseconds: 50), (){
-    //     dashboardState.listaItemEvento.forEach((itemEvento) => itemEvento.atualizaPosicaoStatus());
-    //   });
-    // });
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
   }

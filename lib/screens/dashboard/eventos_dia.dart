@@ -89,6 +89,7 @@ class EventosDiaState extends State<EventosDia> {
         setState(() {
           listaDoDia.sort((a, b) => a.dataInicial.compareTo(b.dataInicial));
           agendamentos = listaDoDia;
+          widget.dashboardState.atualizouBanco = true;
         });
       });
     });
