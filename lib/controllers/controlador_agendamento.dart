@@ -135,7 +135,6 @@ class ControladorAgendamento {
           minutes: eventoDto.horaFinal.minute));
       List<Agendamento> listaAgendamento =
           await _agendamentoDao.findByEvento(evento);
-      debugPrint(listaAgendamento.toString());
       listaAgendamento.forEach((agendamento) {
         bool diaValidado = false;
         eventoDto.diasDaSemana.forEach((dia) {
@@ -206,6 +205,32 @@ class ControladorAgendamento {
     }
     eventoForm.eventosDiaState.atualizaLista();
     eventoForm.todosEventosState.atualizaLista();
+  }
+
+  Future<void> editaStatus(Agendamento agendamento, String status, DashboardState dashboardState) async {
+    switch(status){
+      case 'Agendado':
+        agendamento.eventoStatus = EventoStatus.agendado;
+        break;
+      case 'Não feito':
+        agendamento.eventoStatus = EventoStatus.nao_feito;
+        break;
+      case 'Feito':
+        agendamento.eventoStatus = EventoStatus.feito;
+        break;
+      default: 
+        break;
+    }
+    _agendamentoDao.editar(agendamento);
+    // Future.delayed(Duration(milliseconds: 100), (){
+    //   dashboardState.eventosDia.eventosDiaState.atualizaLista();
+    //   dashboardState.todosEventos.todosEventosState.atualizaLista();
+    //   Future.delayed(Duration(milliseconds: 50), (){
+    //     dashboardState.listaItemEvento.forEach((itemEvento) => itemEvento.atualizaPosicaoStatus());
+    //   });
+    // });
+    dashboardState.eventosDia.eventosDiaState.atualizaLista();
+    dashboardState.todosEventos.todosEventosState.atualizaLista();
   }
 
   Future<void> deletaUmAgendamento(
@@ -287,7 +312,6 @@ class ControladorAgendamento {
         if (!listaSemana.contains(segunda)) listaSemana.add(segunda);
         break;
       case 2:
-        debugPrint('entrou no case');
         if (!listaSemana.contains(terca)) listaSemana.add(terca);
         break;
       case 3:

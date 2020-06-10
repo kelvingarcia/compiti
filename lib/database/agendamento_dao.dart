@@ -77,7 +77,7 @@ class AgendamentoDao {
     return agendamentos.removeLast();
   }
 
-  void editar(Agendamento agendamento) async {
+  Future<void> editar(Agendamento agendamento) async {
     final Database db = await getDatabase();
     Map<String, dynamic> agendamentoMap = _toMap(agendamento);
     await db.update(_tableName, agendamentoMap, where: "id = ?", whereArgs: [agendamento.id]);

@@ -15,4 +15,8 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Implementar controller com EventoDto e Agendamento
+- Implementar mudança de status do agendamento ao refatorar o código e duplicar os item eventos.
+- Implementar a geração de lista de eventos realizados x não realizados.
+- Exibição de snack bar ao inserir, alterar e deletar.
+- Validação de erros: formulário, datas e dias da semana.
+- Implementação da feature de relatórios.

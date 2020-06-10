@@ -43,7 +43,6 @@ class EventoFormState extends State<EventoForm> {
       _horaFinalController.text =
           widget.evento.horaFinal.toString().substring(10, 15);
       if (widget.agendamento == null) {
-        debugPrint('entrou no if do evento');
         var dataInicialSplit =
             widget.evento.dataInicial.toString().substring(0, 10).split('-');
         _dataInicialController.text = dataInicialSplit.elementAt(2) +
@@ -59,9 +58,7 @@ class EventoFormState extends State<EventoForm> {
             '/' +
             dataFinalSplit.elementAt(0);
         controladorAgendamento.diasDaSemana(widget.evento, this);
-        debugPrint(widget.evento.toString());
       } else {
-        debugPrint('entrou no else do agendamento');
         var dataInicialSplit =
             widget.agendamento.dataInicial.toString().substring(0, 10).split('-');
         _dataInicialController.text = dataInicialSplit.elementAt(2) +
@@ -78,7 +75,6 @@ class EventoFormState extends State<EventoForm> {
             dataFinalSplit.elementAt(0);
         diasDaSemana = controladorAgendamento.diasDaSemanaAgendamento(
             widget.agendamento, this);
-        debugPrint(widget.agendamento.toString());
       }
     }
     super.initState();

@@ -1,6 +1,7 @@
 import 'package:compiti_2/models/toggle_status.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
+import 'package:compiti_2/screens/dashboard/item_evento.dart';
 import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 
@@ -21,6 +22,7 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   TodosEventos todosEventos = TodosEventos();
   EventosDia eventosDia = EventosDia();
+  List<ItemEventoState> listaItemEvento = List();
 
   ToggleStatus toggleStatus;
   AnimationController _controllerDia;

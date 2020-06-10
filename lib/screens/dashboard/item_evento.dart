@@ -1,5 +1,6 @@
 import 'package:compiti_2/controllers/controlador_agendamento.dart';
 import 'package:compiti_2/models/agendamento.dart';
+import 'package:compiti_2/models/evento_status.dart';
 import 'package:compiti_2/models/opcao.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +14,61 @@ class ItemEvento extends StatefulWidget {
   ItemEvento(this.agendamento, this.dashboardState);
 
   @override
-  _ItemEventoState createState() => _ItemEventoState();
+  ItemEventoState createState() => ItemEventoState();
 }
 
-class _ItemEventoState extends State<ItemEvento> {
+class ItemEventoState extends State<ItemEvento> {
   double _toggleLeft = 95;
   String _status = 'Agendado';
   int dragCount = 0;
   ControladorAgendamento _controladorAgendamento = ControladorAgendamento();
 
   @override
+  void initState(){
+    super.initState();
+    switch(widget.agendamento.eventoStatus){
+      case EventoStatus.agendado:
+        _status = 'Agendado';
+        _toggleLeft = 95;
+        break;
+      case EventoStatus.feito:
+        _status = 'Feito';
+        _toggleLeft = 2;
+        break;
+      case EventoStatus.nao_feito:
+        _status = 'Não feito';
+        _toggleLeft = 202;
+        break;
+      default:
+        break;
+    }
+    widget.dashboardState.listaItemEvento.add(this);
+  }
+
+  void atualizaPosicaoStatus(){
+    setState(() {   
+      switch(widget.agendamento.eventoStatus){
+        case EventoStatus.agendado:
+          _status = 'Agendado';
+          _toggleLeft = 95;
+          break;
+        case EventoStatus.feito:
+          _status = 'Feito';
+          _toggleLeft = 2;
+          break;
+        case EventoStatus.nao_feito:
+          _status = 'Não feito';
+          _toggleLeft = 202;
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    debugPrint('buildou o item evento');
     var dataInicial =
         widget.agendamento.dataInicial.toString().substring(0, 10);
     var horaInicial =
@@ -182,6 +227,7 @@ class _ItemEventoState extends State<ItemEvento> {
                             setState(() {
                               _toggleLeft = 2;
                               _status = 'Feito';
+                              this.atualizaStatus();
                             });
                           },
                           child: Text('Feito'),
@@ -195,6 +241,7 @@ class _ItemEventoState extends State<ItemEvento> {
                             setState(() {
                               _toggleLeft = 95;
                               _status = 'Agendado';
+                              this.atualizaStatus();
                             });
                           },
                           child: Text('Agendado'),
@@ -208,6 +255,7 @@ class _ItemEventoState extends State<ItemEvento> {
                             setState(() {
                               _toggleLeft = 202;
                               _status = 'Não feito';
+                              this.atualizaStatus();
                             });
                           },
                           child: Text('Não feito'),
@@ -284,6 +332,7 @@ class _ItemEventoState extends State<ItemEvento> {
                                 }
                               }
                               dragCount = 0;
+                              this.atualizaStatus();
                             });
                           },
                           child: DecoratedBox(
@@ -314,6 +363,12 @@ class _ItemEventoState extends State<ItemEvento> {
         ),
       ),
     );
+  }
+
+  void atualizaStatus(){
+    Future.delayed(Duration(seconds: 2), (){
+      _controladorAgendamento.editaStatus(widget.agendamento, _status, widget.dashboardState);
+    });
   }
 
   Future<void> _deletarMaisDeUm() async {

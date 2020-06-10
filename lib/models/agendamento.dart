@@ -7,7 +7,7 @@ class Agendamento {
   final DateTime dataInicial;
   final DateTime dataFinal;
   final Evento evento;
-  final EventoStatus eventoStatus;
+  EventoStatus eventoStatus;
 
 
   Agendamento(this.id, this.dataInicial, this.dataFinal, this.evento,
