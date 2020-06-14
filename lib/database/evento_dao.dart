@@ -1,4 +1,5 @@
 import 'package:compiti_2/models/evento.dart';
+import 'package:compiti_2/models/semana.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -12,7 +13,8 @@ class EventoDao {
       '$_horaInicial TEXT,'
       '$_horaFinal TEXT,'
       '$_dataInicial TEXT,'
-      '$_dataFinal TEXT)';
+      '$_dataFinal TEXT,'
+      '$_diasDaSemana TEXT)';
   static const String _tableName = 'events';
   static const String _id = 'id';
   static const String _titulo = 'titulo';
@@ -21,6 +23,7 @@ class EventoDao {
   static const String _horaFinal = 'hora_final';
   static const String _dataInicial = 'data_inicial';
   static const String _dataFinal = 'data_final';
+  static const String _diasDaSemana = 'dias_da_semana';
 
   Future<int> save(Evento evento) async {
     final Database db = await getDatabase();
@@ -56,6 +59,7 @@ class EventoDao {
     eventoMap[_horaFinal] = evento.horaFinal.toString();
     eventoMap[_dataInicial] = evento.dataInicial.toString();
     eventoMap[_dataFinal] = evento.dataFinal.toString();
+    eventoMap[_diasDaSemana] = evento.diasDaSemana.toString();
     return eventoMap;
   }
 
@@ -68,6 +72,11 @@ class EventoDao {
           row[_dataFinal].toString().substring(0, 10).split('-');
       var horaInicialSplit = row[_horaInicial].toString().substring(10, 15).split(':');
       var horaFinalSplit = row[_horaFinal].toString().substring(10, 15).split(':');
+      List<Semana> diasDaSemana = List();
+      var diasDaSemanaString = row[_diasDaSemana].toString();
+      diasDaSemanaString.substring(1, diasDaSemanaString.length-1).split(',').forEach((diaString) {
+        diasDaSemana.add(Semana.values.firstWhere((valor) => valor.toString() == diaString.trim()));
+      });
       final Evento evento = Evento(
         row[_id],
         row[_titulo],
@@ -94,6 +103,7 @@ class EventoDao {
           int.parse(dataFinalSplit.elementAt(1)),
           int.parse(dataFinalSplit.elementAt(2)),
         ),
+        diasDaSemana,
       );
       eventos.add(evento);
     }

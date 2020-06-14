@@ -3,7 +3,7 @@ import 'evento.dart';
 import 'evento_status.dart';
 
 class Agendamento {
-  final int id;
+  int id;
   final DateTime dataInicial;
   final DateTime dataFinal;
   final Evento evento;

@@ -1,7 +1,7 @@
 import 'package:compiti_2/models/toggle_status.dart';
+import 'package:compiti_2/screens/dashboard/barra_inferior_info.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
-import 'package:compiti_2/screens/dashboard/item_evento.dart';
 import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 
@@ -21,9 +21,10 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   bool atualizouBanco = false;
-
+  
   TodosEventos todosEventos = TodosEventos();
   EventosDia eventosDia = EventosDia();
+  BarraInferiorInfo barraInferiorInfo = BarraInferiorInfo();
 
   ToggleStatus toggleStatus;
   AnimationController _controllerDia;
@@ -44,6 +45,9 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   bool forwardAnimation = false;
   bool eventosAnimation = false;
 
+  double _bottomSnackBar = -50;
+  double _bottomFloatButton = 15;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +65,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     );
     eventosDia.dashboardState = this;
     todosEventos.dashboardState = this;
+    barraInferiorInfo.dashboardState = this;
   }
 
   @override
@@ -296,14 +301,17 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             ),
           ),
         ),
-        Positioned(
-          bottom: 15,
+        AnimatedPositioned(
+          duration: Duration(milliseconds: 300),
+          bottom: _bottomFloatButton,
           width: MediaQuery.of(context).size.width,
           child: Center(
             child: FloatingActionButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => Material(child: EventoForm(todosEventos.todosEventosState, eventosDia.eventosDiaState)),
+                  builder: (context) => Material(
+                      child: EventoForm(todosEventos.todosEventosState,
+                          eventosDia.eventosDiaState)),
                 ),
               ),
               backgroundColor: Colors.cyan,
@@ -311,8 +319,37 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             ),
           ),
         ),
+        AnimatedPositioned(
+          duration: Duration(milliseconds: 300),
+          bottom: _bottomSnackBar,
+          left: 0,
+          child: barraInferiorInfo,
+        ),
       ],
     );
+  }
+
+  void toggleSnackBar() {
+    setState(() {
+      if (_bottomFloatButton == 15) {
+        _bottomSnackBar = 0;
+        _bottomFloatButton = 60;
+      } else {
+        _bottomSnackBar = -50;
+        _bottomFloatButton = 0;
+      }
+    });
+    Future.delayed(Duration(seconds: 5), () {
+      setState(() {
+        if (_bottomFloatButton == 15) {
+          _bottomSnackBar = 0;
+          _bottomFloatButton = 60;
+        } else {
+          _bottomSnackBar = -50;
+          _bottomFloatButton = 15;
+        }
+      });
+    });
   }
 
   void diaFromEventos() {
