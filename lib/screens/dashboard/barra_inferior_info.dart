@@ -17,12 +17,14 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
   Color _buttonColor;
   ControladorAgendamento _controladorAgendamento = ControladorAgendamento();
   Agendamento agendamento;
+  List<Agendamento> listaAgendamentos;
   Agendamento agendamentoNew;
   String texto = '';
   OpcaoSnackBar opcaoSnackBar;
+  bool desfez = false;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     widget.barraInferiorInfoState = this;
   }
@@ -60,44 +62,51 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
     );
   }
 
-  void toggleOpcao(OpcaoSnackBar opcaoSnackBar, Agendamento agendamento, {Agendamento agendamentoNew}){
-    setState(() {
-      if(agendamento != null){
-        this.agendamento = agendamento;
-      }
-      if(agendamentoNew != null){
-        this.agendamentoNew = agendamentoNew;
-      }
-      this.opcaoSnackBar = opcaoSnackBar;
-      switch(opcaoSnackBar){        
-        case OpcaoSnackBar.deletou_todos:
-          texto = 'O evento ' + agendamento.evento.titulo + ' foi deletado.';
-          _buttonColor = Colors.cyan;
-          break;
-        case OpcaoSnackBar.deletou_um:
-          texto = 'O evento ' + agendamento.evento.titulo + ' foi deletado.';
-          _buttonColor = Colors.cyan;
-          break;
-        case OpcaoSnackBar.editou_todos:
-          texto = 'O evento ' + agendamento.evento.titulo + ' foi editado.';
-          _buttonColor = Colors.cyan;
-          break;
-        case OpcaoSnackBar.editou_um:
-          texto = 'O evento ' + agendamento.evento.titulo + ' foi editado.';
-          _buttonColor = Colors.cyan;
-          break;
-        case OpcaoSnackBar.adicionou:
-          texto = 'Item foi adicionado.';
-          _buttonColor = Colors.black;
-          break;
-      }
-      widget.dashboardState.toggleSnackBar();
-    });
+  void toggleOpcao(OpcaoSnackBar opcaoSnackBar, {Agendamento agendamento,
+      Agendamento agendamentoNew, List<Agendamento> listaAgendamentos}) {
+    if (!desfez) {
+      setState(() {
+        if (agendamento != null) {
+          this.agendamento = agendamento;
+        }
+        if (agendamentoNew != null) {
+          this.agendamentoNew = agendamentoNew;
+        }
+        if (listaAgendamentos != null) {
+          this.listaAgendamentos = listaAgendamentos;
+          this.agendamento = listaAgendamentos[0];
+        }
+        this.opcaoSnackBar = opcaoSnackBar;
+        switch (opcaoSnackBar) {
+          case OpcaoSnackBar.deletou_todos:
+            texto = 'O evento ' + listaAgendamentos[0].evento.titulo + ' foi deletado.';
+            _buttonColor = Colors.cyan;
+            break;
+          case OpcaoSnackBar.deletou_um:
+            texto = 'O evento ' + agendamento.evento.titulo + ' foi deletado.';
+            _buttonColor = Colors.cyan;
+            break;
+          case OpcaoSnackBar.editou_todos:
+            texto = 'O evento ' + listaAgendamentos[0].evento.titulo + ' foi editado.';
+            _buttonColor = Colors.cyan;
+            break;
+          case OpcaoSnackBar.editou_um:
+            texto = 'O evento ' + agendamento.evento.titulo + ' foi editado.';
+            _buttonColor = Colors.cyan;
+            break;
+          case OpcaoSnackBar.adicionou:
+            texto = 'Evento '+ agendamento.evento.titulo + ' foi adicionado.';
+            _buttonColor = Colors.black;
+            break;
+        }
+        widget.dashboardState.toggleSnackBar();
+      });
+    }
   }
 
   Future<void> _dialogo() async {
     var textoDialogo;
-    switch(opcaoSnackBar){      
+    switch (opcaoSnackBar) {
       case OpcaoSnackBar.adicionou:
         break;
       case OpcaoSnackBar.deletou_todos:
@@ -122,8 +131,10 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
-                    'Tem certeza que deseja desfazer a ' + textoDialogo + agendamento.evento.titulo + '?'),
+                Text('Tem certeza que deseja desfazer a ' +
+                    textoDialogo +
+                    agendamento.evento.titulo +
+                    '?'),
               ],
             ),
           ),
@@ -137,20 +148,32 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
             FlatButton(
               child: Text('Sim'),
               onPressed: () {
-                switch(this.opcaoSnackBar) {                  
+                switch (this.opcaoSnackBar) {
                   case OpcaoSnackBar.deletou_todos:
-                    _controladorAgendamento.salvarEventoAgendamento(agendamento.evento, context, widget.dashboardState);
+                    this.desfez = true;
+                    _controladorAgendamento.salvarPorLista(context, widget.dashboardState, this.listaAgendamentos);
+                    this.operacaoDesfeita();
                     break;
                   case OpcaoSnackBar.deletou_um:
-                    _controladorAgendamento.salvarSomenteAgendamento(context, widget.dashboardState, agendamento);
+                    this.desfez = true;
+                    _controladorAgendamento.salvarSomenteAgendamento(
+                        context, widget.dashboardState, agendamento);
+                    this.operacaoDesfeita();
                     break;
                   case OpcaoSnackBar.editou_todos:
-                    _controladorAgendamento.deletaTodosAgendamentosComEvento(agendamento, widget.dashboardState);
-                    _controladorAgendamento.salvarEventoAgendamento(agendamento.evento, context, widget.dashboardState);
+                    this.desfez = true;
+                    _controladorAgendamento.deletaTodosAgendamentosComEvento(
+                        agendamentoNew, widget.dashboardState);
+                    _controladorAgendamento.salvarPorLista(context, widget.dashboardState, this.listaAgendamentos);
+                    this.operacaoDesfeita();
                     break;
                   case OpcaoSnackBar.editou_um:
-                    _controladorAgendamento.deletaTodosAgendamentosComEvento(agendamentoNew, widget.dashboardState);
-                    _controladorAgendamento.salvarSomenteAgendamento(context, widget.dashboardState, agendamento);                    
+                    this.desfez = true;
+                    _controladorAgendamento.deletaTodosAgendamentosComEvento(
+                        agendamentoNew, widget.dashboardState);
+                    _controladorAgendamento.salvarSomenteAgendamento(
+                        context, widget.dashboardState, agendamento);
+                    this.operacaoDesfeita();
                     break;
                   case OpcaoSnackBar.adicionou:
                     // TODO: Handle this case.
@@ -163,5 +186,13 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
         );
       },
     );
+  }
+
+  void operacaoDesfeita() {
+    setState(() {
+      texto = 'Operação desfeita.';
+      _buttonColor = Colors.black;
+      widget.dashboardState.toggleSnackBar();
+    });
   }
 }

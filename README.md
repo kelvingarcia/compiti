@@ -15,8 +15,11 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Implementar mudança de status do agendamento ao refatorar o código e duplicar os item eventos.
-- Implementar a geração de lista de eventos realizados x não realizados.
-- Exibição de snack bar ao inserir, alterar e deletar.
 - Validação de erros: formulário, datas e dias da semana.
 - Implementação da feature de relatórios.
+- Implementar animação ao evento mudar de realizado para não realizado e vice-versa.
+
+Bugs:
+
+- Reduzir chamadas de atualizarLista para evitar consultas nulas no BD ao desfazer operações.
+- Erro ao realizar mais uma operação em menos de 5 segundos.

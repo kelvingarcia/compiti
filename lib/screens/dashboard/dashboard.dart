@@ -331,23 +331,14 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
   void toggleSnackBar() {
     setState(() {
-      if (_bottomFloatButton == 15) {
-        _bottomSnackBar = 0;
-        _bottomFloatButton = 60;
-      } else {
-        _bottomSnackBar = -50;
-        _bottomFloatButton = 0;
-      }
+      _bottomSnackBar = 0;
+      _bottomFloatButton = 60;
     });
     Future.delayed(Duration(seconds: 5), () {
       setState(() {
-        if (_bottomFloatButton == 15) {
-          _bottomSnackBar = 0;
-          _bottomFloatButton = 60;
-        } else {
-          _bottomSnackBar = -50;
-          _bottomFloatButton = 15;
-        }
+        _bottomSnackBar = -50;
+        _bottomFloatButton = 15;
+        barraInferiorInfo.barraInferiorInfoState.desfez = false;
       });
     });
   }
