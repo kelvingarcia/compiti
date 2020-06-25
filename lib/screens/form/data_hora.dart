@@ -1,0 +1,4 @@
+enum DataHora{
+  data,
+  hora
+}
