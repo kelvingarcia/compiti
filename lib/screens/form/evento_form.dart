@@ -1,7 +1,6 @@
 import 'package:compiti_2/controllers/controlador_agendamento.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/evento_dto.dart';
 import 'package:compiti_2/models/semana.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
 import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
@@ -9,6 +8,8 @@ import 'package:compiti_2/screens/form/campo_data_hora.dart';
 import 'package:compiti_2/screens/form/data_hora.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 
 class EventoForm extends StatefulWidget {
   final TodosEventosState todosEventosState;
@@ -25,6 +26,7 @@ class EventoForm extends StatefulWidget {
 
 class EventoFormState extends State<EventoForm> {
   final _formKey = GlobalKey<FormState>();
+  final DateFormat formatoData = DateFormat('dd/MM/yyyy');
 
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _descricaoController = TextEditingController();
@@ -35,6 +37,7 @@ class EventoFormState extends State<EventoForm> {
   final ControladorAgendamento controladorAgendamento =
       ControladorAgendamento();
   List<Semana> diasDaSemana = List();
+  List<SemanaButtonState> listaSemanaButton = List();
 
   @override
   void initState() {
@@ -82,6 +85,11 @@ class EventoFormState extends State<EventoForm> {
             controladorAgendamento.diasDaSemanaAgendamento(widget.agendamento);
       }
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      datasListener();
+      _dataInicialController.addListener(datasListener);
+      _dataFinalController.addListener(datasListener);
+    });
     super.initState();
   }
 
@@ -138,8 +146,8 @@ class EventoFormState extends State<EventoForm> {
                           Padding(
                             padding: EdgeInsets.only(top: 24.0),
                             child: TextFormField(
-                              validator: (value){
-                                if(value.isEmpty)
+                              validator: (value) {
+                                if (value.isEmpty)
                                   return 'O campo descrição não pode ser vazio';
                                 return null;
                               },
@@ -307,61 +315,108 @@ class EventoFormState extends State<EventoForm> {
     );
   }
 
-  void addDiaDaSemana(int dia) {
-    switch (dia) {
-      case 0:
-        diasDaSemana.add(Semana.domingo);
-        break;
-      case 1:
-        diasDaSemana.add(Semana.segunda);
-        break;
-      case 2:
-        diasDaSemana.add(Semana.terca);
-        break;
-      case 3:
-        diasDaSemana.add(Semana.quarta);
-        break;
-      case 4:
-        diasDaSemana.add(Semana.quinta);
-        break;
-      case 5:
-        diasDaSemana.add(Semana.sexta);
-        break;
-      case 6:
-        diasDaSemana.add(Semana.sabado);
-        break;
-      default:
-        break;
+  datasListener() {
+    if (_dataInicialController.text != '' &&
+        _dataFinalController.text != '' &&
+        listaSemanaButton.isNotEmpty) {
+      listaSemanaButton.forEach((button) => button.desmarcaButton());
+      DateTime dataInicial = formatoData.parse(_dataInicialController.text);
+      DateTime dataFinal = formatoData.parse(_dataFinalController.text);
+      if (dataFinal.weekday >= dataInicial.weekday &&
+          dataFinal.difference(dataInicial).inDays < 7) {
+        for (int i = dataInicial.weekday; i <= dataFinal.weekday; i++) {
+          listaSemanaButton
+              .firstWhere((button) => button.index == i - 1)
+              .marcaButton();
+        }
+      } else {
+        if (dataFinal.difference(dataInicial).inDays > 7) {
+          listaSemanaButton.forEach((button) => button.marcaButton());
+        } else {
+          for (int i = dataInicial.weekday; i <= 7; i++) {
+            listaSemanaButton
+                .firstWhere((button) => button.index == i - 1)
+                .marcaButton();
+          }
+          for (int i = 1; i <= dataFinal.weekday; i++) {
+            listaSemanaButton
+                .firstWhere((button) => button.index == i - 1)
+                .marcaButton();
+          }
+        }
+      }
     }
   }
 
-  void removeDiaDaSemana(int dia) {
-    switch (dia) {
-      case 0:
-        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.domingo));
-        break;
-      case 1:
-        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.segunda));
-        break;
-      case 2:
-        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.terca));
-        break;
-      case 3:
-        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.quarta));
-        break;
-      case 4:
-        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.quinta));
-        break;
-      case 5:
-        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.sexta));
-        break;
-      case 6:
-        diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.sabado));
-        break;
-      default:
-        break;
-    }
-  }
+  // void addDiaDaSemana(int dia) {
+  //   switch (dia) {
+  //     case 0:
+  //       diasDaSemana.add(Semana.domingo);
+  //       listaSemanaButton.where((button) => button.index == 6).first.marcaButton();
+  //       break;
+  //     case 1:
+  //       diasDaSemana.add(Semana.segunda);
+  //       listaSemanaButton.where((button) => button.index == 0).first.marcaButton();
+  //       break;
+  //     case 2:
+  //       diasDaSemana.add(Semana.terca);
+  //       listaSemanaButton.where((button) => button.index == 1).first.marcaButton();
+  //       break;
+  //     case 3:
+  //       diasDaSemana.add(Semana.quarta);
+  //       listaSemanaButton.where((button) => button.index == 2).first.marcaButton();
+  //       break;
+  //     case 4:
+  //       diasDaSemana.add(Semana.quinta);
+  //       listaSemanaButton.where((button) => button.index == 3).first.marcaButton();
+  //       break;
+  //     case 5:
+  //       diasDaSemana.add(Semana.sexta);
+  //       listaSemanaButton.where((button) => button.index == 4).first.marcaButton();
+  //       break;
+  //     case 6:
+  //       diasDaSemana.add(Semana.sabado);
+  //       listaSemanaButton.where((button) => button.index == 5).first.marcaButton();
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
+
+  // void removeDiaDaSemana(int dia) {
+  //   switch (dia) {
+  //     case 0:
+  //       diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.domingo));
+  //       listaSemanaButton.where((button) => button.index == 6).first.desmarcaButton();
+  //       break;
+  //     case 1:
+  //       diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.segunda));
+  //       listaSemanaButton.where((button) => button.index == 0).first.desmarcaButton();
+  //       break;
+  //     case 2:
+  //       diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.terca));
+  //       listaSemanaButton.where((button) => button.index == 1).first.desmarcaButton();
+  //       break;
+  //     case 3:
+  //       diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.quarta));
+  //       listaSemanaButton.where((button) => button.index == 2).first.desmarcaButton();
+  //       break;
+  //     case 4:
+  //       diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.quinta));
+  //       listaSemanaButton.where((button) => button.index == 3).first.desmarcaButton();
+  //       break;
+  //     case 5:
+  //       diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.sexta));
+  //       listaSemanaButton.where((button) => button.index == 4).first.desmarcaButton();
+  //       break;
+  //     case 6:
+  //       diasDaSemana.removeAt(diasDaSemana.indexOf(Semana.sabado));
+  //       listaSemanaButton.where((button) => button.index == 5).first.desmarcaButton();
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
 }
 
 class SemanaButton extends StatefulWidget {
@@ -386,7 +441,7 @@ class SemanaButtonState extends State<SemanaButton> {
     switch (widget._dia) {
       case 0:
         _textoDia = 'D';
-        index = 7;
+        index = 6;
         break;
       case 1:
         _textoDia = 'S';
@@ -414,7 +469,7 @@ class SemanaButtonState extends State<SemanaButton> {
         break;
       default:
         _textoDia = 'S';
-        index = 6;
+        index = 5;
         break;
     }
     if (widget.eventoFormState.diasDaSemana != null) {
@@ -425,6 +480,24 @@ class SemanaButtonState extends State<SemanaButton> {
         }
       });
     }
+    widget.eventoFormState.listaSemanaButton.add(this);
+  }
+
+  void marcaButton() {
+    setState(() {
+      widget.eventoFormState.diasDaSemana.add(Semana.values[index]);
+      _color = Colors.cyan;
+      _colorSplash = Colors.cyan;
+    });
+  }
+
+  void desmarcaButton() {
+    setState(() {
+      widget.eventoFormState.diasDaSemana
+          .removeWhere((dia) => dia == Semana.values[index]);
+      _color = Colors.white;
+      _colorSplash = Colors.white;
+    });
   }
 
   @override
@@ -438,17 +511,11 @@ class SemanaButtonState extends State<SemanaButton> {
           splashColor: _colorSplash,
           customBorder: CircleBorder(),
           onTap: () {
-            setState(() {
-              if (_color == Colors.white) {
-                _color = Colors.cyan;
-                _colorSplash = Colors.cyan;
-                widget.eventoFormState.addDiaDaSemana(widget._dia);
-              } else {
-                _color = Colors.white;
-                _colorSplash = Colors.white;
-                widget.eventoFormState.removeDiaDaSemana(widget._dia);
-              }
-            });
+            if (_color == Colors.white) {
+              marcaButton();
+            } else {
+              desmarcaButton();
+            }
           },
           child: Container(
             width: 35.0,
