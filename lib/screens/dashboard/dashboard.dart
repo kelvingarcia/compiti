@@ -315,6 +315,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                 ),
               ),
               backgroundColor: Colors.cyan,
+              splashColor: Colors.white,
               child: Icon(Icons.add),
             ),
           ),

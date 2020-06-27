@@ -1,3 +1,4 @@
+import 'package:compiti_2/screens/dashboard/item_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:compiti_2/screens/dashboard/dashboard.dart';
 
@@ -30,6 +31,7 @@ class _BarraSuperiorState extends State<BarraSuperior> {
                   Material(
                     color: Colors.cyan,
                     child: InkWell(
+                      splashColor: Colors.white,
                       onTap: () {
                         if (this.widget.parent.topCorpo == 100.0) {
                           this.widget.parent.setState(() {
@@ -64,39 +66,31 @@ class _BarraSuperiorState extends State<BarraSuperior> {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 24.0),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Testa Notificação',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(top: 36.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: <Widget>[
+                      ItemMenu(
+                        hasTop: true,
+                        icone: Icons.show_chart,
+                        texto: 'Relatórios',
+                      ),
+                      ItemMenu(
+                        hasTop: false,
+                        icone: Icons.report_problem,
+                        texto: 'Reportar problema',
+                      ),
+                      ItemMenu(
+                        hasTop: false,
+                        icone: Icons.star,
+                        texto: 'Avaliar app',
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Item Menu',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  Text(
-                    'Item Menu',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  Text(
-                    'Item Menu',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ],
