@@ -8,7 +8,6 @@ import 'package:compiti_2/screens/form/campo_data_hora.dart';
 import 'package:compiti_2/screens/form/data_hora.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
 class EventoForm extends StatefulWidget {
@@ -30,35 +29,36 @@ class EventoFormState extends State<EventoForm> {
 
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _descricaoController = TextEditingController();
-  final TextEditingController _horaInicialController = TextEditingController();
-  final TextEditingController _horaFinalController = TextEditingController();
-  final TextEditingController _dataInicialController = TextEditingController();
-  final TextEditingController _dataFinalController = TextEditingController();
+  final TextEditingController horaInicialController = TextEditingController();
+  final TextEditingController horaFinalController = TextEditingController();
+  final TextEditingController dataInicialController = TextEditingController();
+  final TextEditingController dataFinalController = TextEditingController();
   final ControladorAgendamento controladorAgendamento =
       ControladorAgendamento();
   List<Semana> diasDaSemana = List();
   List<SemanaButtonState> listaSemanaButton = List();
+  List<Semana> diasValidos = List();
 
   @override
   void initState() {
     if (widget.evento != null) {
       _tituloController.text = widget.evento.titulo;
       _descricaoController.text = widget.evento.descricao;
-      _horaInicialController.text =
+      horaInicialController.text =
           widget.evento.horaInicial.toString().substring(10, 15);
-      _horaFinalController.text =
+      horaFinalController.text =
           widget.evento.horaFinal.toString().substring(10, 15);
       if (widget.agendamento == null) {
         var dataInicialSplit =
             widget.evento.dataInicial.toString().substring(0, 10).split('-');
-        _dataInicialController.text = dataInicialSplit.elementAt(2) +
+        dataInicialController.text = dataInicialSplit.elementAt(2) +
             '/' +
             dataInicialSplit.elementAt(1) +
             '/' +
             dataInicialSplit.elementAt(0);
         var dataFinalSplit =
             widget.evento.dataFinal.toString().substring(0, 10).split('-');
-        _dataFinalController.text = dataFinalSplit.elementAt(2) +
+        dataFinalController.text = dataFinalSplit.elementAt(2) +
             '/' +
             dataFinalSplit.elementAt(1) +
             '/' +
@@ -69,14 +69,14 @@ class EventoFormState extends State<EventoForm> {
             .toString()
             .substring(0, 10)
             .split('-');
-        _dataInicialController.text = dataInicialSplit.elementAt(2) +
+        dataInicialController.text = dataInicialSplit.elementAt(2) +
             '/' +
             dataInicialSplit.elementAt(1) +
             '/' +
             dataInicialSplit.elementAt(0);
         var dataFinalSplit =
             widget.agendamento.dataFinal.toString().substring(0, 10).split('-');
-        _dataFinalController.text = dataFinalSplit.elementAt(2) +
+        dataFinalController.text = dataFinalSplit.elementAt(2) +
             '/' +
             dataFinalSplit.elementAt(1) +
             '/' +
@@ -87,8 +87,8 @@ class EventoFormState extends State<EventoForm> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       datasListener();
-      _dataInicialController.addListener(datasListener);
-      _dataFinalController.addListener(datasListener);
+      dataInicialController.addListener(datasListener);
+      dataFinalController.addListener(datasListener);
     });
     super.initState();
   }
@@ -165,15 +165,17 @@ class EventoFormState extends State<EventoForm> {
                                 Expanded(
                                   child: CampoDataHora(
                                     label: 'Hora inicial',
-                                    controller: _horaInicialController,
+                                    controller: horaInicialController,
                                     dataHora: DataHora.hora,
+                                    eventoFormState: this,
                                   ),
                                 ),
                                 Expanded(
                                   child: CampoDataHora(
                                     label: 'Hora final',
-                                    controller: _horaFinalController,
+                                    controller: horaFinalController,
                                     dataHora: DataHora.hora,
+                                    eventoFormState: this,
                                   ),
                                 ),
                               ],
@@ -186,15 +188,17 @@ class EventoFormState extends State<EventoForm> {
                                 Expanded(
                                   child: CampoDataHora(
                                     label: 'Data inicial',
-                                    controller: _dataInicialController,
+                                    controller: dataInicialController,
                                     dataHora: DataHora.data,
+                                    eventoFormState: this,
                                   ),
                                 ),
                                 Expanded(
                                   child: CampoDataHora(
                                     label: 'Data final',
-                                    controller: _dataFinalController,
+                                    controller: dataFinalController,
                                     dataHora: DataHora.data,
+                                    eventoFormState: this,
                                   ),
                                 ),
                               ],
@@ -203,18 +207,64 @@ class EventoFormState extends State<EventoForm> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 24.0),
-                      child: Container(
-                        height: 50,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 7,
-                          itemBuilder: (context, index) {
-                            return SemanaButton(index, this);
-                          },
+                    // Padding(
+                    //   padding: EdgeInsets.only(top: 24.0),
+                    //   child: Container(
+                    //     height: 50,
+                    //     child: ListView.builder(
+                    //       scrollDirection: Axis.horizontal,
+                    //       itemCount: 7,
+                    //       itemBuilder: (context, index) {
+                    //         return SemanaButton(index, this);
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
+                    Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 24.0, left: 8.0),
+                          child: TextFormField(
+                            focusNode: FocusNode(),
+                            showCursor: false,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            validator: (_) {
+                              List<bool> validacao = List();
+                              diasDaSemana.forEach((dia) { 
+                                bool valido = false;
+                                diasValidos.forEach((diaValido) { 
+                                  if(diaValido == dia)
+                                    valido = true;
+                                });
+                                validacao.add(valido);
+                              });
+                              if (validacao.contains(false)) {
+                                return 'Os dias selecionados não são válidos';
+                              }
+                              if(diasDaSemana.isEmpty){
+                                return 'Selecione ao menos um dia';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 24.0),
+                          child: Container(
+                            height: 50,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 7,
+                              itemBuilder: (context, index) {
+                                return SemanaButton(index, this);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 24.0),
@@ -226,16 +276,16 @@ class EventoFormState extends State<EventoForm> {
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
                                 var dataInicialSplit =
-                                    _dataInicialController.text.split('/');
+                                    dataInicialController.text.split('/');
 
                                 var dataFinalSplit =
-                                    _dataFinalController.text.split('/');
+                                    dataFinalController.text.split('/');
 
                                 var horaInicialSplit =
-                                    _horaInicialController.text.split(':');
+                                    horaInicialController.text.split(':');
 
                                 var horaFinalSplit =
-                                    _horaFinalController.text.split(':');
+                                    horaFinalController.text.split(':');
 
                                 Evento eventoNew = Evento(
                                   0,
@@ -316,32 +366,38 @@ class EventoFormState extends State<EventoForm> {
   }
 
   datasListener() {
-    if (_dataInicialController.text != '' &&
-        _dataFinalController.text != '' &&
+    if (dataInicialController.text != '' &&
+        dataFinalController.text != '' &&
         listaSemanaButton.isNotEmpty) {
       listaSemanaButton.forEach((button) => button.desmarcaButton());
-      DateTime dataInicial = formatoData.parse(_dataInicialController.text);
-      DateTime dataFinal = formatoData.parse(_dataFinalController.text);
+      DateTime dataInicial = formatoData.parse(dataInicialController.text);
+      DateTime dataFinal = formatoData.parse(dataFinalController.text);
       if (dataFinal.weekday >= dataInicial.weekday &&
           dataFinal.difference(dataInicial).inDays < 7) {
         for (int i = dataInicial.weekday; i <= dataFinal.weekday; i++) {
           listaSemanaButton
               .firstWhere((button) => button.index == i - 1)
               .marcaButton();
+          diasValidos.add(Semana.values[i - 1]);
         }
       } else {
         if (dataFinal.difference(dataInicial).inDays > 7) {
-          listaSemanaButton.forEach((button) => button.marcaButton());
+          for (int i = 0; i < 7; i++) {
+            listaSemanaButton.elementAt(i).marcaButton();
+            diasValidos.add(Semana.values[i]);
+          }
         } else {
           for (int i = dataInicial.weekday; i <= 7; i++) {
             listaSemanaButton
                 .firstWhere((button) => button.index == i - 1)
                 .marcaButton();
+            diasValidos.add(Semana.values[i - 1]);
           }
           for (int i = 1; i <= dataFinal.weekday; i++) {
             listaSemanaButton
                 .firstWhere((button) => button.index == i - 1)
                 .marcaButton();
+            diasValidos.add(Semana.values[i - 1]);
           }
         }
       }
