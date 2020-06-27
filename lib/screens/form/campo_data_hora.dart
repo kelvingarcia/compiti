@@ -37,29 +37,6 @@ class _CampoDataHoraState extends State<CampoDataHora> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (value) {
-        if (widget.dataHora == DataHora.data &&
-            widget.label.endsWith('final')) {
-          if (formatoData
-              .parse(widget.eventoFormState.dataInicialController.text)
-              .isAfter(formatoData
-                  .parse(widget.eventoFormState.dataFinalController.text))) {
-            return 'Data inicial não ser pode depois da data final';
-          }
-        } else {
-          if (widget.dataHora == DataHora.hora &&
-              widget.label.endsWith('final')) {
-            var horaInicialSplit = widget.eventoFormState.horaInicialController.text.split(':');
-            var horaFinalSplit = widget.eventoFormState.horaFinalController.text.split(':');
-            var horaInicial = DateTime.now().add(Duration(hours: int.parse(horaInicialSplit[0]), minutes: int.parse(horaInicialSplit[1])));
-            var horaFinal = DateTime.now().add(Duration(hours: int.parse(horaFinalSplit[0]), minutes: int.parse(horaFinalSplit[1])));
-            if(horaInicial.isAfter(horaFinal)){
-              return 'Hora inicial não pode ser depois da data final';
-            }
-          }
-        }
-        return null;
-      },
       focusNode: FocusNode(),
       showCursor: true,
       readOnly: true,

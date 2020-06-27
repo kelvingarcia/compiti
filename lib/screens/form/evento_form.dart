@@ -158,51 +158,108 @@ class EventoFormState extends State<EventoForm> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 24.0),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: CampoDataHora(
-                                    label: 'Hora inicial',
-                                    controller: horaInicialController,
-                                    dataHora: DataHora.hora,
-                                    eventoFormState: this,
+                          Stack(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 24.0),
+                                child: TextFormField(
+                                  focusNode: FocusNode(),
+                                  showCursor: false,
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
                                   ),
+                                  validator: (_) {
+                                    var horaInicialSplit =
+                                        horaInicialController.text.split(':');
+                                    var horaFinalSplit =
+                                        horaFinalController.text.split(':');
+                                    var horaInicial = DateTime.now().add(
+                                        Duration(
+                                            hours:
+                                                int.parse(horaInicialSplit[0]),
+                                            minutes: int.parse(
+                                                horaInicialSplit[1])));
+                                    var horaFinal = DateTime.now().add(Duration(
+                                        hours: int.parse(horaFinalSplit[0]),
+                                        minutes: int.parse(horaFinalSplit[1])));
+                                    if (horaInicial.isAfter(horaFinal)) {
+                                      return 'Hora inicial não pode ser depois da data final';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                Expanded(
-                                  child: CampoDataHora(
-                                    label: 'Hora final',
-                                    controller: horaFinalController,
-                                    dataHora: DataHora.hora,
-                                    eventoFormState: this,
-                                  ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 24.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: CampoDataHora(
+                                        label: 'Hora inicial',
+                                        controller: horaInicialController,
+                                        dataHora: DataHora.hora,
+                                        eventoFormState: this,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: CampoDataHora(
+                                        label: 'Hora final',
+                                        controller: horaFinalController,
+                                        dataHora: DataHora.hora,
+                                        eventoFormState: this,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 24.0),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: CampoDataHora(
-                                    label: 'Data inicial',
-                                    controller: dataInicialController,
-                                    dataHora: DataHora.data,
-                                    eventoFormState: this,
+                          Stack(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 24.0),
+                                child: TextFormField(
+                                  focusNode: FocusNode(),
+                                  showCursor: false,
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
                                   ),
+                                  validator: (_) {
+                                    if (formatoData
+                                        .parse(dataInicialController.text)
+                                        .isAfter(formatoData.parse(dataFinalController.text))) {
+                                      return 'Data inicial não ser pode depois da data final';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                Expanded(
-                                  child: CampoDataHora(
-                                    label: 'Data final',
-                                    controller: dataFinalController,
-                                    dataHora: DataHora.data,
-                                    eventoFormState: this,
-                                  ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 24.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: CampoDataHora(
+                                        label: 'Data inicial',
+                                        controller: dataInicialController,
+                                        dataHora: DataHora.data,
+                                        eventoFormState: this,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: CampoDataHora(
+                                        label: 'Data final',
+                                        controller: dataFinalController,
+                                        dataHora: DataHora.data,
+                                        eventoFormState: this,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -233,18 +290,17 @@ class EventoFormState extends State<EventoForm> {
                             ),
                             validator: (_) {
                               List<bool> validacao = List();
-                              diasDaSemana.forEach((dia) { 
+                              diasDaSemana.forEach((dia) {
                                 bool valido = false;
-                                diasValidos.forEach((diaValido) { 
-                                  if(diaValido == dia)
-                                    valido = true;
+                                diasValidos.forEach((diaValido) {
+                                  if (diaValido == dia) valido = true;
                                 });
                                 validacao.add(valido);
                               });
                               if (validacao.contains(false)) {
                                 return 'Os dias selecionados não são válidos';
                               }
-                              if(diasDaSemana.isEmpty){
+                              if (diasDaSemana.isEmpty) {
                                 return 'Selecione ao menos um dia';
                               }
                               return null;
