@@ -15,7 +15,6 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Validação de erros: formulário, datas e dias da semana.
 - Implementação da feature de relatórios.
 - Implementar animação ao evento mudar de realizado para não realizado e vice-versa.
 
