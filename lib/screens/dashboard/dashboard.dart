@@ -1,3 +1,4 @@
+import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/toggle_status.dart';
 import 'package:compiti_2/screens/dashboard/barra_inferior_info.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
@@ -21,6 +22,7 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   bool atualizouBanco = false;
+  List<Agendamento> listaAgendamentos = List();
   
   TodosEventos todosEventos = TodosEventos();
   EventosDia eventosDia = EventosDia();
@@ -102,6 +104,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
           left: 0,
           child: BarraSuperior(
             parent: this,
+            listaAgendamentos: listaAgendamentos,
           ),
         ),
         AnimatedPositioned(

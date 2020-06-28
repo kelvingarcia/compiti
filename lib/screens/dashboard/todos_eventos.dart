@@ -130,6 +130,7 @@ class TodosEventosState extends State<TodosEventos> {
         agendamentos = lista;
         this.fitraLista();
         widget.dashboardState.atualizouBanco = true;
+        widget.dashboardState.listaAgendamentos = lista;
       });
     });
   }

@@ -1,11 +1,14 @@
+import 'package:compiti_2/models/agendamento.dart';
+import 'package:compiti_2/screens/charts/grafico_pizza.dart';
 import 'package:compiti_2/screens/dashboard/item_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:compiti_2/screens/dashboard/dashboard.dart';
 
 class BarraSuperior extends StatefulWidget {
   final DashboardState parent;
+  List<Agendamento> listaAgendamentos = List();
 
-  BarraSuperior({this.parent});
+  BarraSuperior({this.parent, this.listaAgendamentos});
 
   @override
   _BarraSuperiorState createState() => _BarraSuperiorState();
@@ -77,6 +80,13 @@ class _BarraSuperiorState extends State<BarraSuperior> {
                         hasTop: true,
                         icone: Icons.show_chart,
                         texto: 'Relatórios',
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Material(
+                              child: GraficoPizza(widget.listaAgendamentos),
+                            ),
+                          ),
+                        ),
                       ),
                       ItemMenu(
                         hasTop: false,
