@@ -26,6 +26,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   charts_flutter:
+  month_picker_dialog:
   intl:
   sqflite:
   path:
