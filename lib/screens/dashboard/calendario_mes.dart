@@ -29,8 +29,11 @@ class _CalendarioMesState extends State<CalendarioMes> {
             child: InkWell(
               splashColor: Colors.white,
               onTap: () async {
-                await showMonthPicker(
+                var novoMes = await showMonthPicker(
                     context: context, initialDate: DateTime.now());
+                setState(() {
+                  mesSelecionado = novoMes;
+                });
               },
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.07,
