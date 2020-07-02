@@ -1,14 +1,19 @@
+import 'package:compiti_2/screens/dashboard/dashboard.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class CalendarioMes extends StatefulWidget {
+  final DashboardState dashboardState;
+
+  CalendarioMes({Key key, this.dashboardState}) : super(key: key);
+
   @override
-  _CalendarioMesState createState() => _CalendarioMesState();
+  CalendarioMesState createState() => CalendarioMesState();
 }
 
-class _CalendarioMesState extends State<CalendarioMes> {
+class CalendarioMesState extends State<CalendarioMes> {
   DateTime mesSelecionado = DateTime.now();
   final DateFormat dateFormat = DateFormat(DateFormat.MONTH, 'pt_BR');
   String data;
@@ -32,7 +37,8 @@ class _CalendarioMesState extends State<CalendarioMes> {
       if (ultimoDiaDoMes.day == 28 && primeiroDia.weekday == 7) {
         numeroDias = 28;
       } else {
-        if((primeiroDia.weekday > 3 && ultimoDiaDoMes.day == 31) || (primeiroDia.weekday == 6 && ultimoDiaDoMes.day == 30)){
+        if ((primeiroDia.weekday > 3 && ultimoDiaDoMes.day == 31) ||
+            (primeiroDia.weekday == 6 && ultimoDiaDoMes.day == 30)) {
           numeroDias = 42;
         } else {
           numeroDias = 35;
@@ -47,10 +53,10 @@ class _CalendarioMesState extends State<CalendarioMes> {
     iteracao = primeiroDia;
     if (primeiroDia.weekday < 7) {
       for (int i = primeiroDia.weekday; i >= 0; i--) {
-        iteracao = DateTime(iteracao.year, iteracao.month, iteracao.day-1);
+        iteracao = DateTime(iteracao.year, iteracao.month, iteracao.day - 1);
       }
     } else {
-      iteracao = DateTime(iteracao.year, iteracao.month, iteracao.day-1);
+      iteracao = DateTime(iteracao.year, iteracao.month, iteracao.day - 1);
     }
     return SizedBox(
       height: MediaQuery.of(context).size.height,
@@ -64,7 +70,7 @@ class _CalendarioMesState extends State<CalendarioMes> {
               onTap: () async {
                 var novoMes = await showMonthPicker(
                     context: context, initialDate: DateTime.now());
-                posicaoMes(novoMes);
+                if (novoMes != null) posicaoMes(novoMes);
               },
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.07,
@@ -144,38 +150,93 @@ class _CalendarioMesState extends State<CalendarioMes> {
                   crossAxisSpacing: 2.0,
                   mainAxisSpacing: 2.0),
               itemBuilder: (BuildContext context, int index) {
-                Color color;
+                Color colorText;
+                Color colorBackground;
                 int diaValidacao;
-                if(index == 0){
+                if (index == 0) {
                   diaValidacao = 7;
                 } else {
                   diaValidacao = index;
                 }
                 if ((diaValidacao == primeiroDia.weekday || primeiro) &&
                     iteracao.isBefore(ultimoDiaDoMes)) {
-                  color = Colors.white;
+                  colorText = Colors.white;
                   primeiro = true;
                 } else {
-                  color = Colors.black;
+                  colorText = Colors.black;
                   primeiro = false;
                 }
-                iteracao = DateTime(iteracao.year, iteracao.month, iteracao.day+1);
-                return Container(
-                  height: 10.0,
-                  width: 10.0,
-                  child: Center(
-                    child: Text(
-                      iteracao.day.toString(),
-                      style: TextStyle(
-                        color: color,
-                      ),
-                    ),
-                  ),
+                iteracao =
+                    DateTime(iteracao.year, iteracao.month, iteracao.day + 1);
+                if (iteracao.day == widget.dashboardState.currentDate.day &&
+                    iteracao.month == widget.dashboardState.currentDate.month &&
+                    iteracao.year == widget.dashboardState.currentDate.year) {
+                  colorBackground = Colors.white;
+                  colorText = Colors.black;
+                } else {
+                  colorBackground = Color(0xFF383838);
+                }
+                return DiaCalendario(
+                  calendarioMesState: this,
+                  colorBackground: colorBackground,
+                  colorText: colorText,
+                  data: iteracao,
                 );
               },
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DiaCalendario extends StatefulWidget {
+  final CalendarioMesState calendarioMesState;
+  final Color colorBackground;
+  final Color colorText;
+  final DateTime data;
+
+  DiaCalendario(
+      {Key key,
+      this.calendarioMesState,
+      this.data,
+      this.colorBackground,
+      this.colorText})
+      : super(key: key);
+
+  @override
+  _DiaCalendarioState createState() => _DiaCalendarioState();
+}
+
+class _DiaCalendarioState extends State<DiaCalendario> {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      splashColor: Colors.white,
+      onTap: () {
+        widget.calendarioMesState.widget.dashboardState.currentDate =
+            widget.data;
+        widget
+            .calendarioMesState.widget.dashboardState.eventosDia.eventosDiaState
+            .atualizaLista();
+        widget.calendarioMesState.widget.dashboardState.diaFromMes();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: widget.colorBackground,
+        ),
+        height: 10.0,
+        width: 10.0,
+        child: Center(
+          child: Text(
+            widget.data.day.toString(),
+            style: TextStyle(
+              color: widget.colorText,
+            ),
+          ),
+        ),
       ),
     );
   }

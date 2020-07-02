@@ -15,7 +15,7 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Implementação da feature de relatórios.
+- Implementar animação ao item sair da lista.
 - Implementar animação ao evento mudar de realizado para não realizado e vice-versa.
 
 Bugs:

@@ -21,11 +21,13 @@ class Dashboard extends StatefulWidget {
 }
 
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
+  DateTime currentDate = DateTime.now();
+
   bool atualizouBanco = false;
   List<Agendamento> listaAgendamentos = List();
-  
+
   TodosEventos todosEventos = TodosEventos();
-  EventosDia eventosDia = EventosDia();
+  EventosDia eventosDia;
   BarraInferiorInfo barraInferiorInfo = BarraInferiorInfo();
 
   ToggleStatus toggleStatus;
@@ -52,7 +54,9 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    super.initState();
+    eventosDia = EventosDia(
+      dashboardState: this,
+    );
     _controllerDia = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animationTime),
@@ -68,6 +72,7 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     eventosDia.dashboardState = this;
     todosEventos.dashboardState = this;
     barraInferiorInfo.dashboardState = this;
+    super.initState();
   }
 
   @override
@@ -295,7 +300,9 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                             }
                           });
                         },
-                        child: CalendarioMes(),
+                        child: CalendarioMes(
+                          dashboardState: this,
+                        ),
                       ),
                     ),
                   ],
