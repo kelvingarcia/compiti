@@ -162,18 +162,47 @@ class TodosEventosState extends State<TodosEventos>
     var novaListaNaoFeitos = novaLista
         .where((agendamento) => agendamento.eventoStatus != EventoStatus.feito)
         .toList();
-    novaListaNaoFeitos
+    var diferencaNaoFeitos = novaListaNaoFeitos
         .toSet()
         .difference(listaNaoFeitosState.widget.agendamentosNaoFeitos.toSet())
-        .toList()
-        .forEach((agendamento) {
-      var indexWhere = listaNaoFeitosState.widget.agendamentosNaoFeitos
-              .lastIndexWhere((agend) =>
-                  agend.dataInicial.isBefore(agendamento.dataInicial)) +
-          1;
-      listaNaoFeitosState.listKey.currentState.insertItem(indexWhere);
-      listaNaoFeitosState.widget.agendamentosNaoFeitos
-          .insert(indexWhere, agendamento);
-    });
+        .toList();
+    if (listaNaoFeitosState.widget.agendamentosNaoFeitos.length <
+        novaListaNaoFeitos.length) {
+      diferencaNaoFeitos.forEach((agendamento) {
+        var indexWhere = listaNaoFeitosState.widget.agendamentosNaoFeitos
+                .lastIndexWhere((agend) =>
+                    agend.dataInicial.isBefore(agendamento.dataInicial)) +
+            1;
+        listaNaoFeitosState.listKey.currentState.insertItem(indexWhere);
+        listaNaoFeitosState.widget.agendamentosNaoFeitos
+            .insert(indexWhere, agendamento);
+      });
+    } else {
+      if (listaNaoFeitosState.widget.agendamentosNaoFeitos.length >
+          novaListaNaoFeitos.length) {
+        List<Agendamento> diferencaRemovidos = List();
+        diferencaRemovidos
+            .addAll(listaNaoFeitosState.widget.agendamentosNaoFeitos);
+        diferencaNaoFeitos.forEach((agendamento) {
+          diferencaRemovidos.removeWhere((agend) => agend.id == agendamento.id);
+        });
+        diferencaRemovidos.forEach((agendamento) {
+          var indexOf = listaNaoFeitosState.widget.agendamentosNaoFeitos
+              .indexWhere((agend) => agend.id == agendamento.id);
+          listaNaoFeitosState.widget.agendamentosNaoFeitos.removeAt(indexOf);
+          listaNaoFeitosState.listKey.currentState.removeItem(indexOf,
+              (context, animation) {
+            return SizeTransition(
+              axis: Axis.vertical,
+              sizeFactor: animation,
+              child: ItemEvento(
+                agendamento,
+                widget.dashboardState,
+              ),
+            );
+          });
+        });
+      }
+    }
   }
 }
