@@ -21,7 +21,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
-  DateTime currentDate = DateTime.now();
+  DateTime currentDate;
 
   bool atualizouBanco = false;
   List<Agendamento> listaAgendamentos = List();
@@ -54,6 +54,8 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    var dateTime = DateTime.now();
+    currentDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
     eventosDia = EventosDia(
       dashboardState: this,
     );

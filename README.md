@@ -17,6 +17,8 @@ Próximos passos:
 
 - Implementar animação ao item sair da lista.
 - Implementar animação ao evento mudar de realizado para não realizado e vice-versa.
+- Corrigir erro dos dias da semana.
+- Implementar a data selecionada em todos os date e time pickers.
 
 Bugs:
 

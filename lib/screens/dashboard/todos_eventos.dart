@@ -1,6 +1,8 @@
 import 'package:compiti_2/database/agendamento_dao.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento_status.dart';
+import 'package:compiti_2/screens/listas/lista_feitos.dart';
+import 'package:compiti_2/screens/listas/lista_nao_feitos.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard.dart';
@@ -19,20 +21,42 @@ class TodosEventos extends StatefulWidget {
   }
 }
 
-class TodosEventosState extends State<TodosEventos> {
+class TodosEventosState extends State<TodosEventos>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<Offset> _offsetAnimation;
+
+  ListaFeitosState listaFeitosState;
+  ListaNaoFeitosState listaNaoFeitosState;
+
   AgendamentoDao _dao = AgendamentoDao();
   List<Agendamento> agendamentos = List();
-  List<Agendamento> listaAux = List();
+  List<Agendamento> agendamentosNaoFeitos = List();
+  List<Agendamento> agendamentosFeitos = List();
   Color _corRealizadas;
   Color _corTextoRealizadas;
   Color _corNaoRealizadas;
 
   Color _corTextoNaoRealizadas;
   bool realizadas = false;
+  int _nextItem;
 
   @override
   void initState() {
-    this.atualizaLista();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset(1.5, 0.0),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.elasticIn,
+      ),
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) => this.atualizaLista());
     super.initState();
   }
 
@@ -63,7 +87,6 @@ class TodosEventosState extends State<TodosEventos> {
                   onTap: () {
                     setState(() {
                       realizadas = true;
-                      this.fitraLista();
                     });
                   },
                   child: Container(
@@ -84,7 +107,6 @@ class TodosEventosState extends State<TodosEventos> {
                   onTap: () {
                     setState(() {
                       realizadas = false;
-                      this.fitraLista();
                     });
                   },
                   child: Container(
@@ -104,19 +126,10 @@ class TodosEventosState extends State<TodosEventos> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.only(left: 16.0, right: 16.0),
-              itemCount: listaAux.length + 1,
-              itemBuilder: (context, int index) {
-                if (index == listaAux.length) {
-                  return Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                  );
-                }
-                return ItemEvento(listaAux.elementAt(index), widget.dashboardState);
-              },
-            ),
+          ListaNaoFeitos(
+            dashboardState: widget.dashboardState,
+            agendamentosNaoFeitos: agendamentosNaoFeitos,
+            todosEventosState: this,
           ),
         ],
       ),
@@ -128,21 +141,39 @@ class TodosEventosState extends State<TodosEventos> {
       setState(() {
         lista.sort((a, b) => a.dataInicial.compareTo(b.dataInicial));
         agendamentos = lista;
-        this.fitraLista();
+        this.fitraLista(lista);
         widget.dashboardState.atualizouBanco = true;
         widget.dashboardState.listaAgendamentos = lista;
       });
     });
   }
 
-  void fitraLista(){
-    setState(() {      
-      listaAux.clear();
-      if(realizadas){
-        listaAux = agendamentos.where((agendamento) => agendamento.eventoStatus == EventoStatus.feito).toList();
-      } else {
-        listaAux = agendamentos.where((agendamento) => agendamento.eventoStatus != EventoStatus.feito).toList();
-      }
+  void fitraLista(List<Agendamento> novaLista) {
+    // agendamentosFeitos = agendamentos
+    //     .where((agendamento) => agendamento.eventoStatus == EventoStatus.feito)
+    //     .toList();
+    // var diferencaFeitos = agendamentosFeitos
+    //     .toSet()
+    //     .difference(listaFeitosState.widget.agendamentosFeitos.toSet())
+    //     .toList();
+    // diferencaFeitos.forEach((agendamento) => listaFeitosState
+    //     .listKey.currentState
+    //     .insertItem(listaFeitosState.widget.agendamentosFeitos.length));
+    var novaListaNaoFeitos = novaLista
+        .where((agendamento) => agendamento.eventoStatus != EventoStatus.feito)
+        .toList();
+    novaListaNaoFeitos
+        .toSet()
+        .difference(listaNaoFeitosState.widget.agendamentosNaoFeitos.toSet())
+        .toList()
+        .forEach((agendamento) {
+      var indexWhere = listaNaoFeitosState.widget.agendamentosNaoFeitos
+              .lastIndexWhere((agend) =>
+                  agend.dataInicial.isBefore(agendamento.dataInicial)) +
+          1;
+      listaNaoFeitosState.listKey.currentState.insertItem(indexWhere);
+      listaNaoFeitosState.widget.agendamentosNaoFeitos
+          .insert(indexWhere, agendamento);
     });
   }
 }
