@@ -22,9 +22,12 @@ class TodosEventos extends StatefulWidget {
 }
 
 class TodosEventosState extends State<TodosEventos>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<Offset> _offsetAnimation;
+    with TickerProviderStateMixin {
+  AnimationController _controllerNaoFeitos;
+  Animation<Offset> _animationNaoFeitos;
+
+  AnimationController _controllerFeitos;
+  Animation<Offset> _animationFeitos;
 
   ListaFeitosState listaFeitosState;
   ListaNaoFeitosState listaNaoFeitosState;
@@ -39,21 +42,33 @@ class TodosEventosState extends State<TodosEventos>
 
   Color _corTextoNaoRealizadas;
   bool realizadas = false;
-  int _nextItem;
 
   @override
   void initState() {
-    _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+    _controllerNaoFeitos = AnimationController(
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    _offsetAnimation = Tween<Offset>(
+    _animationNaoFeitos = Tween<Offset>(
       begin: Offset.zero,
-      end: Offset(1.5, 0.0),
+      end: Offset(1.0, 0.0),
     ).animate(
       CurvedAnimation(
-        parent: _controller,
-        curve: Curves.elasticIn,
+        parent: _controllerNaoFeitos,
+        curve: Curves.ease,
+      ),
+    );
+    _controllerFeitos = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _animationFeitos = Tween<Offset>(
+      begin: Offset(-1.0, 0.0),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _controllerFeitos,
+        curve: Curves.ease,
       ),
     );
     WidgetsBinding.instance.addPostFrameCallback((_) => this.atualizaLista());
@@ -87,6 +102,8 @@ class TodosEventosState extends State<TodosEventos>
                   onTap: () {
                     setState(() {
                       realizadas = true;
+                      _controllerNaoFeitos.forward();
+                      _controllerFeitos.forward();
                     });
                   },
                   child: Container(
@@ -107,6 +124,8 @@ class TodosEventosState extends State<TodosEventos>
                   onTap: () {
                     setState(() {
                       realizadas = false;
+                      _controllerNaoFeitos.reverse();
+                      _controllerFeitos.reverse();
                     });
                   },
                   child: Container(
@@ -126,10 +145,29 @@ class TodosEventosState extends State<TodosEventos>
               ],
             ),
           ),
-          ListaNaoFeitos(
-            dashboardState: widget.dashboardState,
-            agendamentosNaoFeitos: agendamentosNaoFeitos,
-            todosEventosState: this,
+          Expanded(
+            child: Container(
+              child: Stack(
+                children: <Widget>[
+                  SlideTransition(
+                    position: _animationFeitos,
+                    child: ListaFeitos(
+                      dashboardState: widget.dashboardState,
+                      agendamentosFeitos: agendamentosFeitos,
+                      todosEventosState: this,
+                    ),
+                  ),
+                  SlideTransition(
+                    position: _animationNaoFeitos,
+                    child: ListaNaoFeitos(
+                      dashboardState: widget.dashboardState,
+                      agendamentosNaoFeitos: agendamentosNaoFeitos,
+                      todosEventosState: this,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -149,16 +187,51 @@ class TodosEventosState extends State<TodosEventos>
   }
 
   void fitraLista(List<Agendamento> novaLista) {
-    // agendamentosFeitos = agendamentos
-    //     .where((agendamento) => agendamento.eventoStatus == EventoStatus.feito)
-    //     .toList();
-    // var diferencaFeitos = agendamentosFeitos
-    //     .toSet()
-    //     .difference(listaFeitosState.widget.agendamentosFeitos.toSet())
-    //     .toList();
-    // diferencaFeitos.forEach((agendamento) => listaFeitosState
-    //     .listKey.currentState
-    //     .insertItem(listaFeitosState.widget.agendamentosFeitos.length));
+    var novaListaFeitos = novaLista
+        .where((agendamento) => agendamento.eventoStatus == EventoStatus.feito)
+        .toList();
+    var diferencaFeitos = novaListaFeitos
+        .toSet()
+        .difference(listaFeitosState.widget.agendamentosFeitos.toSet())
+        .toList();
+    if (listaFeitosState.widget.agendamentosFeitos.length <
+        novaListaFeitos.length) {
+      diferencaFeitos.forEach((agendamento) {
+        var indexWhere = listaFeitosState.widget.agendamentosFeitos
+                .lastIndexWhere((agend) =>
+                    agend.dataInicial.isBefore(agendamento.dataInicial)) +
+            1;
+        listaFeitosState.listKey.currentState.insertItem(indexWhere);
+        listaFeitosState.widget.agendamentosFeitos
+            .insert(indexWhere, agendamento);
+      });
+    } else {
+      if (listaFeitosState.widget.agendamentosFeitos.length >
+          novaListaFeitos.length) {
+        List<Agendamento> diferencaRemovidos = List();
+        diferencaRemovidos.addAll(listaFeitosState.widget.agendamentosFeitos);
+        diferencaFeitos.forEach((agendamento) {
+          diferencaRemovidos.removeWhere((agend) => agend.id == agendamento.id);
+        });
+        diferencaRemovidos.forEach((agendamento) {
+          var indexOf = listaFeitosState.widget.agendamentosFeitos
+              .indexWhere((agend) => agend.id == agendamento.id);
+          listaFeitosState.widget.agendamentosFeitos.removeAt(indexOf);
+          listaFeitosState.listKey.currentState.removeItem(indexOf,
+              (context, animation) {
+            return SizeTransition(
+              axis: Axis.vertical,
+              sizeFactor: animation,
+              child: ItemEvento(
+                agendamento,
+                widget.dashboardState,
+              ),
+            );
+          });
+        });
+      }
+    }
+
     var novaListaNaoFeitos = novaLista
         .where((agendamento) => agendamento.eventoStatus != EventoStatus.feito)
         .toList();

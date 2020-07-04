@@ -22,38 +22,34 @@ class ListaNaoFeitos extends StatefulWidget {
 
 class ListaNaoFeitosState extends State<ListaNaoFeitos> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
-  int nextItem;
 
   @override
   void initState() {
-    nextItem = widget.agendamentosNaoFeitos.length;
     widget.todosEventosState.listaNaoFeitosState = this;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: AnimatedList(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0),
-        key: listKey,
-        initialItemCount: widget.agendamentosNaoFeitos.length + 1,
-        itemBuilder: (context, index, animation) {
-          if (index == widget.agendamentosNaoFeitos.length) {
-            return Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-            );
-          }
-          return SizeTransition(
-            axis: Axis.vertical,
-            sizeFactor: animation,
-            child: ItemEvento(
-              widget.agendamentosNaoFeitos[index],
-              widget.dashboardState,
-            ),
+    return AnimatedList(
+      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      key: listKey,
+      initialItemCount: widget.agendamentosNaoFeitos.length + 1,
+      itemBuilder: (context, index, animation) {
+        if (index == widget.agendamentosNaoFeitos.length) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.3,
           );
-        },
-      ),
+        }
+        return SizeTransition(
+          axis: Axis.vertical,
+          sizeFactor: animation,
+          child: ItemEvento(
+            widget.agendamentosNaoFeitos[index],
+            widget.dashboardState,
+          ),
+        );
+      },
     );
   }
 }

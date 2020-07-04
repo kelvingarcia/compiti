@@ -22,38 +22,34 @@ class ListaFeitos extends StatefulWidget {
 
 class ListaFeitosState extends State<ListaFeitos> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
-  int nextItem;
 
   @override
   void initState() {
-    nextItem = widget.agendamentosFeitos.length;
     widget.todosEventosState.listaFeitosState = this;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: AnimatedList(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0),
-        key: listKey,
-        initialItemCount: widget.agendamentosFeitos.length + 1,
-        itemBuilder: (context, index, animation) {
-          if (index == widget.agendamentosFeitos.length) {
-            return Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-            );
-          }
-          return SizeTransition(
-            axis: Axis.vertical,
-            sizeFactor: animation,
-            child: ItemEvento(
-              widget.agendamentosFeitos[index],
-              widget.dashboardState,
-            ),
+    return AnimatedList(
+      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      key: listKey,
+      initialItemCount: widget.agendamentosFeitos.length + 1,
+      itemBuilder: (context, index, animation) {
+        if (index == widget.agendamentosFeitos.length) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.3,
           );
-        },
-      ),
+        }
+        return SizeTransition(
+          axis: Axis.vertical,
+          sizeFactor: animation,
+          child: ItemEvento(
+            widget.agendamentosFeitos[index],
+            widget.dashboardState,
+          ),
+        );
+      },
     );
   }
 }
