@@ -39,6 +39,8 @@ class EventoFormState extends State<EventoForm> {
   List<SemanaButtonState> listaSemanaButton = List();
   List<Semana> diasValidos = List();
 
+  bool submitted = false;
+
   @override
   void initState() {
     if (widget.evento != null) {
@@ -331,6 +333,7 @@ class EventoFormState extends State<EventoForm> {
                           RaisedButton(
                             child: Text('Adicionar'),
                             onPressed: () {
+                              submitted = true;
                               if (_formKey.currentState.validate()) {
                                 var dataInicialSplit =
                                     dataInicialController.text.split('/');
@@ -425,7 +428,8 @@ class EventoFormState extends State<EventoForm> {
   datasListener() {
     if (dataInicialController.text != '' &&
         dataFinalController.text != '' &&
-        listaSemanaButton.isNotEmpty) {
+        listaSemanaButton.isNotEmpty &&
+        !submitted) {
       listaSemanaButton.forEach((button) => button.desmarcaButton());
       DateTime dataInicial = formatoData.parse(dataInicialController.text);
       DateTime dataFinal = formatoData.parse(dataFinalController.text);

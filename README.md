@@ -15,12 +15,9 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Implementar animação ao item sair da lista.
-- Implementar animação ao evento mudar de realizado para não realizado e vice-versa.
-- Corrigir erro dos dias da semana.
 - Implementar a data selecionada em todos os date e time pickers.
+- Erro ao realizar mais uma operação em menos de 5 segundos.
 
 Bugs:
 
 - Reduzir chamadas de atualizarLista para evitar consultas nulas no BD ao desfazer operações.
-- Erro ao realizar mais uma operação em menos de 5 segundos.
