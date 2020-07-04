@@ -40,8 +40,8 @@ class ListaFeitosState extends State<ListaFeitos> {
           var indexWhere = widget.agendamentosFeitos.lastIndexWhere((agend) =>
                   agend.dataInicial.isBefore(agendamento.dataInicial)) +
               1;
-          listKey.currentState.insertItem(indexWhere);
           widget.agendamentosFeitos.insert(indexWhere, agendamento);
+          listKey.currentState.insertItem(indexWhere);
         });
       } else {
         if (widget.agendamentosFeitos.length > novaListaFeitos.length) {

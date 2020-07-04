@@ -91,6 +91,13 @@ class EventoFormState extends State<EventoForm> {
       datasListener();
       dataInicialController.addListener(datasListener);
       dataFinalController.addListener(datasListener);
+      if (widget.evento != null) {
+        widget.evento.diasDaSemana.forEach((diaDaSemana) {
+          listaSemanaButton
+              .firstWhere((button) => button.index == diaDaSemana.index)
+              .marcaButton();
+        });
+      }
     });
     super.initState();
   }
@@ -416,36 +423,40 @@ class EventoFormState extends State<EventoForm> {
     if (dataInicialController.text != '' &&
         dataFinalController.text != '' &&
         listaSemanaButton.isNotEmpty &&
-        !submitted &&
-        widget.evento == null) {
-      listaSemanaButton.forEach((button) => button.desmarcaButton());
+        !submitted) {
+      if (widget.evento == null)
+        listaSemanaButton.forEach((button) => button.desmarcaButton());
       DateTime dataInicial = formatoData.parse(dataInicialController.text);
       DateTime dataFinal = formatoData.parse(dataFinalController.text);
       if (dataFinal.weekday >= dataInicial.weekday &&
           dataFinal.difference(dataInicial).inDays < 7) {
         for (int i = dataInicial.weekday; i <= dataFinal.weekday; i++) {
-          listaSemanaButton
-              .firstWhere((button) => button.index == i - 1)
-              .marcaButton();
+          if (widget.evento == null)
+            listaSemanaButton
+                .firstWhere((button) => button.index == i - 1)
+                .marcaButton();
           diasValidos.add(Semana.values[i - 1]);
         }
       } else {
         if (dataFinal.difference(dataInicial).inDays > 7) {
           for (int i = 0; i < 7; i++) {
-            listaSemanaButton.elementAt(i).marcaButton();
+            if (widget.evento == null)
+              listaSemanaButton.elementAt(i).marcaButton();
             diasValidos.add(Semana.values[i]);
           }
         } else {
           for (int i = dataInicial.weekday; i <= 7; i++) {
-            listaSemanaButton
-                .firstWhere((button) => button.index == i - 1)
-                .marcaButton();
+            if (widget.evento == null)
+              listaSemanaButton
+                  .firstWhere((button) => button.index == i - 1)
+                  .marcaButton();
             diasValidos.add(Semana.values[i - 1]);
           }
           for (int i = 1; i <= dataFinal.weekday; i++) {
-            listaSemanaButton
-                .firstWhere((button) => button.index == i - 1)
-                .marcaButton();
+            if (widget.evento == null)
+              listaSemanaButton
+                  .firstWhere((button) => button.index == i - 1)
+                  .marcaButton();
             diasValidos.add(Semana.values[i - 1]);
           }
         }

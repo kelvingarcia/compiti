@@ -31,18 +31,21 @@ class ListaNaoFeitosState extends State<ListaNaoFeitos> {
 
   void insereNovoItem(List<Agendamento> novaListaNaoFeitos) {
     if (listKey.currentState != null) {
-      var diferencaNaoFeitos = novaListaNaoFeitos
-          .toSet()
-          .difference(widget.agendamentosNaoFeitos.toSet())
-          .toList();
+      var diferencaNaoFeitos = List();
+      diferencaNaoFeitos.addAll(novaListaNaoFeitos);
       if (widget.agendamentosNaoFeitos.length < novaListaNaoFeitos.length) {
+        List<Agendamento> diferencaNovos = List();
+        diferencaNovos.addAll(widget.agendamentosNaoFeitos);
+        diferencaNovos.forEach((agendamento) {
+          diferencaNaoFeitos.removeWhere((agend) => agend.id == agendamento.id);
+        });
         diferencaNaoFeitos.forEach((agendamento) {
           var indexWhere = widget.agendamentosNaoFeitos.lastIndexWhere(
                   (agend) =>
                       agend.dataInicial.isBefore(agendamento.dataInicial)) +
               1;
-          listKey.currentState.insertItem(indexWhere);
           widget.agendamentosNaoFeitos.insert(indexWhere, agendamento);
+          listKey.currentState.insertItem(indexWhere);
         });
       } else {
         if (widget.agendamentosNaoFeitos.length > novaListaNaoFeitos.length) {
