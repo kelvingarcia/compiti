@@ -1,4 +1,3 @@
-import 'package:compiti_2/models/agendamento.dart';
 import 'package:flutter/material.dart';
 
 class ItemMenu extends StatelessWidget {
@@ -8,7 +7,11 @@ class ItemMenu extends StatelessWidget {
   final String texto;
   Function onPressed;
 
-  ItemMenu({@required this.hasTop, @required this.icone, @required this.texto, this.onPressed});
+  ItemMenu(
+      {@required this.hasTop,
+      @required this.icone,
+      @required this.texto,
+      this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +23,8 @@ class ItemMenu extends StatelessWidget {
     } else {
       borderTop = BorderSide.none;
     }
-    if(onPressed == null){
-      onPressed = (){};
+    if (onPressed == null) {
+      onPressed = () {};
     }
     return Material(
       color: Colors.cyan,

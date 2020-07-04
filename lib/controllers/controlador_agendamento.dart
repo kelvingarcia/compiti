@@ -3,12 +3,10 @@ import 'package:compiti_2/database/agendamento_dao.dart';
 import 'package:compiti_2/database/evento_dao.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/evento_dto.dart';
 import 'package:compiti_2/models/evento_status.dart';
 import 'package:compiti_2/models/opcao_snackbar.dart';
 import 'package:compiti_2/models/semana.dart';
 import 'package:compiti_2/screens/dashboard/dashboard.dart';
-import 'package:compiti_2/screens/form/evento_form.dart';
 import 'package:flutter/cupertino.dart';
 
 class ControladorAgendamento {
@@ -57,7 +55,7 @@ class ControladorAgendamento {
         );
       }
     }
-    
+
     Agendamento agendamento = Agendamento(0, null, null, evento, null);
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
@@ -84,8 +82,10 @@ class ControladorAgendamento {
         .toggleOpcao(OpcaoSnackBar.adicionou, agendamento: agendamento);
   }
 
-  Future<void> salvarPorLista(BuildContext context,
-      DashboardState dashboardState, List<Agendamento> listaAgendamentos) async {
+  Future<void> salvarPorLista(
+      BuildContext context,
+      DashboardState dashboardState,
+      List<Agendamento> listaAgendamentos) async {
     NotificacaoController notificacaoController =
         NotificacaoController(context);
     var evento = listaAgendamentos.elementAt(0).evento;
@@ -95,8 +95,8 @@ class ControladorAgendamento {
       agendamento.id = 0;
       agendamento.evento.id = idEvento;
     });
-    listaAgendamentos.forEach((agendamento) async { 
-      await _agendamentoDao.save(agendamento);      
+    listaAgendamentos.forEach((agendamento) async {
+      await _agendamentoDao.save(agendamento);
       notificacaoController.agendaNotificacao(
         agendamento.dataInicial,
         agendamento.evento,
@@ -106,7 +106,8 @@ class ControladorAgendamento {
     dashboardState.todosEventos.todosEventosState.atualizaLista();
     dashboardState.eventosDia.eventosDiaState.widget.dashboardState
         .barraInferiorInfo.barraInferiorInfoState
-        .toggleOpcao(OpcaoSnackBar.adicionou, agendamento: listaAgendamentos[0]);
+        .toggleOpcao(OpcaoSnackBar.adicionou,
+            agendamento: listaAgendamentos[0]);
   }
 
   Future<void> editarSomenteAgendamento(
@@ -120,15 +121,14 @@ class ControladorAgendamento {
     evento.id = id;
     await _agendamentoDao.deleteAgendamento(agendamento);
     Agendamento agendamentoNew = Agendamento(
-        0,
-        evento.dataInicial.add(Duration(
-            hours: evento.horaInicial.hour,
-            minutes: evento.horaInicial.minute)),
-        evento.dataFinal.add(Duration(
-            hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute)),
-        evento,
-        EventoStatus.agendado,
-      );
+      0,
+      evento.dataInicial.add(Duration(
+          hours: evento.horaInicial.hour, minutes: evento.horaInicial.minute)),
+      evento.dataFinal.add(Duration(
+          hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute)),
+      evento,
+      EventoStatus.agendado,
+    );
     final int idAgendamento = await _agendamentoDao.save(
       agendamentoNew,
     );
@@ -142,13 +142,17 @@ class ControladorAgendamento {
     dashboardState.todosEventos.todosEventosState.atualizaLista();
     dashboardState.eventosDia.eventosDiaState.widget.dashboardState
         .barraInferiorInfo.barraInferiorInfoState
-        .toggleOpcao(OpcaoSnackBar.editou_um, agendamento: agendamento, agendamentoNew: agendamentoNew);
+        .toggleOpcao(OpcaoSnackBar.editou_um,
+            agendamento: agendamento, agendamentoNew: agendamentoNew);
   }
 
-  Future<void> editarEventoAgendamento(Evento eventoNew,
-      DashboardState dashboardState, BuildContext context, Evento evento) async {
+  Future<void> editarEventoAgendamento(
+      Evento eventoNew,
+      DashboardState dashboardState,
+      BuildContext context,
+      Evento evento) async {
     List<Agendamento> listaAgendamento =
-          await _agendamentoDao.findByEvento(evento);
+        await _agendamentoDao.findByEvento(evento);
     NotificacaoController notificacaoController =
         NotificacaoController(context);
     _eventoDao.editar(eventoNew);
@@ -235,7 +239,9 @@ class ControladorAgendamento {
     dashboardState.todosEventos.todosEventosState.atualizaLista();
     dashboardState.eventosDia.eventosDiaState.widget.dashboardState
         .barraInferiorInfo.barraInferiorInfoState
-        .toggleOpcao(OpcaoSnackBar.editou_todos, listaAgendamentos: listaAgendamento, agendamentoNew: agendamentoNew);
+        .toggleOpcao(OpcaoSnackBar.editou_todos,
+            listaAgendamentos: listaAgendamento,
+            agendamentoNew: agendamentoNew);
   }
 
   Future<void> editaStatus(Agendamento agendamento, String status,
@@ -275,19 +281,22 @@ class ControladorAgendamento {
     dashboardState.todosEventos.todosEventosState.atualizaLista();
     List<Agendamento> listaAgendamentos = List();
     listaAgendamentos.add(agendamento);
-    dashboardState.barraInferiorInfo.barraInferiorInfoState
-        .toggleOpcao(OpcaoSnackBar.deletou_todos, listaAgendamentos: listaAgendamentos);
+    dashboardState.barraInferiorInfo.barraInferiorInfoState.toggleOpcao(
+        OpcaoSnackBar.deletou_todos,
+        listaAgendamentos: listaAgendamentos);
   }
 
   Future<void> deletaTodosAgendamentosComEvento(
       Agendamento agendamento, DashboardState dashboardState) async {
-    List<Agendamento> listaAgendamentos = await _agendamentoDao.findByEvento(agendamento.evento);
+    List<Agendamento> listaAgendamentos =
+        await _agendamentoDao.findByEvento(agendamento.evento);
     await _agendamentoDao.deleteFromEvento(agendamento.evento);
     await _eventoDao.deleteEvento(agendamento.evento);
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
-    dashboardState.barraInferiorInfo.barraInferiorInfoState
-        .toggleOpcao(OpcaoSnackBar.deletou_todos, listaAgendamentos: listaAgendamentos);
+    dashboardState.barraInferiorInfo.barraInferiorInfoState.toggleOpcao(
+        OpcaoSnackBar.deletou_todos,
+        listaAgendamentos: listaAgendamentos);
   }
 
   List<Semana> diasDaSemanaAgendamento(Agendamento agendamento) {

@@ -29,6 +29,48 @@ class ListaFeitosState extends State<ListaFeitos> {
     super.initState();
   }
 
+  void atualizaLista(List<Agendamento> novaListaFeitos) {
+    if (listKey.currentState != null) {
+      var diferencaFeitos = novaListaFeitos
+          .toSet()
+          .difference(widget.agendamentosFeitos.toSet())
+          .toList();
+      if (widget.agendamentosFeitos.length < novaListaFeitos.length) {
+        diferencaFeitos.forEach((agendamento) {
+          var indexWhere = widget.agendamentosFeitos.lastIndexWhere((agend) =>
+                  agend.dataInicial.isBefore(agendamento.dataInicial)) +
+              1;
+          listKey.currentState.insertItem(indexWhere);
+          widget.agendamentosFeitos.insert(indexWhere, agendamento);
+        });
+      } else {
+        if (widget.agendamentosFeitos.length > novaListaFeitos.length) {
+          List<Agendamento> diferencaRemovidos = List();
+          diferencaRemovidos.addAll(widget.agendamentosFeitos);
+          diferencaFeitos.forEach((agendamento) {
+            diferencaRemovidos
+                .removeWhere((agend) => agend.id == agendamento.id);
+          });
+          diferencaRemovidos.forEach((agendamento) {
+            var indexOf = widget.agendamentosFeitos
+                .indexWhere((agend) => agend.id == agendamento.id);
+            widget.agendamentosFeitos.removeAt(indexOf);
+            listKey.currentState.removeItem(indexOf, (context, animation) {
+              return SizeTransition(
+                axis: Axis.vertical,
+                sizeFactor: animation,
+                child: ItemEvento(
+                  agendamento,
+                  widget.dashboardState,
+                ),
+              );
+            });
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedList(

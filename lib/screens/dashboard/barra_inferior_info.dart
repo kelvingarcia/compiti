@@ -1,7 +1,6 @@
 import 'package:compiti_2/controllers/controlador_agendamento.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/opcao_snackbar.dart';
-import 'package:compiti_2/models/semana.dart';
 import 'package:compiti_2/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
@@ -62,8 +61,10 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
     );
   }
 
-  void toggleOpcao(OpcaoSnackBar opcaoSnackBar, {Agendamento agendamento,
-      Agendamento agendamentoNew, List<Agendamento> listaAgendamentos}) {
+  void toggleOpcao(OpcaoSnackBar opcaoSnackBar,
+      {Agendamento agendamento,
+      Agendamento agendamentoNew,
+      List<Agendamento> listaAgendamentos}) {
     if (!desfez) {
       setState(() {
         if (agendamento != null) {
@@ -79,7 +80,9 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
         this.opcaoSnackBar = opcaoSnackBar;
         switch (opcaoSnackBar) {
           case OpcaoSnackBar.deletou_todos:
-            texto = 'O evento ' + listaAgendamentos[0].evento.titulo + ' foi deletado.';
+            texto = 'O evento ' +
+                listaAgendamentos[0].evento.titulo +
+                ' foi deletado.';
             _buttonColor = Colors.cyan;
             break;
           case OpcaoSnackBar.deletou_um:
@@ -87,7 +90,9 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
             _buttonColor = Colors.cyan;
             break;
           case OpcaoSnackBar.editou_todos:
-            texto = 'O evento ' + listaAgendamentos[0].evento.titulo + ' foi editado.';
+            texto = 'O evento ' +
+                listaAgendamentos[0].evento.titulo +
+                ' foi editado.';
             _buttonColor = Colors.cyan;
             break;
           case OpcaoSnackBar.editou_um:
@@ -95,7 +100,7 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
             _buttonColor = Colors.cyan;
             break;
           case OpcaoSnackBar.adicionou:
-            texto = 'Evento '+ agendamento.evento.titulo + ' foi adicionado.';
+            texto = 'Evento ' + agendamento.evento.titulo + ' foi adicionado.';
             _buttonColor = Colors.black;
             break;
         }
@@ -151,7 +156,8 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
                 switch (this.opcaoSnackBar) {
                   case OpcaoSnackBar.deletou_todos:
                     this.desfez = true;
-                    _controladorAgendamento.salvarPorLista(context, widget.dashboardState, this.listaAgendamentos);
+                    _controladorAgendamento.salvarPorLista(
+                        context, widget.dashboardState, this.listaAgendamentos);
                     this.operacaoDesfeita();
                     break;
                   case OpcaoSnackBar.deletou_um:
@@ -164,7 +170,8 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
                     this.desfez = true;
                     _controladorAgendamento.deletaTodosAgendamentosComEvento(
                         agendamentoNew, widget.dashboardState);
-                    _controladorAgendamento.salvarPorLista(context, widget.dashboardState, this.listaAgendamentos);
+                    _controladorAgendamento.salvarPorLista(
+                        context, widget.dashboardState, this.listaAgendamentos);
                     this.operacaoDesfeita();
                     break;
                   case OpcaoSnackBar.editou_um:
@@ -176,7 +183,6 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
                     this.operacaoDesfeita();
                     break;
                   case OpcaoSnackBar.adicionou:
-                    // TODO: Handle this case.
                     break;
                 }
                 Navigator.of(context).pop();

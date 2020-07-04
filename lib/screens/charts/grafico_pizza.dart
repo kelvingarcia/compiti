@@ -1,5 +1,4 @@
 import 'package:charts_flutter/flutter.dart';
-import 'package:compiti_2/database/agendamento_dao.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento_status.dart';
 import 'package:compiti_2/screens/charts/dado_relatorio.dart';
@@ -16,7 +15,6 @@ class GraficoPizza extends StatefulWidget {
 
 class _GraficoPizzaState extends State<GraficoPizza> {
   List<Series<DadoRelatorio, String>> _seriesPieData = List();
-  AgendamentoDao _dao = AgendamentoDao();
 
   @override
   void initState() {
@@ -72,8 +70,10 @@ class _GraficoPizzaState extends State<GraficoPizza> {
       var agendados = widget.listaAgendamentos.where(
           (agendamento) => agendamento.eventoStatus == EventoStatus.agendado);
       porcFeitos = (feitos.length * 100) / widget.listaAgendamentos.length;
-      porcNaoFeitos = (naoFeitos.length * 100) / widget.listaAgendamentos.length;
-      porcAgendados = (agendados.length * 100) / widget.listaAgendamentos.length;
+      porcNaoFeitos =
+          (naoFeitos.length * 100) / widget.listaAgendamentos.length;
+      porcAgendados =
+          (agendados.length * 100) / widget.listaAgendamentos.length;
     }
     var dados = [
       DadoRelatorio('Feitos', porcFeitos),

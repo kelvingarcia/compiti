@@ -29,6 +29,49 @@ class ListaNaoFeitosState extends State<ListaNaoFeitos> {
     super.initState();
   }
 
+  void insereNovoItem(List<Agendamento> novaListaNaoFeitos) {
+    if (listKey.currentState != null) {
+      var diferencaNaoFeitos = novaListaNaoFeitos
+          .toSet()
+          .difference(widget.agendamentosNaoFeitos.toSet())
+          .toList();
+      if (widget.agendamentosNaoFeitos.length < novaListaNaoFeitos.length) {
+        diferencaNaoFeitos.forEach((agendamento) {
+          var indexWhere = widget.agendamentosNaoFeitos.lastIndexWhere(
+                  (agend) =>
+                      agend.dataInicial.isBefore(agendamento.dataInicial)) +
+              1;
+          listKey.currentState.insertItem(indexWhere);
+          widget.agendamentosNaoFeitos.insert(indexWhere, agendamento);
+        });
+      } else {
+        if (widget.agendamentosNaoFeitos.length > novaListaNaoFeitos.length) {
+          List<Agendamento> diferencaRemovidos = List();
+          diferencaRemovidos.addAll(widget.agendamentosNaoFeitos);
+          diferencaNaoFeitos.forEach((agendamento) {
+            diferencaRemovidos
+                .removeWhere((agend) => agend.id == agendamento.id);
+          });
+          diferencaRemovidos.forEach((agendamento) {
+            var indexOf = widget.agendamentosNaoFeitos
+                .indexWhere((agend) => agend.id == agendamento.id);
+            widget.agendamentosNaoFeitos.removeAt(indexOf);
+            listKey.currentState.removeItem(indexOf, (context, animation) {
+              return SizeTransition(
+                axis: Axis.vertical,
+                sizeFactor: animation,
+                child: ItemEvento(
+                  agendamento,
+                  widget.dashboardState,
+                ),
+              );
+            });
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedList(
