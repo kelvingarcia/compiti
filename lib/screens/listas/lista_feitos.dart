@@ -5,9 +5,9 @@ import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
 import 'package:flutter/material.dart';
 
 class ListaFeitos extends StatefulWidget {
-  TodosEventosState todosEventosState;
+  final TodosEventosState todosEventosState;
   final DashboardState dashboardState;
-  List<Agendamento> agendamentosFeitos;
+  final List<Agendamento> agendamentosFeitos;
 
   ListaFeitos(
       {Key key,

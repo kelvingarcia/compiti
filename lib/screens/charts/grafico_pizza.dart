@@ -5,7 +5,7 @@ import 'package:compiti_2/screens/charts/dado_relatorio.dart';
 import 'package:flutter/material.dart';
 
 class GraficoPizza extends StatefulWidget {
-  List<Agendamento> listaAgendamentos = List();
+  final List<Agendamento> listaAgendamentos;
 
   GraficoPizza(this.listaAgendamentos);
 

@@ -9,7 +9,7 @@ import 'dashboard.dart';
 
 class ItemEvento extends StatefulWidget {
   final Agendamento agendamento;
-  DashboardState dashboardState;
+  final DashboardState dashboardState;
 
   ItemEvento(this.agendamento, this.dashboardState);
 
@@ -24,9 +24,9 @@ class ItemEventoState extends State<ItemEvento> {
   ControladorAgendamento _controladorAgendamento = ControladorAgendamento();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    switch(widget.agendamento.eventoStatus){
+    switch (widget.agendamento.eventoStatus) {
       case EventoStatus.agendado:
         _status = 'Agendado';
         _toggleLeft = 95;
@@ -46,8 +46,8 @@ class ItemEventoState extends State<ItemEvento> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.dashboardState.atualizouBanco){
-      switch(widget.agendamento.eventoStatus){
+    if (widget.dashboardState.atualizouBanco) {
+      switch (widget.agendamento.eventoStatus) {
         case EventoStatus.agendado:
           _status = 'Agendado';
           _toggleLeft = 95;
@@ -111,9 +111,9 @@ class ItemEventoState extends State<ItemEvento> {
                           child: InkWell(
                             onTap: () {
                               if (widget.agendamento.evento.dataFinal
-                                  .difference(
-                                  widget.agendamento.evento.dataInicial)
-                                  .inDays >
+                                      .difference(
+                                          widget.agendamento.evento.dataInicial)
+                                      .inDays >
                                   0) {
                                 _editarMaisDeUm();
                               } else {
@@ -364,9 +364,10 @@ class ItemEventoState extends State<ItemEvento> {
     );
   }
 
-  void atualizaStatus(){
-    Future.delayed(Duration(seconds: 1), (){
-      _controladorAgendamento.editaStatus(widget.agendamento, _status, widget.dashboardState);
+  void atualizaStatus() {
+    Future.delayed(Duration(seconds: 1), () {
+      _controladorAgendamento.editaStatus(
+          widget.agendamento, _status, widget.dashboardState);
     });
   }
 
@@ -428,10 +429,8 @@ class ItemEventoState extends State<ItemEvento> {
           MaterialPageRoute(
             builder: (context) => Material(
               child: EventoForm(
-                widget.dashboardState.todosEventos
-                    .todosEventosState,
-                widget.dashboardState.eventosDia
-                    .eventosDiaState,
+                widget.dashboardState.todosEventos.todosEventosState,
+                widget.dashboardState.eventosDia.eventosDiaState,
                 evento: widget.agendamento.evento,
               ),
             ),
@@ -443,10 +442,8 @@ class ItemEventoState extends State<ItemEvento> {
           MaterialPageRoute(
             builder: (context) => Material(
               child: EventoForm(
-                widget.dashboardState.todosEventos
-                    .todosEventosState,
-                widget.dashboardState.eventosDia
-                    .eventosDiaState,
+                widget.dashboardState.todosEventos.todosEventosState,
+                widget.dashboardState.eventosDia.eventosDiaState,
                 evento: widget.agendamento.evento,
                 agendamento: widget.agendamento,
               ),

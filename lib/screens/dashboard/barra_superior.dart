@@ -6,7 +6,7 @@ import 'package:compiti_2/screens/dashboard/dashboard.dart';
 
 class BarraSuperior extends StatefulWidget {
   final DashboardState parent;
-  List<Agendamento> listaAgendamentos = List();
+  final List<Agendamento> listaAgendamentos;
 
   BarraSuperior({this.parent, this.listaAgendamentos});
 
