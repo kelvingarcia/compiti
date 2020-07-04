@@ -5,7 +5,7 @@ import 'package:compiti_2/screens/listas/lista_feitos.dart';
 import 'package:compiti_2/screens/listas/lista_nao_feitos.dart';
 import 'package:flutter/material.dart';
 
-import 'dashboard.dart';
+import '../dashboard/dashboard.dart';
 
 class TodosEventos extends StatefulWidget {
   TodosEventosState todosEventosState;
@@ -43,8 +43,6 @@ class TodosEventosState extends State<TodosEventos>
 
   @override
   Widget build(BuildContext context) {
-    if (realizadas) {
-    } else {}
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,

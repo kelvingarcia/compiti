@@ -3,7 +3,7 @@ import 'package:compiti_2/models/toggle_status.dart';
 import 'package:compiti_2/screens/dashboard/barra_inferior_info.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
-import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
+import 'package:compiti_2/screens/listas/todos_eventos.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 
 import 'package:flutter/cupertino.dart';

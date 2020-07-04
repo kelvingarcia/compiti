@@ -3,7 +3,7 @@ import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento.dart';
 import 'package:compiti_2/models/semana.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
-import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
+import 'package:compiti_2/screens/listas/todos_eventos.dart';
 import 'package:compiti_2/screens/form/campo_data_hora.dart';
 import 'package:compiti_2/screens/form/data_hora.dart';
 import 'package:flutter/cupertino.dart';
@@ -229,7 +229,8 @@ class EventoFormState extends State<EventoForm> {
                                   validator: (_) {
                                     if (formatoData
                                         .parse(dataInicialController.text)
-                                        .isAfter(formatoData.parse(dataFinalController.text))) {
+                                        .isAfter(formatoData
+                                            .parse(dataFinalController.text))) {
                                       return 'Data inicial não ser pode depois da data final';
                                     }
                                     return null;

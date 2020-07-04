@@ -1,7 +1,7 @@
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/screens/dashboard/dashboard.dart';
 import 'package:compiti_2/screens/dashboard/item_evento.dart';
-import 'package:compiti_2/screens/dashboard/todos_eventos.dart';
+import 'package:compiti_2/screens/listas/todos_eventos.dart';
 import 'package:flutter/material.dart';
 
 class ListaNaoFeitos extends StatefulWidget {
@@ -84,13 +84,9 @@ class ListaNaoFeitosState extends State<ListaNaoFeitos> {
             height: MediaQuery.of(context).size.height * 0.3,
           );
         }
-        return SizeTransition(
-          axis: Axis.vertical,
-          sizeFactor: animation,
-          child: ItemEvento(
-            widget.agendamentosNaoFeitos[index],
-            widget.dashboardState,
-          ),
+        return ItemEvento(
+          widget.agendamentosNaoFeitos[index],
+          widget.dashboardState,
         );
       },
     );
