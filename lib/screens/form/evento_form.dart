@@ -267,19 +267,6 @@ class EventoFormState extends State<EventoForm> {
                         ],
                       ),
                     ),
-                    // Padding(
-                    //   padding: EdgeInsets.only(top: 24.0),
-                    //   child: Container(
-                    //     height: 50,
-                    //     child: ListView.builder(
-                    //       scrollDirection: Axis.horizontal,
-                    //       itemCount: 7,
-                    //       itemBuilder: (context, index) {
-                    //         return SemanaButton(index, this);
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
                     Stack(
                       children: <Widget>[
                         Padding(

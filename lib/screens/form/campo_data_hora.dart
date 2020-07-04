@@ -65,8 +65,14 @@ class _CampoDataHoraState extends State<CampoDataHora> {
   }
 
   void mostraTimePicker() async {
-    var time =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    var horaSplit = widget.controller.text.split(':');
+    var time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(
+        hour: int.parse(horaSplit[0]),
+        minute: int.parse(horaSplit[1]),
+      ),
+    );
     if (time != null) widget.controller.text = time.format(context);
   }
 }

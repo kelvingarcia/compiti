@@ -15,7 +15,6 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Implementar a data selecionada em todos os date e time pickers.
 - Erro ao realizar mais uma operação em menos de 5 segundos.
 
 Bugs:
