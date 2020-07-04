@@ -27,10 +27,12 @@ class _CampoDataHoraState extends State<CampoDataHora> {
   void initState() {
     var dateTime = DateTime.now();
     var timeOfDay = TimeOfDay.now();
-    if (widget.dataHora == DataHora.data)
-      widget.controller.text = formatoData.format(dateTime);
-    else
-      widget.controller.text = timeOfDay.hour.toString() + ':00';
+    if (widget.controller.text == '') {
+      if (widget.dataHora == DataHora.data)
+        widget.controller.text = formatoData.format(dateTime);
+      else
+        widget.controller.text = timeOfDay.hour.toString() + ':00';
+    }
     super.initState();
   }
 
