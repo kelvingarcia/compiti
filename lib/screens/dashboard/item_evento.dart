@@ -66,9 +66,16 @@ class ItemEventoState extends State<ItemEvento> {
         default:
           break;
       }
+      if (DateTime.now().isBefore(widget.agendamento.dataFinal) &&
+          widget.agendamento.eventoStatus == EventoStatus.nao_feito) {
+        Future.delayed(Duration(milliseconds: 300), () {
+          _status = 'Agendado';
+          this.atualizaStatus();
+        });
+      }
     }
-    if (widget.agendamento.dataFinal.isBefore(DateTime.now()) &&
-        widget.agendamento.eventoStatus != EventoStatus.feito) {
+    if (DateTime.now().isAfter(widget.agendamento.dataFinal) &&
+        widget.agendamento.eventoStatus == EventoStatus.agendado) {
       Future.delayed(Duration(milliseconds: 300), () {
         _status = 'Não feito';
         this.atualizaStatus();

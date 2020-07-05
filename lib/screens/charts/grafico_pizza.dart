@@ -24,6 +24,27 @@ class _GraficoPizzaState extends State<GraficoPizza> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.listaAgendamentos.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Relatórios'),
+          backgroundColor: Colors.blueAccent[200],
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Container(
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Icon(Icons.warning),
+                  Text('Você ainda não tem agendamentos!'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Relatórios'),
