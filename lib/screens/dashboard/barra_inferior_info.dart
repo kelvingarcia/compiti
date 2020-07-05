@@ -13,7 +13,6 @@ class BarraInferiorInfo extends StatefulWidget {
 }
 
 class BarraInferiorInfoState extends State<BarraInferiorInfo> {
-  Color _buttonColor;
   ControladorAgendamento _controladorAgendamento = ControladorAgendamento();
   Agendamento agendamento;
   List<Agendamento> listaAgendamentos;
@@ -21,6 +20,7 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
   String texto = '';
   OpcaoSnackBar opcaoSnackBar;
   bool desfez = false;
+  bool _visibilidadeButton = false;
 
   @override
   void initState() {
@@ -39,20 +39,25 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                texto,
-                style: TextStyle(color: Colors.white),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  texto,
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-            FlatButton(
-              onPressed: () {
-                _dialogo();
-              },
-              child: Text(
-                'DESFAZER',
-                style: TextStyle(color: _buttonColor),
+            Visibility(
+              visible: _visibilidadeButton,
+              child: FlatButton(
+                onPressed: () {
+                  _dialogo();
+                },
+                child: Text(
+                  'DESFAZER',
+                  style: TextStyle(color: Color(0xFF6599FF)),
+                ),
               ),
             ),
           ],
@@ -80,28 +85,24 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
         this.opcaoSnackBar = opcaoSnackBar;
         switch (opcaoSnackBar) {
           case OpcaoSnackBar.deletou_todos:
-            texto = 'O evento ' +
-                listaAgendamentos[0].evento.titulo +
-                ' foi deletado.';
-            _buttonColor = Color(0xFF6599FF);
+            texto = listaAgendamentos[0].evento.titulo + ' foi deletado.';
+            _visibilidadeButton = true;
             break;
           case OpcaoSnackBar.deletou_um:
-            texto = 'O evento ' + agendamento.evento.titulo + ' foi deletado.';
-            _buttonColor = Color(0xFF6599FF);
+            texto = agendamento.evento.titulo + ' foi deletado.';
+            _visibilidadeButton = true;
             break;
           case OpcaoSnackBar.editou_todos:
-            texto = 'O evento ' +
-                listaAgendamentos[0].evento.titulo +
-                ' foi editado.';
-            _buttonColor = Color(0xFF6599FF);
+            texto = listaAgendamentos[0].evento.titulo + ' foi editado.';
+            _visibilidadeButton = true;
             break;
           case OpcaoSnackBar.editou_um:
-            texto = 'O evento ' + agendamento.evento.titulo + ' foi editado.';
-            _buttonColor = Color(0xFF6599FF);
+            texto = agendamento.evento.titulo + ' foi editado.';
+            _visibilidadeButton = true;
             break;
           case OpcaoSnackBar.adicionou:
-            texto = 'Evento ' + agendamento.evento.titulo + ' foi adicionado.';
-            _buttonColor = Colors.black;
+            texto = agendamento.evento.titulo + ' foi adicionado.';
+            _visibilidadeButton = false;
             break;
         }
         widget.dashboardState.toggleSnackBar();
@@ -197,7 +198,7 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
   void operacaoDesfeita() {
     setState(() {
       texto = 'Operação desfeita.';
-      _buttonColor = Colors.black;
+      _visibilidadeButton = false;
       widget.dashboardState.toggleSnackBar();
     });
   }

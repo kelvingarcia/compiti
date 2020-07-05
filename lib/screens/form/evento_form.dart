@@ -155,6 +155,8 @@ class EventoFormState extends State<EventoForm> {
                               validator: (value) {
                                 if (value.isEmpty)
                                   return 'O título não pode estar vazio';
+                                if (value.length > 20)
+                                  return 'O título deve ter no máximo 20 caracteres';
                                 return null;
                               },
                               controller: _tituloController,

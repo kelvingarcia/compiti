@@ -102,7 +102,7 @@ class ItemEventoState extends State<ItemEvento> {
                             widget.agendamento.evento.titulo,
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 24.0,
+                              fontSize: 16.0,
                             ),
                           ),
                         )
@@ -193,7 +193,7 @@ class ItemEventoState extends State<ItemEvento> {
                 widget.agendamento.evento.descricao,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20.0,
+                  fontSize: 16.0,
                 ),
               ),
             ),
