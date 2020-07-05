@@ -11,7 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'barra_superior.dart';
+import '../barra_superior/barra_superior.dart';
 import 'toggle_dashboard.dart';
 
 class Dashboard extends StatefulWidget {

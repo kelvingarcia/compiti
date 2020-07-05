@@ -27,6 +27,7 @@ dependencies:
     sdk: flutter
   charts_flutter:
   month_picker_dialog:
+  launch_review:
   date_utils:
   intl:
   sqflite:

@@ -1,8 +1,9 @@
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/screens/charts/grafico_pizza.dart';
-import 'package:compiti_2/screens/dashboard/item_menu.dart';
+import 'package:compiti_2/screens/barra_superior/item_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:compiti_2/screens/dashboard/dashboard.dart';
+import 'package:launch_review/launch_review.dart';
 
 class BarraSuperior extends StatefulWidget {
   final DashboardState parent;
@@ -97,6 +98,7 @@ class _BarraSuperiorState extends State<BarraSuperior> {
                         hasTop: false,
                         icone: Icons.star,
                         texto: 'Avaliar app',
+                        onPressed: () => LaunchReview.launch(),
                       ),
                     ],
                   ),
