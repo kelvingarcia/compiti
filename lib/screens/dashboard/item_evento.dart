@@ -67,6 +67,13 @@ class ItemEventoState extends State<ItemEvento> {
           break;
       }
     }
+    if (widget.agendamento.dataFinal.isBefore(DateTime.now()) &&
+        widget.agendamento.eventoStatus != EventoStatus.feito) {
+      Future.delayed(Duration(milliseconds: 300), () {
+        _status = 'Não feito';
+        this.atualizaStatus();
+      });
+    }
     var dataInicial = dateFormat.format(widget.agendamento.dataInicial);
     var horaInicial =
         widget.agendamento.dataInicial.toString().substring(11, 16);
