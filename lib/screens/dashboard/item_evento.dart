@@ -4,6 +4,7 @@ import 'package:compiti_2/models/evento_status.dart';
 import 'package:compiti_2/models/opcao.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'dashboard.dart';
 
@@ -22,6 +23,7 @@ class ItemEventoState extends State<ItemEvento> {
   String _status = 'Agendado';
   int dragCount = 0;
   ControladorAgendamento _controladorAgendamento = ControladorAgendamento();
+  final DateFormat dateFormat = DateFormat("dd/MM/yyyy");
 
   @override
   void initState() {
@@ -64,8 +66,7 @@ class ItemEventoState extends State<ItemEvento> {
           break;
       }
     }
-    var dataInicial =
-        widget.agendamento.dataInicial.toString().substring(0, 10);
+    var dataInicial = dateFormat.format(widget.agendamento.dataInicial);
     var horaInicial =
         widget.agendamento.dataInicial.toString().substring(11, 16);
     var horaFinal = widget.agendamento.dataFinal.toString().substring(11, 16);
@@ -75,7 +76,7 @@ class ItemEventoState extends State<ItemEvento> {
         width: MediaQuery.of(context).size.width * 0.9,
         color: Color(0xFF626262),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
               height: MediaQuery.of(context).size.height * 0.07,
@@ -91,15 +92,17 @@ class ItemEventoState extends State<ItemEvento> {
                     Row(
                       children: <Widget>[
                         Icon(
-                          Icons.category,
+                          Icons.event,
                           color: Colors.white,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 8.0),
                           child: Text(
                             widget.agendamento.evento.titulo,
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 16.0),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.0,
+                            ),
                           ),
                         )
                       ],
@@ -173,23 +176,12 @@ class ItemEventoState extends State<ItemEvento> {
                       fontSize: 16.0,
                     ),
                   ),
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        horaInicial,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      Text(
-                        horaFinal,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    horaInicial + ' ~ ' + horaFinal,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
                   ),
                 ],
               ),
@@ -200,7 +192,7 @@ class ItemEventoState extends State<ItemEvento> {
                 widget.agendamento.evento.descricao,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16.0,
+                  fontSize: 20.0,
                 ),
               ),
             ),

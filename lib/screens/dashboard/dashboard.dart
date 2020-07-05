@@ -3,6 +3,7 @@ import 'package:compiti_2/models/toggle_status.dart';
 import 'package:compiti_2/screens/dashboard/barra_inferior_info.dart';
 import 'package:compiti_2/screens/dashboard/calendario_mes.dart';
 import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
+import 'package:compiti_2/screens/dashboard/roteamento_animado.dart';
 import 'package:compiti_2/screens/listas/todos_eventos.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 
@@ -14,14 +15,13 @@ import 'barra_superior.dart';
 import 'toggle_dashboard.dart';
 
 class Dashboard extends StatefulWidget {
-  final int animationTime = 200;
-
   @override
   DashboardState createState() => DashboardState();
 }
 
 class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   DateTime currentDate;
+  int animationTime = 200;
 
   bool atualizouBanco = false;
   List<Agendamento> listaAgendamentos = List();
@@ -61,15 +61,15 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     );
     _controllerDia = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: widget.animationTime),
+      duration: Duration(milliseconds: animationTime),
     );
     _controllerCalendario = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: widget.animationTime),
+      duration: Duration(milliseconds: animationTime),
     );
     _controllerEventos = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: widget.animationTime),
+      duration: Duration(milliseconds: animationTime),
     );
     eventosDia.dashboardState = this;
     todosEventos.dashboardState = this;
@@ -320,10 +320,13 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
           child: Center(
             child: FloatingActionButton(
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Material(
-                      child: EventoForm(todosEventos.todosEventosState,
-                          eventosDia.eventosDiaState)),
+                createRoute(
+                  Material(
+                    child: EventoForm(
+                      todosEventos.todosEventosState,
+                      eventosDia.eventosDiaState,
+                    ),
+                  ),
                 ),
               ),
               backgroundColor: Colors.cyan,

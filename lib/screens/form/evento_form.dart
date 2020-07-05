@@ -136,9 +136,21 @@ class EventoFormState extends State<EventoForm> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.only(top: 24.0),
+                            padding: EdgeInsets.only(right: 4.0, top: 8.0),
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.black,
+                                size: 28.0,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 8.0),
                             child: TextFormField(
                               validator: (value) {
                                 if (value.isEmpty)

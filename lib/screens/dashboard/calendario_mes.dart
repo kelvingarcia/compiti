@@ -65,26 +65,43 @@ class CalendarioMesState extends State<CalendarioMes> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
-            child: InkWell(
-              splashColor: Colors.white,
-              onTap: () async {
-                var novoMes = await showMonthPicker(
-                    context: context, initialDate: DateTime.now());
-                if (novoMes != null) posicaoMes(novoMes);
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.07,
-                color: Colors.grey[400],
-                child: Center(
-                  child: Text(
-                    dateFormat.format(mesSelecionado) +
-                        ' ' +
-                        mesSelecionado.year.toString(),
-                    style: TextStyle(
-                      color: Colors.black,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.07,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      posicaoMes(DateTime(
+                          mesSelecionado.year, mesSelecionado.month - 1));
+                    },
+                    child: Icon(
+                      Icons.keyboard_arrow_left,
+                      color: Colors.white,
                     ),
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () async {
+                      var novoMes = await showMonthPicker(
+                          context: context, initialDate: mesSelecionado);
+                      if (novoMes != null) posicaoMes(novoMes);
+                    },
+                    child: Text(
+                      dateFormat.format(mesSelecionado) +
+                          ' ' +
+                          mesSelecionado.year.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 24.0),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => posicaoMes(DateTime(
+                        mesSelecionado.year, mesSelecionado.month + 1)),
+                    child: Icon(
+                      Icons.keyboard_arrow_right,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -21,7 +21,7 @@ class EventosDia extends StatefulWidget {
 class EventosDiaState extends State<EventosDia> {
   AgendamentoDao _dao = AgendamentoDao();
   List<Agendamento> agendamentos = List();
-  final DateFormat dateFormat = DateFormat("dd/MM/yyyy");
+  final DateFormat dateFormat = DateFormat(DateFormat.MONTH, 'pt_BR');
 
   @override
   void initState() {
@@ -38,19 +38,29 @@ class EventosDiaState extends State<EventosDia> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-            child: InkWell(
-              splashColor: Colors.white,
-              onTap: () => widget.dashboardState.mesFromDia(),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.07,
-                color: Colors.grey[400],
-                child: Center(
-                  child: Text(
-                    dateFormat.format(widget.dashboardState.currentDate),
-                    style: TextStyle(
-                      color: Colors.black,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.07,
+              child: GestureDetector(
+                onTap: () => widget.dashboardState.mesFromDia(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      widget.dashboardState.currentDate.day.toString() +
+                          ' de ' +
+                          dateFormat.format(widget.dashboardState.currentDate) +
+                          ' de ' +
+                          widget.dashboardState.currentDate.year.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 16.0),
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -53,6 +53,7 @@ class TodosEventosState extends State<TodosEventos>
             Padding(
               padding: EdgeInsets.only(bottom: 16.0),
               child: TabBar(
+                indicatorColor: Colors.cyan,
                 tabs: <Widget>[
                   Tab(
                     text: 'Realizadas',
