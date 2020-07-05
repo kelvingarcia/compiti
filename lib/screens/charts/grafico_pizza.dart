@@ -27,7 +27,7 @@ class _GraficoPizzaState extends State<GraficoPizza> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Relatórios'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueAccent[200],
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
@@ -77,7 +77,7 @@ class _GraficoPizzaState extends State<GraficoPizza> {
     }
     var dados = [
       DadoRelatorio('Feitos', porcFeitos),
-      DadoRelatorio('Não feito', porcNaoFeitos),
+      DadoRelatorio('Não feitos', porcNaoFeitos),
       DadoRelatorio('Agendados', porcAgendados),
     ];
     _seriesPieData.add(

@@ -33,7 +33,7 @@ class TodosEventosState extends State<TodosEventos>
   List<Agendamento> agendamentosNaoFeitos = List();
   List<Agendamento> agendamentosFeitos = List();
 
-  bool realizadas = false;
+  bool realizados = false;
 
   @override
   void initState() {
@@ -56,10 +56,10 @@ class TodosEventosState extends State<TodosEventos>
                 indicatorColor: Color(0xFF6599FF),
                 tabs: <Widget>[
                   Tab(
-                    text: 'Realizadas',
+                    text: 'Realizados',
                   ),
                   Tab(
-                    text: 'Não realizadas',
+                    text: 'Não Realizados',
                   ),
                 ],
               ),
