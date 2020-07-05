@@ -1,4 +1,4 @@
-import 'package:compiti_2/screens/form/evento_form.dart';
+import 'package:compiti/screens/form/evento_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

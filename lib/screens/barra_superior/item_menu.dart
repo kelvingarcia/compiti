@@ -27,7 +27,7 @@ class ItemMenu extends StatelessWidget {
       onPressed = () {};
     }
     return Material(
-      color: Colors.cyan,
+      color: Color(0xFF6599FF),
       shadowColor: Colors.white,
       child: InkWell(
         splashColor: Colors.white,

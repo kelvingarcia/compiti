@@ -1,4 +1,4 @@
-import 'package:compiti_2/screens/dashboard/dashboard.dart';
+import 'package:compiti/screens/dashboard/dashboard.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

@@ -1,11 +1,11 @@
-import 'package:compiti_2/controllers/controlador_agendamento.dart';
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/semana.dart';
-import 'package:compiti_2/screens/dashboard/eventos_dia.dart';
-import 'package:compiti_2/screens/listas/todos_eventos.dart';
-import 'package:compiti_2/screens/form/campo_data_hora.dart';
-import 'package:compiti_2/screens/form/data_hora.dart';
+import 'package:compiti/controllers/controlador_agendamento.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/models/evento.dart';
+import 'package:compiti/models/semana.dart';
+import 'package:compiti/screens/dashboard/eventos_dia.dart';
+import 'package:compiti/screens/listas/todos_eventos.dart';
+import 'package:compiti/screens/form/campo_data_hora.dart';
+import 'package:compiti/screens/form/data_hora.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -533,8 +533,8 @@ class SemanaButtonState extends State<SemanaButton> {
     if (widget.eventoFormState.diasDaSemana != null) {
       widget.eventoFormState.diasDaSemana.forEach((dia) {
         if (dia.index == this.index) {
-          _color = Colors.cyan;
-          _colorSplash = Colors.cyan;
+          _color = Color(0xFF6599FF);
+          _colorSplash = Color(0xFF6599FF);
         }
       });
     }
@@ -544,8 +544,8 @@ class SemanaButtonState extends State<SemanaButton> {
   void marcaButton() {
     setState(() {
       widget.eventoFormState.diasDaSemana.add(Semana.values[index]);
-      _color = Colors.cyan;
-      _colorSplash = Colors.cyan;
+      _color = Color(0xFF6599FF);
+      _colorSplash = Color(0xFF6599FF);
     });
   }
 

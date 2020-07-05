@@ -1,5 +1,5 @@
-import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/screens/dashboard/dashboard.dart';
+import 'package:compiti/models/evento.dart';
+import 'package:compiti/screens/dashboard/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,13 +8,14 @@ class NotificacaoController {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
 
-  NotificacaoController(this.context){
+  NotificacaoController(this.context) {
     this.iniciaConfigNotify();
   }
 
   void iniciaConfigNotify() async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('compiti_logo');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
@@ -35,7 +36,12 @@ class NotificacaoController {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
-      0, evento.titulo, evento.descricao, dataHora, platformChannelSpecifics,);
+      0,
+      evento.titulo,
+      evento.descricao,
+      dataHora,
+      platformChannelSpecifics,
+    );
   }
 
   Future selectNotification(String payload) async {

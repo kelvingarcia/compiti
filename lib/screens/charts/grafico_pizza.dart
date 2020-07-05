@@ -1,7 +1,7 @@
 import 'package:charts_flutter/flutter.dart';
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/models/evento_status.dart';
-import 'package:compiti_2/screens/charts/dado_relatorio.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/models/evento_status.dart';
+import 'package:compiti/screens/charts/dado_relatorio.dart';
 import 'package:flutter/material.dart';
 
 class GraficoPizza extends StatefulWidget {
@@ -27,7 +27,7 @@ class _GraficoPizzaState extends State<GraficoPizza> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Relatórios'),
-        backgroundColor: Colors.cyan,
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),

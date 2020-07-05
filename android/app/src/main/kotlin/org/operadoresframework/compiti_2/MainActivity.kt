@@ -1,4 +1,4 @@
-package org.operadoresframework.compiti_2
+package org.operadoresframework.compiti
 
 import io.flutter.embedding.android.FlutterActivity
 

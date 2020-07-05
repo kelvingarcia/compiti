@@ -1,9 +1,9 @@
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/screens/barra_superior/reportar_problema.dart';
-import 'package:compiti_2/screens/charts/grafico_pizza.dart';
-import 'package:compiti_2/screens/barra_superior/item_menu.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/screens/barra_superior/reportar_problema.dart';
+import 'package:compiti/screens/charts/grafico_pizza.dart';
+import 'package:compiti/screens/barra_superior/item_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:compiti_2/screens/dashboard/dashboard.dart';
+import 'package:compiti/screens/dashboard/dashboard.dart';
 import 'package:launch_review/launch_review.dart';
 
 class BarraSuperior extends StatefulWidget {
@@ -21,7 +21,7 @@ class _BarraSuperiorState extends State<BarraSuperior> {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.cyan,
+        color: Color(0xFF6599FF),
       ),
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -34,7 +34,7 @@ class _BarraSuperiorState extends State<BarraSuperior> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Material(
-                    color: Colors.cyan,
+                    color: Color(0xFF6599FF),
                     child: InkWell(
                       splashColor: Colors.white,
                       onTap: () {

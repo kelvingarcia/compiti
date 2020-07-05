@@ -1,5 +1,5 @@
-import 'package:compiti_2/database/agendamento_dao.dart';
-import 'package:compiti_2/database/evento_dao.dart';
+import 'package:compiti/database/agendamento_dao.dart';
+import 'package:compiti/database/evento_dao.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

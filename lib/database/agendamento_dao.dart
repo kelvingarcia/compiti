@@ -1,7 +1,7 @@
-import 'package:compiti_2/database/evento_dao.dart';
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/evento_status.dart';
+import 'package:compiti/database/evento_dao.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/models/evento.dart';
+import 'package:compiti/models/evento_status.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'app_database.dart';
@@ -80,19 +80,20 @@ class AgendamentoDao {
   Future<void> editar(Agendamento agendamento) async {
     final Database db = await getDatabase();
     Map<String, dynamic> agendamentoMap = _toMap(agendamento);
-    await db.update(_tableName, agendamentoMap, where: "id = ?", whereArgs: [agendamento.id]);
+    await db.update(_tableName, agendamentoMap,
+        where: "id = ?", whereArgs: [agendamento.id]);
   }
 
   Future<List<Agendamento>> findByEvento(Evento evento) async {
     final Database db = await getDatabase();
     final int id = evento.id;
     final List<Map<String, dynamic>> result =
-    await db.rawQuery('SELECT * FROM $_tableName where evento=$id');
+        await db.rawQuery('SELECT * FROM $_tableName where evento=$id');
     List<Agendamento> agendamentos = await _toList(result);
     return agendamentos;
   }
 
-  Future<void> deleteAgendamento(Agendamento agendamento) async{
+  Future<void> deleteAgendamento(Agendamento agendamento) async {
     final Database db = await getDatabase();
     int id = agendamento.id;
     await db.rawQuery('DELETE FROM $_tableName where id=$id');

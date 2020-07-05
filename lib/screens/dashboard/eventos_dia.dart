@@ -1,7 +1,7 @@
-import 'package:compiti_2/database/agendamento_dao.dart';
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/screens/dashboard/dashboard.dart';
-import 'package:compiti_2/screens/dashboard/item_evento.dart';
+import 'package:compiti/database/agendamento_dao.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/screens/dashboard/dashboard.dart';
+import 'package:compiti/screens/dashboard/item_evento.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

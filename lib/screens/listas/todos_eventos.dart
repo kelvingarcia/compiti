@@ -1,8 +1,8 @@
-import 'package:compiti_2/database/agendamento_dao.dart';
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/models/evento_status.dart';
-import 'package:compiti_2/screens/listas/lista_feitos.dart';
-import 'package:compiti_2/screens/listas/lista_nao_feitos.dart';
+import 'package:compiti/database/agendamento_dao.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/models/evento_status.dart';
+import 'package:compiti/screens/listas/lista_feitos.dart';
+import 'package:compiti/screens/listas/lista_nao_feitos.dart';
 import 'package:flutter/material.dart';
 
 import '../dashboard/dashboard.dart';
@@ -53,7 +53,7 @@ class TodosEventosState extends State<TodosEventos>
             Padding(
               padding: EdgeInsets.only(bottom: 16.0),
               child: TabBar(
-                indicatorColor: Colors.cyan,
+                indicatorColor: Color(0xFF6599FF),
                 tabs: <Widget>[
                   Tab(
                     text: 'Realizadas',

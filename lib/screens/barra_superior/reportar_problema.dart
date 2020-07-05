@@ -11,7 +11,7 @@ class ReportarProblema extends StatelessWidget {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Reportar problema'),
-        backgroundColor: Colors.cyan,
+        backgroundColor: Color(0xFF6599FF),
       ),
       body: Form(
         key: _formKey,

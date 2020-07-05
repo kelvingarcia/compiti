@@ -1,5 +1,5 @@
-import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/semana.dart';
+import 'package:compiti/models/evento.dart';
+import 'package:compiti/models/semana.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -34,7 +34,8 @@ class EventoDao {
   void editar(Evento evento) async {
     final Database db = await getDatabase();
     Map<String, dynamic> eventoMap = _toMap(evento);
-    await db.update(_tableName, eventoMap, where: "id = ?", whereArgs: [evento.id]);
+    await db
+        .update(_tableName, eventoMap, where: "id = ?", whereArgs: [evento.id]);
   }
 
   Future<List<Evento>> findAll() async {
@@ -46,7 +47,8 @@ class EventoDao {
 
   Future<Evento> find(int id) async {
     final Database db = await getDatabase();
-    final List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $_tableName where id=$id');
+    final List<Map<String, dynamic>> result =
+        await db.rawQuery('SELECT * FROM $_tableName where id=$id');
     List<Evento> eventos = _toList(result);
     return eventos.removeLast();
   }
@@ -70,28 +72,30 @@ class EventoDao {
           row[_dataInicial].toString().substring(0, 10).split('-');
       var dataFinalSplit =
           row[_dataFinal].toString().substring(0, 10).split('-');
-      var horaInicialSplit = row[_horaInicial].toString().substring(10, 15).split(':');
-      var horaFinalSplit = row[_horaFinal].toString().substring(10, 15).split(':');
+      var horaInicialSplit =
+          row[_horaInicial].toString().substring(10, 15).split(':');
+      var horaFinalSplit =
+          row[_horaFinal].toString().substring(10, 15).split(':');
       List<Semana> diasDaSemana = List();
       var diasDaSemanaString = row[_diasDaSemana].toString();
-      diasDaSemanaString.substring(1, diasDaSemanaString.length-1).split(',').forEach((diaString) {
-        diasDaSemana.add(Semana.values.firstWhere((valor) => valor.toString() == diaString.trim()));
+      diasDaSemanaString
+          .substring(1, diasDaSemanaString.length - 1)
+          .split(',')
+          .forEach((diaString) {
+        diasDaSemana.add(Semana.values
+            .firstWhere((valor) => valor.toString() == diaString.trim()));
       });
       final Evento evento = Evento(
         row[_id],
         row[_titulo],
         row[_descricao],
         TimeOfDay(
-          hour: int.parse(
-              horaInicialSplit.elementAt(0)),
-          minute: int.parse(
-              horaInicialSplit.elementAt(1)),
+          hour: int.parse(horaInicialSplit.elementAt(0)),
+          minute: int.parse(horaInicialSplit.elementAt(1)),
         ),
         TimeOfDay(
-          hour: int.parse(
-              horaFinalSplit.elementAt(0)),
-          minute: int.parse(
-              horaFinalSplit.elementAt(1)),
+          hour: int.parse(horaFinalSplit.elementAt(0)),
+          minute: int.parse(horaFinalSplit.elementAt(1)),
         ),
         DateTime(
           int.parse(dataInicialSplit.elementAt(0)),
@@ -110,7 +114,7 @@ class EventoDao {
     return eventos;
   }
 
-  Future<void> deleteEvento(Evento evento) async{
+  Future<void> deleteEvento(Evento evento) async {
     final Database db = await getDatabase();
     int id = evento.id;
     await db.rawQuery('DELETE FROM $_tableName where id=$id');

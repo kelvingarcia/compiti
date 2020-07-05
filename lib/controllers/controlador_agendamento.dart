@@ -1,12 +1,12 @@
-import 'package:compiti_2/controllers/notificacao_controller.dart';
-import 'package:compiti_2/database/agendamento_dao.dart';
-import 'package:compiti_2/database/evento_dao.dart';
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/models/evento.dart';
-import 'package:compiti_2/models/evento_status.dart';
-import 'package:compiti_2/models/opcao_snackbar.dart';
-import 'package:compiti_2/models/semana.dart';
-import 'package:compiti_2/screens/dashboard/dashboard.dart';
+import 'package:compiti/controllers/notificacao_controller.dart';
+import 'package:compiti/database/agendamento_dao.dart';
+import 'package:compiti/database/evento_dao.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/models/evento.dart';
+import 'package:compiti/models/evento_status.dart';
+import 'package:compiti/models/opcao_snackbar.dart';
+import 'package:compiti/models/semana.dart';
+import 'package:compiti/screens/dashboard/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 
 class ControladorAgendamento {

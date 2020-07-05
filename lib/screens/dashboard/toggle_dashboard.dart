@@ -1,5 +1,5 @@
-import 'package:compiti_2/models/toggle_status.dart';
-import 'package:compiti_2/screens/dashboard/dashboard.dart';
+import 'package:compiti/models/toggle_status.dart';
+import 'package:compiti/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class ToggleDashboard extends StatefulWidget {
@@ -18,19 +18,19 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.dashboard.toggleStatus == ToggleStatus.dia){
+    if (widget.dashboard.toggleStatus == ToggleStatus.dia) {
       _borderEventos = Color(0xFF383838);
       _borderMes = Color(0xFF383838);
-      _borderDia = Colors.cyan;
+      _borderDia = Color(0xFF6599FF);
     } else {
-      if(widget.dashboard.toggleStatus == ToggleStatus.eventos){
-        _borderEventos = Colors.cyan;
+      if (widget.dashboard.toggleStatus == ToggleStatus.eventos) {
+        _borderEventos = Color(0xFF6599FF);
         _borderMes = Color(0xFF383838);
         _borderDia = Color(0xFF383838);
       } else {
-        if(widget.dashboard.toggleStatus == ToggleStatus.mes){
+        if (widget.dashboard.toggleStatus == ToggleStatus.mes) {
           _borderEventos = Color(0xFF383838);
-          _borderMes = Colors.cyan;
+          _borderMes = Color(0xFF6599FF);
           _borderDia = Color(0xFF383838);
         }
       }
@@ -44,10 +44,10 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
           GestureDetector(
             onTap: () {
               setState(() {
-                if(widget.dashboard.toggleStatus == ToggleStatus.dia) {
+                if (widget.dashboard.toggleStatus == ToggleStatus.dia) {
                   widget.dashboard.eventosFromDia();
                 } else {
-                  if(widget.dashboard.toggleStatus == ToggleStatus.mes){
+                  if (widget.dashboard.toggleStatus == ToggleStatus.mes) {
                     widget.dashboard.eventosFromMes();
                   }
                 }
@@ -74,10 +74,10 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
           GestureDetector(
             onTap: () {
               setState(() {
-                if(widget.dashboard.toggleStatus == ToggleStatus.eventos){
+                if (widget.dashboard.toggleStatus == ToggleStatus.eventos) {
                   widget.dashboard.diaFromEventos();
                 } else {
-                  if(widget.dashboard.toggleStatus == ToggleStatus.mes){
+                  if (widget.dashboard.toggleStatus == ToggleStatus.mes) {
                     widget.dashboard.diaFromMes();
                   }
                 }
@@ -102,12 +102,12 @@ class _ToggleDashboardState extends State<ToggleDashboard> {
             ),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
-                if(widget.dashboard.toggleStatus == ToggleStatus.dia) {
+                if (widget.dashboard.toggleStatus == ToggleStatus.dia) {
                   widget.dashboard.mesFromDia();
                 } else {
-                  if(widget.dashboard.toggleStatus == ToggleStatus.eventos){
+                  if (widget.dashboard.toggleStatus == ToggleStatus.eventos) {
                     widget.dashboard.mesFromEventos();
                   }
                 }

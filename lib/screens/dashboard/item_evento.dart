@@ -1,9 +1,9 @@
-import 'package:compiti_2/controllers/controlador_agendamento.dart';
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/models/evento_status.dart';
-import 'package:compiti_2/models/opcao.dart';
-import 'package:compiti_2/screens/dashboard/roteamento_animado.dart';
-import 'package:compiti_2/screens/form/evento_form.dart';
+import 'package:compiti/controllers/controlador_agendamento.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/models/evento_status.dart';
+import 'package:compiti/models/opcao.dart';
+import 'package:compiti/screens/dashboard/roteamento_animado.dart';
+import 'package:compiti/screens/form/evento_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

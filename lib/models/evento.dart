@@ -1,6 +1,5 @@
-import 'package:compiti_2/models/semana.dart';
+import 'package:compiti/models/semana.dart';
 import 'package:flutter/material.dart';
-
 
 class Evento {
   int id;
@@ -19,5 +18,4 @@ class Evento {
   String toString() {
     return 'Evento{id: $id, titulo: $titulo, descricao: $descricao, horaInicial: $horaInicial, horaFinal: $horaFinal, dataInicial: $dataInicial, dataFinal: $dataFinal, diasDaSemana: $diasDaSemana}';
   }
-
 }

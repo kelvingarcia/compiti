@@ -1,7 +1,7 @@
-import 'package:compiti_2/controllers/controlador_agendamento.dart';
-import 'package:compiti_2/models/agendamento.dart';
-import 'package:compiti_2/models/opcao_snackbar.dart';
-import 'package:compiti_2/screens/dashboard/dashboard.dart';
+import 'package:compiti/controllers/controlador_agendamento.dart';
+import 'package:compiti/models/agendamento.dart';
+import 'package:compiti/models/opcao_snackbar.dart';
+import 'package:compiti/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class BarraInferiorInfo extends StatefulWidget {
@@ -83,21 +83,21 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
             texto = 'O evento ' +
                 listaAgendamentos[0].evento.titulo +
                 ' foi deletado.';
-            _buttonColor = Colors.cyan;
+            _buttonColor = Color(0xFF6599FF);
             break;
           case OpcaoSnackBar.deletou_um:
             texto = 'O evento ' + agendamento.evento.titulo + ' foi deletado.';
-            _buttonColor = Colors.cyan;
+            _buttonColor = Color(0xFF6599FF);
             break;
           case OpcaoSnackBar.editou_todos:
             texto = 'O evento ' +
                 listaAgendamentos[0].evento.titulo +
                 ' foi editado.';
-            _buttonColor = Colors.cyan;
+            _buttonColor = Color(0xFF6599FF);
             break;
           case OpcaoSnackBar.editou_um:
             texto = 'O evento ' + agendamento.evento.titulo + ' foi editado.';
-            _buttonColor = Colors.cyan;
+            _buttonColor = Color(0xFF6599FF);
             break;
           case OpcaoSnackBar.adicionou:
             texto = 'Evento ' + agendamento.evento.titulo + ' foi adicionado.';
