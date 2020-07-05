@@ -2,6 +2,7 @@ import 'package:compiti_2/controllers/controlador_agendamento.dart';
 import 'package:compiti_2/models/agendamento.dart';
 import 'package:compiti_2/models/evento_status.dart';
 import 'package:compiti_2/models/opcao.dart';
+import 'package:compiti_2/screens/dashboard/roteamento_animado.dart';
 import 'package:compiti_2/screens/form/evento_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -96,7 +97,7 @@ class ItemEventoState extends State<ItemEvento> {
                           color: Colors.white,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 8.0),
+                          padding: EdgeInsets.only(left: 16.0),
                           child: Text(
                             widget.agendamento.evento.titulo,
                             style: TextStyle(
@@ -121,8 +122,8 @@ class ItemEventoState extends State<ItemEvento> {
                                 _editarMaisDeUm();
                               } else {
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => Material(
+                                  createRoute(
+                                    Material(
                                       child: EventoForm(
                                         widget.dashboardState.todosEventos
                                             .todosEventosState,
@@ -418,8 +419,8 @@ class ItemEventoState extends State<ItemEvento> {
         })) {
       case Opcao.evento:
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Material(
+          createRoute(
+            Material(
               child: EventoForm(
                 widget.dashboardState.todosEventos.todosEventosState,
                 widget.dashboardState.eventosDia.eventosDiaState,
@@ -431,8 +432,8 @@ class ItemEventoState extends State<ItemEvento> {
         break;
       case Opcao.agendamento:
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Material(
+          createRoute(
+            Material(
               child: EventoForm(
                 widget.dashboardState.todosEventos.todosEventosState,
                 widget.dashboardState.eventosDia.eventosDiaState,

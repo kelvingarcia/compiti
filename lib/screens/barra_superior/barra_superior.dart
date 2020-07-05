@@ -1,4 +1,5 @@
 import 'package:compiti_2/models/agendamento.dart';
+import 'package:compiti_2/screens/barra_superior/reportar_problema.dart';
 import 'package:compiti_2/screens/charts/grafico_pizza.dart';
 import 'package:compiti_2/screens/barra_superior/item_menu.dart';
 import 'package:flutter/material.dart';
@@ -93,6 +94,13 @@ class _BarraSuperiorState extends State<BarraSuperior> {
                         hasTop: false,
                         icone: Icons.report_problem,
                         texto: 'Reportar problema',
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Material(
+                              child: ReportarProblema(),
+                            ),
+                          ),
+                        ),
                       ),
                       ItemMenu(
                         hasTop: false,
