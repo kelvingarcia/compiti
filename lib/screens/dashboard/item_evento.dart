@@ -20,7 +20,7 @@ class ItemEvento extends StatefulWidget {
 }
 
 class ItemEventoState extends State<ItemEvento> {
-  double _toggleLeft = 95;
+  double _toggleLeft;
   String _status = 'Agendado';
   int dragCount = 0;
   ControladorAgendamento _controladorAgendamento = ControladorAgendamento();
@@ -29,22 +29,6 @@ class ItemEventoState extends State<ItemEvento> {
   @override
   void initState() {
     super.initState();
-    switch (widget.agendamento.eventoStatus) {
-      case EventoStatus.agendado:
-        _status = 'Agendado';
-        _toggleLeft = 95;
-        break;
-      case EventoStatus.feito:
-        _status = 'Feito';
-        _toggleLeft = 2;
-        break;
-      case EventoStatus.nao_feito:
-        _status = 'Não feito';
-        _toggleLeft = 202;
-        break;
-      default:
-        break;
-    }
   }
 
   @override
@@ -53,15 +37,15 @@ class ItemEventoState extends State<ItemEvento> {
       switch (widget.agendamento.eventoStatus) {
         case EventoStatus.agendado:
           _status = 'Agendado';
-          _toggleLeft = 95;
+          _toggleLeft = MediaQuery.of(context).size.width * 0.264;
           break;
         case EventoStatus.feito:
           _status = 'Feito';
-          _toggleLeft = 2;
+          _toggleLeft = MediaQuery.of(context).size.width * 0.006;
           break;
         case EventoStatus.nao_feito:
           _status = 'Não feito';
-          _toggleLeft = 202;
+          _toggleLeft = MediaQuery.of(context).size.width * 0.56;
           break;
         default:
           break;
@@ -222,13 +206,14 @@ class ItemEventoState extends State<ItemEvento> {
                   child: Stack(
                     children: <Widget>[
                       Positioned(
-                        top: 8,
-                        left: 35,
+                        top: (MediaQuery.of(context).size.height * 0.05) * 0.25,
+                        left: MediaQuery.of(context).size.width * 0.1,
                         child: GestureDetector(
                           onTap: () {
                             widget.dashboardState.atualizouBanco = false;
                             setState(() {
-                              _toggleLeft = 2;
+                              _toggleLeft =
+                                  MediaQuery.of(context).size.width * 0.006;
                               _status = 'Feito';
                               this.atualizaStatus();
                             });
@@ -237,13 +222,14 @@ class ItemEventoState extends State<ItemEvento> {
                         ),
                       ),
                       Positioned(
-                        top: 8,
-                        left: 125,
+                        top: (MediaQuery.of(context).size.height * 0.05) * 0.25,
+                        left: MediaQuery.of(context).size.width * 0.35,
                         child: GestureDetector(
                           onTap: () {
                             widget.dashboardState.atualizouBanco = false;
                             setState(() {
-                              _toggleLeft = 95;
+                              _toggleLeft =
+                                  MediaQuery.of(context).size.width * 0.264;
                               _status = 'Agendado';
                               this.atualizaStatus();
                             });
@@ -252,13 +238,14 @@ class ItemEventoState extends State<ItemEvento> {
                         ),
                       ),
                       Positioned(
-                        top: 8,
-                        left: 225,
+                        top: (MediaQuery.of(context).size.height * 0.05) * 0.25,
+                        left: MediaQuery.of(context).size.width * 0.625,
                         child: GestureDetector(
                           onTap: () {
                             widget.dashboardState.atualizouBanco = false;
                             setState(() {
-                              _toggleLeft = 202;
+                              _toggleLeft =
+                                  MediaQuery.of(context).size.width * 0.56;
                               _status = 'Não feito';
                               this.atualizaStatus();
                             });
@@ -276,19 +263,31 @@ class ItemEventoState extends State<ItemEvento> {
                             dragCount++;
                             setState(() {
                               if (dragInfo.delta.dx < 0) {
-                                if (_toggleLeft == 95) {
-                                  _toggleLeft = 2;
+                                if (_toggleLeft ==
+                                    MediaQuery.of(context).size.width * 0.264) {
+                                  _toggleLeft =
+                                      MediaQuery.of(context).size.width * 0.006;
                                 } else {
-                                  if (_toggleLeft == 202) {
-                                    _toggleLeft = 95;
+                                  if (_toggleLeft ==
+                                      MediaQuery.of(context).size.width *
+                                          0.56) {
+                                    _toggleLeft =
+                                        MediaQuery.of(context).size.width *
+                                            0.264;
                                   }
                                 }
                               } else {
-                                if (_toggleLeft == 95) {
-                                  _toggleLeft = 202;
+                                if (_toggleLeft ==
+                                    MediaQuery.of(context).size.width * 0.264) {
+                                  _toggleLeft =
+                                      MediaQuery.of(context).size.width * 0.56;
                                 } else {
-                                  if (_toggleLeft == 2) {
-                                    _toggleLeft = 95;
+                                  if (_toggleLeft ==
+                                      MediaQuery.of(context).size.width *
+                                          0.006) {
+                                    _toggleLeft =
+                                        MediaQuery.of(context).size.width *
+                                            0.264;
                                   }
                                 }
                               }
@@ -296,17 +295,24 @@ class ItemEventoState extends State<ItemEvento> {
                           },
                           onHorizontalDragEnd: (dragInfo) {
                             setState(() {
-                              if (_toggleLeft == 202 &&
+                              if (_toggleLeft ==
+                                      MediaQuery.of(context).size.width *
+                                          0.56 &&
                                   _status == 'Feito' &&
                                   dragCount < 15) {
-                                _toggleLeft = 95;
+                                _toggleLeft =
+                                    MediaQuery.of(context).size.width * 0.264;
                                 _status = 'Agendado';
                               } else {
-                                if (_toggleLeft == 202 &&
+                                if (_toggleLeft ==
+                                        MediaQuery.of(context).size.width *
+                                            0.56 &&
                                     _status == 'Agendado') {
                                   _status = 'Não feito';
                                 } else {
-                                  if (_toggleLeft == 95 &&
+                                  if (_toggleLeft ==
+                                          MediaQuery.of(context).size.width *
+                                              0.264 &&
                                       (_status == 'Feito' ||
                                           _status == 'Não feito')) {
                                     _status = 'Agendado';
@@ -318,10 +324,16 @@ class ItemEventoState extends State<ItemEvento> {
                                       if (_toggleLeft == 02 &&
                                           _status == 'Não feito' &&
                                           dragCount < 15) {
-                                        _toggleLeft = 95;
+                                        _toggleLeft =
+                                            MediaQuery.of(context).size.width *
+                                                0.264;
                                         _status = 'Agendado';
                                       } else {
-                                        if (_toggleLeft == 202 &&
+                                        if (_toggleLeft ==
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.56 &&
                                             _status == 'Feito' &&
                                             dragCount >= 15) {
                                           _status = 'Não feito';

@@ -104,6 +104,8 @@ class EventoFormState extends State<EventoForm> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(MediaQuery.of(context).size.height.toString());
+    debugPrint(MediaQuery.of(context).size.width.toString());
     return Stack(
       children: <Widget>[
         Positioned(
@@ -116,7 +118,7 @@ class EventoFormState extends State<EventoForm> {
           ),
         ),
         Positioned(
-          top: 25,
+          top: MediaQuery.of(context).size.height * 0.04,
           left: 0,
           child: DecoratedBox(
             decoration: BoxDecoration(
