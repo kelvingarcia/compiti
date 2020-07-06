@@ -141,7 +141,7 @@ class EventoFormState extends State<EventoForm> {
                           Padding(
                             padding: EdgeInsets.only(right: 4.0, top: 8.0),
                             child: GestureDetector(
-                              onTap: () => Navigator.pop(context),
+                              onTap: () => Navigator.of(context).pop(),
                               child: Icon(
                                 Icons.close,
                                 color: Colors.black,
@@ -412,12 +412,12 @@ class EventoFormState extends State<EventoForm> {
                                             widget.agendamento);
                                   }
                                 }
-                                Navigator.pop(context);
+                                Navigator.of(context).pop();
                               }
                             },
                           ),
                           RaisedButton(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => Navigator.of(context).pop(),
                             child: Text('Cancelar'),
                           ),
                         ],

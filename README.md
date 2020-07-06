@@ -15,5 +15,6 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Melhorar design.
-- Publicar na Play Store
+- Corrigir posicionamentos nas stacks.
+- Implementar eventos que duram mais de um dia.
+- Implementar unselect do menu com clique no corpo.
