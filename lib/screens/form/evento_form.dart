@@ -503,11 +503,13 @@ class EventoFormState extends State<EventoForm> {
               AgendamentoDao().findByEvento(widget.evento).then((lista) {
                 controladorAgendamento.deletaTodosAgendamentosComEvento(
                     lista.first, widget.eventosDiaState.widget.dashboardState);
-                controladorAgendamento.salvarEventoAgendamento(eventoNew,
-                    context, widget.eventosDiaState.widget.dashboardState);
-                widget.eventosDiaState.widget.dashboardState.todosEventos
-                    .todosEventosState
-                    .atualizaLista();
+                Future.delayed(Duration(milliseconds: 500), () {
+                  controladorAgendamento.salvarEventoAgendamento(eventoNew,
+                      context, widget.eventosDiaState.widget.dashboardState);
+                });
+                // widget.eventosDiaState.widget.dashboardState.todosEventos
+                //     .todosEventosState
+                //     .atualizaLista();
                 Navigator.of(context).pop();
               });
               break;
