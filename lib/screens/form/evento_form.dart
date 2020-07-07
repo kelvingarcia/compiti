@@ -135,266 +135,278 @@ class EventoFormState extends State<EventoForm> {
               width: MediaQuery.of(context).size.width,
               child: Form(
                 key: _formKey,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(right: 4.0, top: 8.0),
+                                child: GestureDetector(
+                                  onTap: () => Navigator.of(context).pop(),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.black,
+                                    size: 28.0,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 2.0),
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value.isEmpty)
+                                      return 'O título não pode estar vazio';
+                                    if (value.length > 20)
+                                      return 'O título deve ter no máximo 20 caracteres';
+                                    return null;
+                                  },
+                                  controller: _tituloController,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    labelText: 'Título',
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 24.0),
+                                child: TextFormField(
+                                  maxLines: null,
+                                  keyboardType: TextInputType.multiline,
+                                  validator: (value) {
+                                    if (value.isEmpty)
+                                      return 'O campo descrição não pode ser vazio';
+                                    return null;
+                                  },
+                                  controller: _descricaoController,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    labelText: 'Descrição',
+                                  ),
+                                ),
+                              ),
+                              Stack(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 24.0),
+                                    child: TextFormField(
+                                      focusNode: FocusNode(),
+                                      showCursor: false,
+                                      readOnly: true,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      validator: (_) {
+                                        var horaInicialSplit =
+                                            horaInicialController.text
+                                                .split(':');
+                                        var horaFinalSplit =
+                                            horaFinalController.text.split(':');
+                                        var horaInicial = DateTime.now().add(
+                                            Duration(
+                                                hours: int.parse(
+                                                    horaInicialSplit[0]),
+                                                minutes: int.parse(
+                                                    horaInicialSplit[1])));
+                                        var horaFinal = DateTime.now().add(
+                                            Duration(
+                                                hours: int.parse(
+                                                    horaFinalSplit[0]),
+                                                minutes: int.parse(
+                                                    horaFinalSplit[1])));
+                                        var dataInicial = formatoData
+                                            .parse(dataInicialController.text);
+                                        var dataFinal = formatoData
+                                            .parse(dataFinalController.text);
+                                        if (horaInicial.isAfter(horaFinal) &&
+                                            (dataFinal.isBefore(dataInicial) ||
+                                                dataFinal.isAtSameMomentAs(
+                                                    dataInicial))) {
+                                          return 'Hora inicial não pode ser depois da data final';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 24.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: CampoDataHora(
+                                            label: 'Hora inicial',
+                                            controller: horaInicialController,
+                                            dataHora: DataHora.hora,
+                                            eventoFormState: this,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: CampoDataHora(
+                                            label: 'Hora final',
+                                            controller: horaFinalController,
+                                            dataHora: DataHora.hora,
+                                            eventoFormState: this,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Stack(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 24.0),
+                                    child: TextFormField(
+                                      focusNode: FocusNode(),
+                                      showCursor: false,
+                                      readOnly: true,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      validator: (_) {
+                                        if (formatoData
+                                            .parse(dataInicialController.text)
+                                            .isAfter(formatoData.parse(
+                                                dataFinalController.text))) {
+                                          return 'Data inicial não ser pode depois da data final';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 24.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: CampoDataHora(
+                                            label: 'Data inicial',
+                                            controller: dataInicialController,
+                                            dataHora: DataHora.data,
+                                            eventoFormState: this,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: CampoDataHora(
+                                            label: 'Data final',
+                                            controller: dataFinalController,
+                                            dataHora: DataHora.data,
+                                            eventoFormState: this,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () => _checkboxNotificacoes(context),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                'Selecione quando notificar',
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                              Icon(Icons.arrow_drop_down),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Stack(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.only(right: 4.0, top: 8.0),
-                            child: GestureDetector(
-                              onTap: () => Navigator.of(context).pop(),
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.black,
-                                size: 28.0,
+                            padding: EdgeInsets.only(top: 8.0, left: 8.0),
+                            child: TextFormField(
+                              focusNode: FocusNode(),
+                              showCursor: false,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
                               ),
+                              validator: (_) {
+                                List<bool> validacao = List();
+                                diasDaSemana.forEach((dia) {
+                                  bool valido = false;
+                                  diasValidos.forEach((diaValido) {
+                                    if (diaValido == dia) valido = true;
+                                  });
+                                  validacao.add(valido);
+                                });
+                                if (validacao.contains(false)) {
+                                  return 'Os dias selecionados não são válidos';
+                                }
+                                if (diasDaSemana.isEmpty) {
+                                  return 'Selecione ao menos um dia';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 2.0),
-                            child: TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty)
-                                  return 'O título não pode estar vazio';
-                                if (value.length > 20)
-                                  return 'O título deve ter no máximo 20 caracteres';
-                                return null;
-                              },
-                              controller: _tituloController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Título',
+                            padding: EdgeInsets.only(top: 8.0),
+                            child: Container(
+                              height: 50,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 7,
+                                itemBuilder: (context, index) {
+                                  return SemanaButton(index, this);
+                                },
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 24.0),
-                            child: TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty)
-                                  return 'O campo descrição não pode ser vazio';
-                                return null;
-                              },
-                              controller: _descricaoController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Descrição',
-                              ),
-                            ),
-                          ),
-                          Stack(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(top: 24.0),
-                                child: TextFormField(
-                                  focusNode: FocusNode(),
-                                  showCursor: false,
-                                  readOnly: true,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                  validator: (_) {
-                                    var horaInicialSplit =
-                                        horaInicialController.text.split(':');
-                                    var horaFinalSplit =
-                                        horaFinalController.text.split(':');
-                                    var horaInicial = DateTime.now().add(
-                                        Duration(
-                                            hours:
-                                                int.parse(horaInicialSplit[0]),
-                                            minutes: int.parse(
-                                                horaInicialSplit[1])));
-                                    var horaFinal = DateTime.now().add(Duration(
-                                        hours: int.parse(horaFinalSplit[0]),
-                                        minutes: int.parse(horaFinalSplit[1])));
-                                    var dataInicial = formatoData
-                                        .parse(dataInicialController.text);
-                                    var dataFinal = formatoData
-                                        .parse(dataFinalController.text);
-                                    if (horaInicial.isAfter(horaFinal) &&
-                                        (dataFinal.isBefore(dataInicial) ||
-                                            dataFinal.isAtSameMomentAs(
-                                                dataInicial))) {
-                                      return 'Hora inicial não pode ser depois da data final';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 24.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: CampoDataHora(
-                                        label: 'Hora inicial',
-                                        controller: horaInicialController,
-                                        dataHora: DataHora.hora,
-                                        eventoFormState: this,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: CampoDataHora(
-                                        label: 'Hora final',
-                                        controller: horaFinalController,
-                                        dataHora: DataHora.hora,
-                                        eventoFormState: this,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Stack(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(top: 24.0),
-                                child: TextFormField(
-                                  focusNode: FocusNode(),
-                                  showCursor: false,
-                                  readOnly: true,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                  validator: (_) {
-                                    if (formatoData
-                                        .parse(dataInicialController.text)
-                                        .isAfter(formatoData
-                                            .parse(dataFinalController.text))) {
-                                      return 'Data inicial não ser pode depois da data final';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 24.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: CampoDataHora(
-                                        label: 'Data inicial',
-                                        controller: dataInicialController,
-                                        dataHora: DataHora.data,
-                                        eventoFormState: this,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: CampoDataHora(
-                                        label: 'Data final',
-                                        controller: dataFinalController,
-                                        dataHora: DataHora.data,
-                                        eventoFormState: this,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
                           ),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () => _checkboxNotificacoes(context),
+                      Padding(
+                        padding: EdgeInsets.only(top: 24.0, bottom: 24.0),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            Text(
-                              'Selecione quando notificar',
-                              style: TextStyle(fontSize: 16.0),
+                            RaisedButton(
+                              child: Text('Adicionar'),
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  var horaInicialSplit =
+                                      horaInicialController.text.split(':');
+                                  var horaFinalSplit =
+                                      horaFinalController.text.split(':');
+                                  var horaInicial = DateTime.now().add(Duration(
+                                      hours: int.parse(horaInicialSplit[0]),
+                                      minutes: int.parse(horaInicialSplit[1])));
+                                  var horaFinal = DateTime.now().add(Duration(
+                                      hours: int.parse(horaFinalSplit[0]),
+                                      minutes: int.parse(horaFinalSplit[1])));
+                                  if (horaFinal.isBefore(horaInicial) &&
+                                      diasDaSemana.length == 1) {
+                                    _eventoVirado();
+                                  } else {
+                                    _enviaFormulario();
+                                  }
+                                }
+                              },
                             ),
-                            Icon(Icons.arrow_drop_down),
+                            RaisedButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text('Cancelar'),
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                    Stack(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 8.0, left: 8.0),
-                          child: TextFormField(
-                            focusNode: FocusNode(),
-                            showCursor: false,
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                            validator: (_) {
-                              List<bool> validacao = List();
-                              diasDaSemana.forEach((dia) {
-                                bool valido = false;
-                                diasValidos.forEach((diaValido) {
-                                  if (diaValido == dia) valido = true;
-                                });
-                                validacao.add(valido);
-                              });
-                              if (validacao.contains(false)) {
-                                return 'Os dias selecionados não são válidos';
-                              }
-                              if (diasDaSemana.isEmpty) {
-                                return 'Selecione ao menos um dia';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 8.0),
-                          child: Container(
-                            height: 50,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 7,
-                              itemBuilder: (context, index) {
-                                return SemanaButton(index, this);
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 24.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          RaisedButton(
-                            child: Text('Adicionar'),
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                var horaInicialSplit =
-                                    horaInicialController.text.split(':');
-                                var horaFinalSplit =
-                                    horaFinalController.text.split(':');
-                                var horaInicial = DateTime.now().add(Duration(
-                                    hours: int.parse(horaInicialSplit[0]),
-                                    minutes: int.parse(horaInicialSplit[1])));
-                                var horaFinal = DateTime.now().add(Duration(
-                                    hours: int.parse(horaFinalSplit[0]),
-                                    minutes: int.parse(horaFinalSplit[1])));
-                                if (horaFinal.isBefore(horaInicial) &&
-                                    diasDaSemana.length == 1) {
-                                  _eventoVirado();
-                                } else {
-                                  _enviaFormulario();
-                                }
-                              }
-                            },
-                          ),
-                          RaisedButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text('Cancelar'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
