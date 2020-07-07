@@ -56,7 +56,7 @@ class NotificacaoController {
         }
       }
       await flutterLocalNotificationsPlugin.schedule(
-        0,
+        evento.hashCode + valor,
         tituloNotificacao,
         evento.descricao,
         dataHora.subtract(Duration(minutes: valor)),
