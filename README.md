@@ -15,6 +15,6 @@ Documentação do Flutter:
 
 Próximos passos:
 
-- Corrigir posicionamentos nas stacks.
-- Implementar eventos que duram mais de um dia.
 - Implementar unselect do menu com clique no corpo.
+- Implementar setas no dia.
+- Implementar notificar antes.

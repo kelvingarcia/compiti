@@ -118,196 +118,205 @@ class DashboardState extends State<Dashboard> with TickerProviderStateMixin {
           duration: Duration(milliseconds: 400),
           top: topCorpo,
           left: 0,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Color(0xFF383838),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+          child: GestureDetector(
+            onTap: () {
+              if (topCorpo != 100) {
+                setState(() {
+                  topCorpo = 100;
+                });
+              }
+            },
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Color(0xFF383838),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
               ),
-            ),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: EdgeInsets.only(top: 24.0, bottom: 24.0),
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      width: MediaQuery.of(context).size.width,
-                      child: ToggleDashboard(
-                        dashboard: this,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 24.0, bottom: 24.0),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        width: MediaQuery.of(context).size.width,
+                        child: ToggleDashboard(
+                          dashboard: this,
+                        ),
                       ),
-                    ),
-                    PositionedTransition(
-                      rect: RelativeRectTween(
-                        begin: RelativeRect.fromSize(
-                          Rect.fromLTWH(
-                            _hiddenEventos,
-                            50,
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
+                      PositionedTransition(
+                        rect: RelativeRectTween(
+                          begin: RelativeRect.fromSize(
+                            Rect.fromLTWH(
+                              _hiddenEventos,
+                              50,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                            Size(
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
                           ),
-                          Size(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
+                          end: RelativeRect.fromSize(
+                            Rect.fromLTWH(
+                              _leftEventos,
+                              50,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                            Size(
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
                           ),
-                        ),
-                        end: RelativeRect.fromSize(
-                          Rect.fromLTWH(
-                            _leftEventos,
-                            50,
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                          Size(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                        ),
-                      ).animate(_controllerEventos),
-                      child: GestureDetector(
-                        onHorizontalDragUpdate: (dragInfo) {
-                          setState(() {
-                            _leftEventos += dragInfo.delta.dx;
-                            _hiddenDia += dragInfo.delta.dx;
-                            appStarted = false;
-                            forwardAnimation = false;
-                            reverseAnimation = false;
-                            eventosAnimation = false;
-                          });
-                        },
-                        onHorizontalDragEnd: (dragInfo) {
-                          setState(() {
-                            if (_leftEventos > -75) {
-                              eventosAnimation = true;
-                            } else {
-                              reverseAnimation = true;
-                              _controllerDia.reverse();
-                              _controllerEventos.reverse();
-                            }
-                          });
-                        },
-                        child: todosEventos,
-                      ),
-                    ),
-                    PositionedTransition(
-                      rect: RelativeRectTween(
-                        begin: RelativeRect.fromSize(
-                          Rect.fromLTWH(
-                            _leftDia,
-                            50,
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                          Size(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                        ),
-                        end: RelativeRect.fromSize(
-                          Rect.fromLTWH(
-                            _hiddenDia,
-                            50,
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                          Size(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                        ),
-                      ).animate(_controllerDia),
-                      child: GestureDetector(
-                        onHorizontalDragUpdate: (dragInfo) {
-                          setState(() {
-                            _leftDia += dragInfo.delta.dx;
-                            _hiddenCalendario += dragInfo.delta.dx;
-                            _hiddenEventos += dragInfo.delta.dx;
-                            appStarted = false;
-                            forwardAnimation = false;
-                            reverseAnimation = false;
-                            eventosAnimation = false;
-                          });
-                        },
-                        onHorizontalDragEnd: (dragInfo) {
-                          setState(() {
-                            if ((_leftDia > -75 && _leftDia < 0) ||
-                                (_leftDia > 0 && _leftDia < 75)) {
-                              appStarted = true;
-                            } else {
-                              if (_leftDia < 0) {
-                                forwardAnimation = true;
-                                _controllerDia.forward();
-                                _controllerCalendario.forward();
-                              } else {
+                        ).animate(_controllerEventos),
+                        child: GestureDetector(
+                          onHorizontalDragUpdate: (dragInfo) {
+                            setState(() {
+                              _leftEventos += dragInfo.delta.dx;
+                              _hiddenDia += dragInfo.delta.dx;
+                              appStarted = false;
+                              forwardAnimation = false;
+                              reverseAnimation = false;
+                              eventosAnimation = false;
+                            });
+                          },
+                          onHorizontalDragEnd: (dragInfo) {
+                            setState(() {
+                              if (_leftEventos > -75) {
                                 eventosAnimation = true;
-                                _controllerDia.forward();
-                                _controllerEventos.forward();
+                              } else {
+                                reverseAnimation = true;
+                                _controllerDia.reverse();
+                                _controllerEventos.reverse();
                               }
-                            }
-                          });
-                        },
-                        child: eventosDia,
-                      ),
-                    ),
-                    PositionedTransition(
-                      rect: RelativeRectTween(
-                        begin: RelativeRect.fromSize(
-                          Rect.fromLTWH(
-                            _hiddenCalendario,
-                            50,
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                          Size(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                        ),
-                        end: RelativeRect.fromSize(
-                          Rect.fromLTWH(
-                            _leftCalendario,
-                            50,
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                          Size(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height,
-                          ),
-                        ),
-                      ).animate(_controllerCalendario),
-                      child: GestureDetector(
-                        onHorizontalDragUpdate: (dragInfo) {
-                          setState(() {
-                            _leftCalendario += dragInfo.delta.dx;
-                            _hiddenDia += dragInfo.delta.dx;
-                            appStarted = false;
-                            forwardAnimation = false;
-                            reverseAnimation = false;
-                            eventosAnimation = false;
-                          });
-                        },
-                        onHorizontalDragEnd: (dragInfo) {
-                          setState(() {
-                            if (_leftCalendario < 75) {
-                              forwardAnimation = true;
-                            } else {
-                              reverseAnimation = true;
-                              _controllerDia.reverse();
-                              _controllerCalendario.reverse();
-                            }
-                          });
-                        },
-                        child: CalendarioMes(
-                          dashboardState: this,
+                            });
+                          },
+                          child: todosEventos,
                         ),
                       ),
-                    ),
-                  ],
+                      PositionedTransition(
+                        rect: RelativeRectTween(
+                          begin: RelativeRect.fromSize(
+                            Rect.fromLTWH(
+                              _leftDia,
+                              50,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                            Size(
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                          ),
+                          end: RelativeRect.fromSize(
+                            Rect.fromLTWH(
+                              _hiddenDia,
+                              50,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                            Size(
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                          ),
+                        ).animate(_controllerDia),
+                        child: GestureDetector(
+                          onHorizontalDragUpdate: (dragInfo) {
+                            setState(() {
+                              _leftDia += dragInfo.delta.dx;
+                              _hiddenCalendario += dragInfo.delta.dx;
+                              _hiddenEventos += dragInfo.delta.dx;
+                              appStarted = false;
+                              forwardAnimation = false;
+                              reverseAnimation = false;
+                              eventosAnimation = false;
+                            });
+                          },
+                          onHorizontalDragEnd: (dragInfo) {
+                            setState(() {
+                              if ((_leftDia > -75 && _leftDia < 0) ||
+                                  (_leftDia > 0 && _leftDia < 75)) {
+                                appStarted = true;
+                              } else {
+                                if (_leftDia < 0) {
+                                  forwardAnimation = true;
+                                  _controllerDia.forward();
+                                  _controllerCalendario.forward();
+                                } else {
+                                  eventosAnimation = true;
+                                  _controllerDia.forward();
+                                  _controllerEventos.forward();
+                                }
+                              }
+                            });
+                          },
+                          child: eventosDia,
+                        ),
+                      ),
+                      PositionedTransition(
+                        rect: RelativeRectTween(
+                          begin: RelativeRect.fromSize(
+                            Rect.fromLTWH(
+                              _hiddenCalendario,
+                              50,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                            Size(
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                          ),
+                          end: RelativeRect.fromSize(
+                            Rect.fromLTWH(
+                              _leftCalendario,
+                              50,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                            Size(
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                            ),
+                          ),
+                        ).animate(_controllerCalendario),
+                        child: GestureDetector(
+                          onHorizontalDragUpdate: (dragInfo) {
+                            setState(() {
+                              _leftCalendario += dragInfo.delta.dx;
+                              _hiddenDia += dragInfo.delta.dx;
+                              appStarted = false;
+                              forwardAnimation = false;
+                              reverseAnimation = false;
+                              eventosAnimation = false;
+                            });
+                          },
+                          onHorizontalDragEnd: (dragInfo) {
+                            setState(() {
+                              if (_leftCalendario < 75) {
+                                forwardAnimation = true;
+                              } else {
+                                reverseAnimation = true;
+                                _controllerDia.reverse();
+                                _controllerCalendario.reverse();
+                              }
+                            });
+                          },
+                          child: CalendarioMes(
+                            dashboardState: this,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
