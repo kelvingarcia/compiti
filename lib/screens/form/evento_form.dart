@@ -104,8 +104,6 @@ class EventoFormState extends State<EventoForm> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(MediaQuery.of(context).size.height.toString());
-    debugPrint(MediaQuery.of(context).size.width.toString());
     return Stack(
       children: <Widget>[
         Positioned(
@@ -208,7 +206,14 @@ class EventoFormState extends State<EventoForm> {
                                     var horaFinal = DateTime.now().add(Duration(
                                         hours: int.parse(horaFinalSplit[0]),
                                         minutes: int.parse(horaFinalSplit[1])));
-                                    if (horaInicial.isAfter(horaFinal)) {
+                                    var dataInicial = formatoData
+                                        .parse(dataInicialController.text);
+                                    var dataFinal = formatoData
+                                        .parse(dataFinalController.text);
+                                    if (horaInicial.isAfter(horaFinal) &&
+                                        (dataFinal.isBefore(dataInicial) ||
+                                            dataFinal.isAtSameMomentAs(
+                                                dataInicial))) {
                                       return 'Hora inicial não pode ser depois da data final';
                                     }
                                     return null;
@@ -343,78 +348,22 @@ class EventoFormState extends State<EventoForm> {
                           RaisedButton(
                             child: Text('Adicionar'),
                             onPressed: () {
-                              submitted = true;
                               if (_formKey.currentState.validate()) {
-                                var dataInicialSplit =
-                                    dataInicialController.text.split('/');
-
-                                var dataFinalSplit =
-                                    dataFinalController.text.split('/');
-
                                 var horaInicialSplit =
                                     horaInicialController.text.split(':');
-
                                 var horaFinalSplit =
                                     horaFinalController.text.split(':');
-
-                                Evento eventoNew = Evento(
-                                  0,
-                                  _tituloController.text,
-                                  _descricaoController.text,
-                                  TimeOfDay(
-                                    hour: int.parse(
-                                        horaInicialSplit.elementAt(0)),
-                                    minute: int.parse(
-                                        horaInicialSplit.elementAt(1)),
-                                  ),
-                                  TimeOfDay(
-                                    hour:
-                                        int.parse(horaFinalSplit.elementAt(0)),
-                                    minute:
-                                        int.parse(horaFinalSplit.elementAt(1)),
-                                  ),
-                                  DateTime(
-                                    int.parse(dataInicialSplit.elementAt(2)),
-                                    int.parse(dataInicialSplit.elementAt(1)),
-                                    int.parse(dataInicialSplit.elementAt(0)),
-                                  ),
-                                  DateTime(
-                                    int.parse(dataFinalSplit.elementAt(2)),
-                                    int.parse(dataFinalSplit.elementAt(1)),
-                                    int.parse(dataFinalSplit.elementAt(0)),
-                                  ),
-                                  diasDaSemana,
-                                );
-
-                                if (widget.evento == null) {
-                                  controladorAgendamento
-                                      .salvarEventoAgendamento(
-                                          eventoNew,
-                                          context,
-                                          widget.eventosDiaState.widget
-                                              .dashboardState);
+                                var horaInicial = DateTime.now().add(Duration(
+                                    hours: int.parse(horaInicialSplit[0]),
+                                    minutes: int.parse(horaInicialSplit[1])));
+                                var horaFinal = DateTime.now().add(Duration(
+                                    hours: int.parse(horaFinalSplit[0]),
+                                    minutes: int.parse(horaFinalSplit[1])));
+                                if (horaFinal.isBefore(horaInicial)) {
+                                  _eventoVirado();
                                 } else {
-                                  if (widget.agendamento == null) {
-                                    eventoNew.id = widget.evento.id;
-
-                                    controladorAgendamento
-                                        .editarEventoAgendamento(
-                                            eventoNew,
-                                            widget.eventosDiaState.widget
-                                                .dashboardState,
-                                            context,
-                                            widget.evento);
-                                  } else {
-                                    controladorAgendamento
-                                        .editarSomenteAgendamento(
-                                            eventoNew,
-                                            widget.eventosDiaState.widget
-                                                .dashboardState,
-                                            context,
-                                            widget.agendamento);
-                                  }
+                                  _enviaFormulario();
                                 }
-                                Navigator.of(context).pop();
                               }
                             },
                           ),
@@ -435,6 +384,107 @@ class EventoFormState extends State<EventoForm> {
     );
   }
 
+  void _enviaFormulario() {
+    submitted = true;
+    var dataInicialSplit = dataInicialController.text.split('/');
+
+    var dataFinalSplit = dataFinalController.text.split('/');
+
+    var horaInicialSplit = horaInicialController.text.split(':');
+
+    var horaFinalSplit = horaFinalController.text.split(':');
+
+    Evento eventoNew = Evento(
+      0,
+      _tituloController.text,
+      _descricaoController.text,
+      TimeOfDay(
+        hour: int.parse(horaInicialSplit.elementAt(0)),
+        minute: int.parse(horaInicialSplit.elementAt(1)),
+      ),
+      TimeOfDay(
+        hour: int.parse(horaFinalSplit.elementAt(0)),
+        minute: int.parse(horaFinalSplit.elementAt(1)),
+      ),
+      DateTime(
+        int.parse(dataInicialSplit.elementAt(2)),
+        int.parse(dataInicialSplit.elementAt(1)),
+        int.parse(dataInicialSplit.elementAt(0)),
+      ),
+      DateTime(
+        int.parse(dataFinalSplit.elementAt(2)),
+        int.parse(dataFinalSplit.elementAt(1)),
+        int.parse(dataFinalSplit.elementAt(0)),
+      ),
+      diasDaSemana,
+    );
+
+    if (widget.evento == null) {
+      controladorAgendamento.salvarEventoAgendamento(
+          eventoNew, context, widget.eventosDiaState.widget.dashboardState);
+    } else {
+      if (widget.agendamento == null) {
+        eventoNew.id = widget.evento.id;
+
+        controladorAgendamento.editarEventoAgendamento(
+            eventoNew,
+            widget.eventosDiaState.widget.dashboardState,
+            context,
+            widget.evento);
+      } else {
+        controladorAgendamento.editarSomenteAgendamento(
+            eventoNew,
+            widget.eventosDiaState.widget.dashboardState,
+            context,
+            widget.agendamento);
+      }
+    }
+    Navigator.of(context).pop();
+  }
+
+  Future<void> _eventoVirado() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Atenção'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Seu evento começa em um dia e termina em outro.'),
+                Text('Início: ' +
+                    dataInicialController.text +
+                    ' às ' +
+                    horaInicialController.text),
+                Text('Término: ' +
+                    dataFinalController.text +
+                    ' às ' +
+                    horaFinalController.text),
+                Text('Confirma?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Confirmar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _enviaFormulario();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   datasListener() {
     if (dataInicialController.text != '' &&
         dataFinalController.text != '' &&
@@ -442,12 +492,27 @@ class EventoFormState extends State<EventoForm> {
         !submitted) {
       if (widget.evento == null)
         listaSemanaButton.forEach((button) => button.desmarcaButton());
+      var horaInicialSplit = horaInicialController.text.split(':');
+      var horaFinalSplit = horaFinalController.text.split(':');
+      var horaInicial = DateTime.now().add(Duration(
+          hours: int.parse(horaInicialSplit[0]),
+          minutes: int.parse(horaInicialSplit[1])));
+      var horaFinal = DateTime.now().add(Duration(
+          hours: int.parse(horaFinalSplit[0]),
+          minutes: int.parse(horaFinalSplit[1])));
       DateTime dataInicial = formatoData.parse(dataInicialController.text);
       DateTime dataFinal = formatoData.parse(dataFinalController.text);
+      var eventoVirado = false;
+      if (horaInicial.isAfter(horaFinal) && dataFinal.isAfter(dataInicial)) {
+        listaSemanaButton
+            .firstWhere((button) => button.index == dataInicial.weekday - 1)
+            .marcaButton();
+        eventoVirado = true;
+      }
       if (dataFinal.weekday >= dataInicial.weekday &&
           dataFinal.difference(dataInicial).inDays < 7) {
         for (int i = dataInicial.weekday; i <= dataFinal.weekday; i++) {
-          if (widget.evento == null)
+          if (widget.evento == null && !eventoVirado)
             listaSemanaButton
                 .firstWhere((button) => button.index == i - 1)
                 .marcaButton();
@@ -456,20 +521,20 @@ class EventoFormState extends State<EventoForm> {
       } else {
         if (dataFinal.difference(dataInicial).inDays > 7) {
           for (int i = 0; i < 7; i++) {
-            if (widget.evento == null)
+            if (widget.evento == null && !eventoVirado)
               listaSemanaButton.elementAt(i).marcaButton();
             diasValidos.add(Semana.values[i]);
           }
         } else {
           for (int i = dataInicial.weekday; i <= 7; i++) {
-            if (widget.evento == null)
+            if (widget.evento == null && !eventoVirado)
               listaSemanaButton
                   .firstWhere((button) => button.index == i - 1)
                   .marcaButton();
             diasValidos.add(Semana.values[i - 1]);
           }
           for (int i = 1; i <= dataFinal.weekday; i++) {
-            if (widget.evento == null)
+            if (widget.evento == null && !eventoVirado)
               listaSemanaButton
                   .firstWhere((button) => button.index == i - 1)
                   .marcaButton();

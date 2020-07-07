@@ -31,6 +31,8 @@ class ItemEventoState extends State<ItemEvento> {
     super.initState();
   }
 
+  double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
+
   @override
   Widget build(BuildContext context) {
     if (widget.dashboardState.atualizouBanco) {
@@ -168,19 +170,68 @@ class ItemEventoState extends State<ItemEvento> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    dataInicial,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        dataInicial,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      Visibility(
+                        visible: (toDouble(
+                                widget.agendamento.evento.horaFinal) <
+                            toDouble(widget.agendamento.evento.horaInicial)),
+                        child: Text(
+                          dateFormat.format(widget.agendamento.dataFinal),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    horaInicial + ' ~ ' + horaFinal,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Visibility(
+                        visible: !(toDouble(
+                                widget.agendamento.evento.horaFinal) <
+                            toDouble(widget.agendamento.evento.horaInicial)),
+                        child: Text(
+                          horaInicial + ' ~ ' + horaFinal,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: (toDouble(
+                                widget.agendamento.evento.horaFinal) <
+                            toDouble(widget.agendamento.evento.horaInicial)),
+                        child: Text(
+                          horaInicial,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: (toDouble(
+                                widget.agendamento.evento.horaFinal) <
+                            toDouble(widget.agendamento.evento.horaInicial)),
+                        child: Text(
+                          horaFinal,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

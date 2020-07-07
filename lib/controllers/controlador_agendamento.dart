@@ -17,27 +17,38 @@ class ControladorAgendamento {
       DashboardState dashboardState) async {
     NotificacaoController notificacaoController =
         NotificacaoController(context);
-    DateTime dataAgendamento = evento.dataInicial.subtract(Duration(days: 1));
+    DateTime dataAgendamento = DateTime(evento.dataInicial.year,
+        evento.dataInicial.month, evento.dataInicial.day - 1);
     final int id = await _eventoDao.save(evento);
     evento.id = id;
+    var testeInicial = DateTime.now().add(Duration(
+        hours: evento.horaInicial.hour, minutes: evento.horaInicial.minute));
+    var testeFinal = DateTime.now().add(Duration(
+        hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute));
     for (int i = 0;
         i <= evento.dataFinal.difference(evento.dataInicial).inDays;
         i++) {
       bool diaValidado = false;
-      dataAgendamento = dataAgendamento.add(Duration(days: 1));
+      dataAgendamento = DateTime(
+          dataAgendamento.year, dataAgendamento.month, dataAgendamento.day + 1);
       evento.diasDaSemana.forEach((dia) {
         if (dataAgendamento.weekday - 1 == dia.index) {
           diaValidado = true;
         }
       });
       if (diaValidado) {
+        DateTime dataAgendamentoFinal = dataAgendamento;
+        if (testeFinal.isBefore(testeInicial)) {
+          dataAgendamentoFinal = DateTime(dataAgendamento.year,
+              dataAgendamento.month, dataAgendamento.day + 1);
+        }
         await _agendamentoDao.save(
           Agendamento(
             0,
             dataAgendamento.add(Duration(
                 hours: evento.horaInicial.hour,
                 minutes: evento.horaInicial.minute)),
-            dataAgendamento.add(Duration(
+            dataAgendamentoFinal.add(Duration(
                 hours: evento.horaFinal.hour,
                 minutes: evento.horaFinal.minute)),
             evento,
