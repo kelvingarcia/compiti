@@ -14,7 +14,8 @@ class EventoDao {
       '$_horaFinal TEXT,'
       '$_dataInicial TEXT,'
       '$_dataFinal TEXT,'
-      '$_diasDaSemana TEXT)';
+      '$_diasDaSemana TEXT,'
+      '$_listaNotificar TEXT)';
   static const String _tableName = 'events';
   static const String _id = 'id';
   static const String _titulo = 'titulo';
@@ -24,6 +25,7 @@ class EventoDao {
   static const String _dataInicial = 'data_inicial';
   static const String _dataFinal = 'data_final';
   static const String _diasDaSemana = 'dias_da_semana';
+  static const String _listaNotificar = 'lista_notificar';
 
   Future<int> save(Evento evento) async {
     final Database db = await getDatabase();
@@ -62,6 +64,7 @@ class EventoDao {
     eventoMap[_dataInicial] = evento.dataInicial.toString();
     eventoMap[_dataFinal] = evento.dataFinal.toString();
     eventoMap[_diasDaSemana] = evento.diasDaSemana.toString();
+    eventoMap[_listaNotificar] = evento.listaNotificar.toString();
     return eventoMap;
   }
 
@@ -84,6 +87,14 @@ class EventoDao {
           .forEach((diaString) {
         diasDaSemana.add(Semana.values
             .firstWhere((valor) => valor.toString() == diaString.trim()));
+      });
+      List<int> listaNotificar = List();
+      var listaNotificarString = row[_listaNotificar].toString();
+      listaNotificarString
+          .substring(1, listaNotificarString.length - 1)
+          .split(',')
+          .forEach((valor) {
+        listaNotificar.add(int.parse(valor));
       });
       final Evento evento = Evento(
         row[_id],
@@ -108,6 +119,7 @@ class EventoDao {
           int.parse(dataFinalSplit.elementAt(2)),
         ),
         diasDaSemana,
+        listaNotificar,
       );
       eventos.add(evento);
     }

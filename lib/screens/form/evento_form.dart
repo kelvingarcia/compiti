@@ -3,6 +3,7 @@ import 'package:compiti/models/agendamento.dart';
 import 'package:compiti/models/evento.dart';
 import 'package:compiti/models/semana.dart';
 import 'package:compiti/screens/dashboard/eventos_dia.dart';
+import 'package:compiti/screens/form/checkbox_notificacoes.dart';
 import 'package:compiti/screens/listas/todos_eventos.dart';
 import 'package:compiti/screens/form/campo_data_hora.dart';
 import 'package:compiti/screens/form/data_hora.dart';
@@ -38,6 +39,7 @@ class EventoFormState extends State<EventoForm> {
   List<Semana> diasDaSemana = List();
   List<SemanaButtonState> listaSemanaButton = List();
   List<Semana> diasValidos = List();
+  List<int> listaNotificar = List();
 
   bool submitted = false;
 
@@ -99,6 +101,7 @@ class EventoFormState extends State<EventoForm> {
         });
       }
     });
+    listaNotificar.add(0);
     super.initState();
   }
 
@@ -150,7 +153,7 @@ class EventoFormState extends State<EventoForm> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 8.0),
+                            padding: EdgeInsets.only(top: 2.0),
                             child: TextFormField(
                               validator: (value) {
                                 if (value.isEmpty)
@@ -295,10 +298,25 @@ class EventoFormState extends State<EventoForm> {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () => _checkboxNotificacoes(context),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              'Selecione quando notificar',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            Icon(Icons.arrow_drop_down),
+                          ],
+                        ),
+                      ),
+                    ),
                     Stack(
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.only(top: 24.0, left: 8.0),
+                          padding: EdgeInsets.only(top: 8.0, left: 8.0),
                           child: TextFormField(
                             focusNode: FocusNode(),
                             showCursor: false,
@@ -326,7 +344,7 @@ class EventoFormState extends State<EventoForm> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 24.0),
+                          padding: EdgeInsets.only(top: 8.0),
                           child: Container(
                             height: 50,
                             child: ListView.builder(
@@ -418,6 +436,7 @@ class EventoFormState extends State<EventoForm> {
         int.parse(dataFinalSplit.elementAt(0)),
       ),
       diasDaSemana,
+      listaNotificar,
     );
 
     if (widget.evento == null) {
@@ -478,6 +497,37 @@ class EventoFormState extends State<EventoForm> {
               onPressed: () {
                 Navigator.of(context).pop();
                 _enviaFormulario();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _checkboxNotificacoes(BuildContext context) async {
+    List<int> notifica = listaNotificar;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Selecione quando notificar'),
+          content: SingleChildScrollView(
+            child: CheckboxNotificacoes(notifica),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Confirmar'),
+              onPressed: () {
+                listaNotificar = notifica;
+                Navigator.of(context).pop();
               },
             ),
           ],

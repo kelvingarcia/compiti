@@ -10,9 +10,10 @@ class Evento {
   final DateTime dataInicial;
   final DateTime dataFinal;
   final List<Semana> diasDaSemana;
+  final List<int> listaNotificar;
 
   Evento(this.id, this.titulo, this.descricao, this.horaInicial, this.horaFinal,
-      this.dataInicial, this.dataFinal, this.diasDaSemana);
+      this.dataInicial, this.dataFinal, this.diasDaSemana, this.listaNotificar);
 
   @override
   String toString() {

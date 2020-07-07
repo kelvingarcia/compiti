@@ -35,13 +35,15 @@ class NotificacaoController {
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.schedule(
-      0,
-      evento.titulo,
-      evento.descricao,
-      dataHora,
-      platformChannelSpecifics,
-    );
+    evento.listaNotificar.forEach((valor) async {
+      await flutterLocalNotificationsPlugin.schedule(
+        0,
+        evento.titulo,
+        evento.descricao,
+        dataHora.subtract(Duration(minutes: valor)),
+        platformChannelSpecifics,
+      );
+    });
   }
 
   Future selectNotification(String payload) async {
