@@ -29,6 +29,13 @@ class EventosDiaState extends State<EventosDia> {
     super.initState();
   }
 
+  void mudaDia(DateTime novoDia) {
+    setState(() {
+      widget.dashboardState.currentDate = novoDia;
+      atualizaLista();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -43,20 +50,39 @@ class EventosDiaState extends State<EventosDia> {
               child: GestureDetector(
                 onTap: () => widget.dashboardState.mesFromDia(),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      widget.dashboardState.currentDate.day.toString() +
-                          ' de ' +
-                          dateFormat.format(widget.dashboardState.currentDate) +
-                          ' de ' +
-                          widget.dashboardState.currentDate.year.toString(),
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
+                    GestureDetector(
+                      onTap: () => mudaDia(DateTime(
+                          widget.dashboardState.currentDate.year,
+                          widget.dashboardState.currentDate.month,
+                          widget.dashboardState.currentDate.day - 1)),
                       child: Icon(
-                        Icons.keyboard_arrow_down,
+                        Icons.keyboard_arrow_left,
+                        color: Colors.white,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        widget.dashboardState.mesFromDia();
+                      },
+                      child: Text(
+                        widget.dashboardState.currentDate.day.toString() +
+                            ' de ' +
+                            dateFormat
+                                .format(widget.dashboardState.currentDate) +
+                            ' de ' +
+                            widget.dashboardState.currentDate.year.toString(),
+                        style: TextStyle(color: Colors.white, fontSize: 16.0),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => mudaDia(DateTime(
+                          widget.dashboardState.currentDate.year,
+                          widget.dashboardState.currentDate.month,
+                          widget.dashboardState.currentDate.day + 1)),
+                      child: Icon(
+                        Icons.keyboard_arrow_right,
                         color: Colors.white,
                       ),
                     ),
