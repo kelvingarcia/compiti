@@ -1,4 +1,5 @@
 import 'package:compiti/controllers/controlador_agendamento.dart';
+import 'package:compiti/database/agendamento_dao.dart';
 import 'package:compiti/models/agendamento.dart';
 import 'package:compiti/models/evento.dart';
 import 'package:compiti/models/semana.dart';
@@ -67,7 +68,7 @@ class EventoFormState extends State<EventoForm> {
             dataFinalSplit.elementAt(1) +
             '/' +
             dataFinalSplit.elementAt(0);
-        diasDaSemana = widget.evento.diasDaSemana;
+        diasDaSemana.addAll(widget.evento.diasDaSemana);
       } else {
         var dataInicialSplit = widget.agendamento.dataInicial
             .toString()
@@ -93,7 +94,7 @@ class EventoFormState extends State<EventoForm> {
       datasListener();
       dataInicialController.addListener(datasListener);
       dataFinalController.addListener(datasListener);
-      if (widget.evento != null) {
+      if (widget.evento != null && widget.agendamento == null) {
         widget.evento.diasDaSemana.forEach((diaDaSemana) {
           listaSemanaButton
               .firstWhere((button) => button.index == diaDaSemana.index)
@@ -403,7 +404,7 @@ class EventoFormState extends State<EventoForm> {
     );
   }
 
-  void _enviaFormulario() {
+  void _enviaFormulario() async {
     submitted = true;
     var dataInicialSplit = dataInicialController.text.split('/');
 
@@ -412,6 +413,10 @@ class EventoFormState extends State<EventoForm> {
     var horaInicialSplit = horaInicialController.text.split(':');
 
     var horaFinalSplit = horaFinalController.text.split(':');
+
+    Set<Semana> diasDaSemanaSet = Set();
+    diasDaSemana =
+        diasDaSemana.where((dia) => diasDaSemanaSet.add(dia)).toList();
 
     Evento eventoNew = Evento(
       0,
@@ -442,24 +447,92 @@ class EventoFormState extends State<EventoForm> {
     if (widget.evento == null) {
       controladorAgendamento.salvarEventoAgendamento(
           eventoNew, context, widget.eventosDiaState.widget.dashboardState);
+      Navigator.of(context).pop();
     } else {
       if (widget.agendamento == null) {
-        eventoNew.id = widget.evento.id;
+        Set<Semana> corrigeEvento = Set();
+        widget.evento.diasDaSemana.forEach((dia) => corrigeEvento.add(dia));
+        var diferenca = corrigeEvento.difference(diasDaSemanaSet).toList();
+        if (diferenca.length > 0) {
+          var diasDaSemanaString = '';
+          diferenca.forEach((dia) {
+            if (diasDaSemanaString != '') {
+              diasDaSemanaString = diasDaSemanaString +
+                  ', ' +
+                  dia.toString().replaceAll('Semana.', '');
+            } else {
+              diasDaSemanaString =
+                  diasDaSemanaString + dia.toString().replaceAll('Semana.', '');
+            }
+          });
+          switch (await showDialog<String>(
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Atenção'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text(
+                          'Suas alterações vão remover os eventos que ocorrem nos dias da semana: '),
+                      Text(diasDaSemanaString),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.pop(context, 'cancel');
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Confirmar'),
+                    onPressed: () {
+                      Navigator.pop(context, 'confirm');
+                    },
+                  ),
+                ],
+              );
+            },
+          )) {
+            case 'cancel':
+              break;
+            case 'confirm':
+              AgendamentoDao().findByEvento(widget.evento).then((lista) {
+                controladorAgendamento.deletaTodosAgendamentosComEvento(
+                    lista.first, widget.eventosDiaState.widget.dashboardState);
+                controladorAgendamento.salvarEventoAgendamento(eventoNew,
+                    context, widget.eventosDiaState.widget.dashboardState);
+                widget.eventosDiaState.widget.dashboardState.todosEventos
+                    .todosEventosState
+                    .atualizaLista();
+                Navigator.of(context).pop();
+              });
+              break;
+            default:
+              break;
+          }
+        } else {
+          eventoNew.id = widget.evento.id;
 
-        controladorAgendamento.editarEventoAgendamento(
-            eventoNew,
-            widget.eventosDiaState.widget.dashboardState,
-            context,
-            widget.evento);
+          controladorAgendamento.editarEventoAgendamento(
+              eventoNew,
+              widget.eventosDiaState.widget.dashboardState,
+              context,
+              widget.evento);
+          Navigator.of(context).pop();
+        }
       } else {
         controladorAgendamento.editarSomenteAgendamento(
             eventoNew,
             widget.eventosDiaState.widget.dashboardState,
             context,
             widget.agendamento);
+        Navigator.of(context).pop();
       }
     }
-    Navigator.of(context).pop();
   }
 
   Future<void> _eventoVirado() async {
@@ -481,7 +554,6 @@ class EventoFormState extends State<EventoForm> {
                     dataFinalController.text +
                     ' às ' +
                     horaFinalController.text),
-                Text('Confirma?'),
               ],
             ),
           ),
@@ -673,6 +745,7 @@ class SemanaButtonState extends State<SemanaButton> {
     setState(() {
       widget.eventoFormState.diasDaSemana
           .removeWhere((dia) => dia == Semana.values[index]);
+
       _color = Colors.white;
       _colorSplash = Colors.white;
     });
