@@ -41,10 +41,18 @@ class NotificacaoController {
         if (valor == 1440) {
           tituloNotificacao = tituloNotificacao + ' - daqui há 1 dia';
         } else {
-          tituloNotificacao = tituloNotificacao +
-              ' - daqui há ' +
-              valor.toString() +
-              ' minutos';
+          if (valor == 60) {
+            tituloNotificacao = tituloNotificacao + ' - daqui há 1 hora';
+          } else {
+            if (valor == 120) {
+              tituloNotificacao = tituloNotificacao + ' - daqui há 2 horas';
+            } else {
+              tituloNotificacao = tituloNotificacao +
+                  ' - daqui há ' +
+                  valor.toString() +
+                  ' minutos';
+            }
+          }
         }
       }
       await flutterLocalNotificationsPlugin.schedule(
