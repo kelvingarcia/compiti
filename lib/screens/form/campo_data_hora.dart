@@ -43,6 +43,7 @@ class _CampoDataHoraState extends State<CampoDataHora> {
       showCursor: true,
       readOnly: true,
       onTap: () {
+        widget.eventoFormState.submitted = false;
         if (widget.dataHora == DataHora.data)
           mostraDatePicker();
         else

@@ -581,6 +581,7 @@ class EventoFormState extends State<EventoForm> {
 
   Future<void> _checkboxNotificacoes(BuildContext context) async {
     List<int> notifica = listaNotificar;
+    submitted = true;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
