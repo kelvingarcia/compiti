@@ -25,45 +25,69 @@ class ControladorAgendamento {
         hours: evento.horaInicial.hour, minutes: evento.horaInicial.minute));
     var testeFinal = DateTime.now().add(Duration(
         hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute));
-    for (int i = 0;
-        i <= evento.dataFinal.difference(evento.dataInicial).inDays;
-        i++) {
-      bool diaValidado = false;
-      dataAgendamento = DateTime(
-          dataAgendamento.year, dataAgendamento.month, dataAgendamento.day + 1);
-      evento.diasDaSemana.forEach((dia) {
-        if (dataAgendamento.weekday - 1 == dia.index) {
-          diaValidado = true;
-        }
-      });
-      if (diaValidado) {
-        DateTime dataAgendamentoFinal = dataAgendamento;
-        if (testeFinal.isBefore(testeInicial)) {
-          dataAgendamentoFinal = DateTime(dataAgendamento.year,
-              dataAgendamento.month, dataAgendamento.day + 1);
-        }
-        await _agendamentoDao.save(
-          Agendamento(
-            0,
-            dataAgendamento.add(Duration(
-                hours: evento.horaInicial.hour,
-                minutes: evento.horaInicial.minute)),
-            dataAgendamentoFinal.add(Duration(
-                hours: evento.horaFinal.hour,
-                minutes: evento.horaFinal.minute)),
-            evento,
-            EventoStatus.agendado,
-          ),
-        );
-        notificacaoController.agendaNotificacao(
-          dataAgendamento.add(
-            Duration(
+    if (testeFinal.isBefore(testeInicial) && evento.diasDaSemana.length == 1) {
+      await _agendamentoDao.save(
+        Agendamento(
+          0,
+          evento.dataInicial.add(Duration(
               hours: evento.horaInicial.hour,
-              minutes: evento.horaInicial.minute,
-            ),
-          ),
+              minutes: evento.horaInicial.minute)),
+          evento.dataFinal.add(Duration(
+              hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute)),
           evento,
-        );
+          EventoStatus.agendado,
+        ),
+      );
+      notificacaoController.agendaNotificacao(
+        dataAgendamento.add(
+          Duration(
+            hours: evento.horaInicial.hour,
+            minutes: evento.horaInicial.minute,
+          ),
+        ),
+        evento,
+      );
+    } else {
+      for (int i = 0;
+          i <= evento.dataFinal.difference(evento.dataInicial).inDays;
+          i++) {
+        bool diaValidado = false;
+        dataAgendamento = DateTime(dataAgendamento.year, dataAgendamento.month,
+            dataAgendamento.day + 1);
+        evento.diasDaSemana.forEach((dia) {
+          if (dataAgendamento.weekday - 1 == dia.index) {
+            diaValidado = true;
+          }
+        });
+        if (diaValidado) {
+          DateTime dataAgendamentoFinal = dataAgendamento;
+          if (testeFinal.isBefore(testeInicial)) {
+            dataAgendamentoFinal = DateTime(dataAgendamento.year,
+                dataAgendamento.month, dataAgendamento.day + 1);
+          }
+          await _agendamentoDao.save(
+            Agendamento(
+              0,
+              dataAgendamento.add(Duration(
+                  hours: evento.horaInicial.hour,
+                  minutes: evento.horaInicial.minute)),
+              dataAgendamentoFinal.add(Duration(
+                  hours: evento.horaFinal.hour,
+                  minutes: evento.horaFinal.minute)),
+              evento,
+              EventoStatus.agendado,
+            ),
+          );
+          notificacaoController.agendaNotificacao(
+            dataAgendamento.add(
+              Duration(
+                hours: evento.horaInicial.hour,
+                minutes: evento.horaInicial.minute,
+              ),
+            ),
+            evento,
+          );
+        }
       }
     }
 

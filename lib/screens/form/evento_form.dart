@@ -359,7 +359,8 @@ class EventoFormState extends State<EventoForm> {
                                 var horaFinal = DateTime.now().add(Duration(
                                     hours: int.parse(horaFinalSplit[0]),
                                     minutes: int.parse(horaFinalSplit[1])));
-                                if (horaFinal.isBefore(horaInicial)) {
+                                if (horaFinal.isBefore(horaInicial) &&
+                                    diasDaSemana.length == 1) {
                                   _eventoVirado();
                                 } else {
                                   _enviaFormulario();
