@@ -36,9 +36,20 @@ class NotificacaoController {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     evento.listaNotificar.forEach((valor) async {
+      var tituloNotificacao = evento.titulo;
+      if (valor != 0) {
+        if (valor == 1440) {
+          tituloNotificacao = tituloNotificacao + ' - daqui há 1 dia';
+        } else {
+          tituloNotificacao = tituloNotificacao +
+              ' - daqui há ' +
+              valor.toString() +
+              ' minutos';
+        }
+      }
       await flutterLocalNotificationsPlugin.schedule(
         0,
-        evento.titulo,
+        tituloNotificacao,
         evento.descricao,
         dataHora.subtract(Duration(minutes: valor)),
         platformChannelSpecifics,
