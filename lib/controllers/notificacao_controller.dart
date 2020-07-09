@@ -1,4 +1,4 @@
-import 'package:compiti/models/evento.dart';
+import 'package:compiti/models/agendamento.dart';
 import 'package:compiti/screens/dashboard/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,15 +28,16 @@ class NotificacaoController {
         onSelectNotification: selectNotification);
   }
 
-  void agendaNotificacao(DateTime dataHora, Evento evento) async {
+  Future<void> agendaNotificacao(
+      DateTime dataHora, Agendamento agendamento) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    evento.listaNotificar.forEach((valor) async {
-      var tituloNotificacao = evento.titulo;
+    agendamento.evento.listaNotificar.forEach((valor) async {
+      var tituloNotificacao = agendamento.evento.titulo;
       if (valor != 0) {
         if (valor == 1440) {
           tituloNotificacao = tituloNotificacao + ' - daqui há 1 dia';
@@ -55,13 +56,21 @@ class NotificacaoController {
           }
         }
       }
+      int id = dataHora.hashCode + valor;
       await flutterLocalNotificationsPlugin.schedule(
-        dataHora.hashCode + valor,
+        id,
         tituloNotificacao,
-        evento.descricao,
+        agendamento.evento.descricao,
         dataHora.subtract(Duration(minutes: valor)),
         platformChannelSpecifics,
       );
+      agendamento.notificacoes.add(id);
+    });
+  }
+
+  void removeNotificacoes(Agendamento agendamento) async {
+    agendamento.notificacoes.forEach((id) async {
+      await flutterLocalNotificationsPlugin.cancel(id);
     });
   }
 

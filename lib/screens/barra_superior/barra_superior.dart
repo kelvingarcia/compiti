@@ -1,5 +1,4 @@
 import 'package:compiti/models/agendamento.dart';
-import 'package:compiti/screens/barra_superior/reportar_problema.dart';
 import 'package:compiti/screens/charts/grafico_pizza.dart';
 import 'package:compiti/screens/barra_superior/item_menu.dart';
 import 'package:flutter/material.dart';

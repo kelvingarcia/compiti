@@ -2,6 +2,7 @@ import 'package:compiti/database/evento_dao.dart';
 import 'package:compiti/models/agendamento.dart';
 import 'package:compiti/models/evento.dart';
 import 'package:compiti/models/evento_status.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'app_database.dart';
@@ -12,13 +13,15 @@ class AgendamentoDao {
       '$_dataInicial TEXT,'
       '$_dataFinal TEXT,'
       '$_evento INTEGER,'
-      '$_status TEXT)';
+      '$_status TEXT,'
+      '$_notificacoes TEXT)';
   static const String _tableName = 'agendamentos';
   static const String _id = 'id';
   static const String _dataInicial = 'dataInicial';
   static const String _dataFinal = 'dataFinal';
   static const String _status = 'status';
   static const String _evento = 'evento';
+  static const String _notificacoes = 'notificacoes';
 
   Future<int> save(Agendamento agendamento) async {
     final Database db = await getDatabase();
@@ -39,6 +42,7 @@ class AgendamentoDao {
     agendamentoMap[_dataFinal] = agendamento.dataFinal.toString();
     agendamentoMap[_status] = agendamento.eventoStatus.toString();
     agendamentoMap[_evento] = agendamento.evento.id;
+    agendamentoMap[_notificacoes] = agendamento.notificacoes.toString();
     return agendamentoMap;
   }
 
@@ -57,12 +61,22 @@ class AgendamentoDao {
         }
       }
       final Evento evento = await _dao.find(int.parse(row[_evento].toString()));
+      List<int> listaNotificacoes = List();
+      debugPrint(row[_notificacoes].toString());
+      // var listaNotificacoesString = row[_notificacoes].toString();
+      // listaNotificacoesString
+      //     .substring(1, listaNotificacoesString.length - 1)
+      //     .split(',')
+      //     .forEach((valor) {
+      //   listaNotificacoes.add(int.parse(valor));
+      // });
       final Agendamento agendamento = Agendamento(
         row[_id],
         DateTime.parse(row[_dataInicial]),
         DateTime.parse(row[_dataFinal]),
         evento,
         eventoStatus,
+        listaNotificacoes,
       );
       agendamentos.add(agendamento);
     }

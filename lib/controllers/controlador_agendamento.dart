@@ -26,27 +26,27 @@ class ControladorAgendamento {
     var testeFinal = DateTime.now().add(Duration(
         hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute));
     if (testeFinal.isBefore(testeInicial) && evento.diasDaSemana.length == 1) {
-      await _agendamentoDao.save(
-        Agendamento(
-          0,
-          evento.dataInicial.add(Duration(
-              hours: evento.horaInicial.hour,
-              minutes: evento.horaInicial.minute)),
-          evento.dataFinal.add(Duration(
-              hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute)),
-          evento,
-          EventoStatus.agendado,
-        ),
+      var agendamento = Agendamento(
+        0,
+        evento.dataInicial.add(Duration(
+            hours: evento.horaInicial.hour,
+            minutes: evento.horaInicial.minute)),
+        evento.dataFinal.add(Duration(
+            hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute)),
+        evento,
+        EventoStatus.agendado,
+        List(),
       );
-      notificacaoController.agendaNotificacao(
+      await notificacaoController.agendaNotificacao(
         dataAgendamento.add(
           Duration(
             hours: evento.horaInicial.hour,
             minutes: evento.horaInicial.minute,
           ),
         ),
-        evento,
+        agendamento,
       );
+      await _agendamentoDao.save(agendamento);
     } else {
       for (int i = 0;
           i <= evento.dataFinal.difference(evento.dataInicial).inDays;
@@ -65,33 +65,33 @@ class ControladorAgendamento {
             dataAgendamentoFinal = DateTime(dataAgendamento.year,
                 dataAgendamento.month, dataAgendamento.day + 1);
           }
-          await _agendamentoDao.save(
-            Agendamento(
-              0,
-              dataAgendamento.add(Duration(
-                  hours: evento.horaInicial.hour,
-                  minutes: evento.horaInicial.minute)),
-              dataAgendamentoFinal.add(Duration(
-                  hours: evento.horaFinal.hour,
-                  minutes: evento.horaFinal.minute)),
-              evento,
-              EventoStatus.agendado,
-            ),
+          var agendamento = Agendamento(
+            0,
+            dataAgendamento.add(Duration(
+                hours: evento.horaInicial.hour,
+                minutes: evento.horaInicial.minute)),
+            dataAgendamentoFinal.add(Duration(
+                hours: evento.horaFinal.hour,
+                minutes: evento.horaFinal.minute)),
+            evento,
+            EventoStatus.agendado,
+            List(),
           );
-          notificacaoController.agendaNotificacao(
+          await notificacaoController.agendaNotificacao(
             dataAgendamento.add(
               Duration(
                 hours: evento.horaInicial.hour,
                 minutes: evento.horaInicial.minute,
               ),
             ),
-            evento,
+            agendamento,
           );
+          await _agendamentoDao.save(agendamento);
         }
       }
     }
 
-    Agendamento agendamento = Agendamento(0, null, null, evento, null);
+    Agendamento agendamento = Agendamento(0, null, null, evento, null, List());
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
     dashboardState.eventosDia.eventosDiaState.widget.dashboardState
@@ -104,11 +104,12 @@ class ControladorAgendamento {
     NotificacaoController notificacaoController =
         NotificacaoController(context);
     agendamento.id = 0;
-    final int id = await _agendamentoDao.save(agendamento);
-    notificacaoController.agendaNotificacao(
+    agendamento.notificacoes = List();
+    await notificacaoController.agendaNotificacao(
       agendamento.dataInicial,
-      agendamento.evento,
+      agendamento,
     );
+    final int id = await _agendamentoDao.save(agendamento);
     agendamento.id = id;
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
@@ -129,13 +130,14 @@ class ControladorAgendamento {
     listaAgendamentos.forEach((agendamento) {
       agendamento.id = 0;
       agendamento.evento.id = idEvento;
+      agendamento.notificacoes = List();
     });
     listaAgendamentos.forEach((agendamento) async {
-      await _agendamentoDao.save(agendamento);
-      notificacaoController.agendaNotificacao(
+      await notificacaoController.agendaNotificacao(
         agendamento.dataInicial,
-        agendamento.evento,
+        agendamento,
       );
+      await _agendamentoDao.save(agendamento);
     });
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
@@ -155,6 +157,7 @@ class ControladorAgendamento {
     final int id = await _eventoDao.save(evento);
     evento.id = id;
     await _agendamentoDao.deleteAgendamento(agendamento);
+    notificacaoController.removeNotificacoes(agendamento);
     Agendamento agendamentoNew = Agendamento(
       0,
       evento.dataInicial.add(Duration(
@@ -163,14 +166,15 @@ class ControladorAgendamento {
           hours: evento.horaFinal.hour, minutes: evento.horaFinal.minute)),
       evento,
       EventoStatus.agendado,
+      List(),
+    );
+    await notificacaoController.agendaNotificacao(
+      evento.dataInicial.add(Duration(
+          hours: evento.horaInicial.hour, minutes: evento.horaInicial.minute)),
+      agendamentoNew,
     );
     final int idAgendamento = await _agendamentoDao.save(
       agendamentoNew,
-    );
-    notificacaoController.agendaNotificacao(
-      evento.dataInicial.add(Duration(
-          hours: evento.horaInicial.hour, minutes: evento.horaInicial.minute)),
-      evento,
     );
     agendamentoNew.id = idAgendamento;
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
@@ -190,6 +194,9 @@ class ControladorAgendamento {
         await _agendamentoDao.findByEvento(evento);
     NotificacaoController notificacaoController =
         NotificacaoController(context);
+    listaAgendamento.forEach((agendamento) async {
+      notificacaoController.removeNotificacoes(agendamento);
+    });
     _eventoDao.editar(eventoNew);
     if (evento.horaInicial != eventoNew.horaInicial ||
         evento.horaFinal != eventoNew.horaFinal ||
@@ -201,7 +208,7 @@ class ControladorAgendamento {
       var dataFinalAgendamento = eventoNew.dataInicial.add(Duration(
           hours: eventoNew.horaFinal.hour,
           minutes: eventoNew.horaFinal.minute));
-      listaAgendamento.forEach((agendamento) {
+      listaAgendamento.forEach((agendamento) async {
         bool diaValidado = false;
         eventoNew.diasDaSemana.forEach((dia) {
           if (agendamento.dataInicial.weekday - 1 == dia.index) {
@@ -209,16 +216,19 @@ class ControladorAgendamento {
           }
         });
         if (diaValidado) {
-          _agendamentoDao.editar(Agendamento(
-              agendamento.id,
-              dataInicialAgendamento,
-              dataFinalAgendamento,
-              evento,
-              agendamento.eventoStatus));
-          notificacaoController.agendaNotificacao(
+          var agendamentoEditar = Agendamento(
+            agendamento.id,
             dataInicialAgendamento,
+            dataFinalAgendamento,
             evento,
+            agendamento.eventoStatus,
+            List(),
           );
+          await notificacaoController.agendaNotificacao(
+            dataInicialAgendamento,
+            agendamentoEditar,
+          );
+          _agendamentoDao.editar(agendamentoEditar);
         } else {
           _agendamentoDao.deleteAgendamento(agendamento);
         }
@@ -250,26 +260,27 @@ class ControladorAgendamento {
             }
           });
           if (!existe) {
-            await _agendamentoDao.save(
-              Agendamento(
-                0,
-                dataAgendamentoInicial,
-                dataAgendamentoFinal,
-                evento,
-                EventoStatus.agendado,
-              ),
-            );
-            notificacaoController.agendaNotificacao(
+            var agendamentoEditar = Agendamento(
+              0,
               dataAgendamentoInicial,
+              dataAgendamentoFinal,
               evento,
+              EventoStatus.agendado,
+              List(),
             );
+            await notificacaoController.agendaNotificacao(
+              dataAgendamentoInicial,
+              agendamentoEditar,
+            );
+            await _agendamentoDao.save(agendamentoEditar);
           }
         }
         dataAgendamentoInicial = dataAgendamentoInicial.add(Duration(days: 1));
         dataAgendamentoFinal = dataAgendamentoFinal.add(Duration(days: 1));
       }
     }
-    Agendamento agendamentoNew = Agendamento(0, null, null, eventoNew, null);
+    Agendamento agendamentoNew =
+        Agendamento(0, null, null, eventoNew, null, List());
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
     dashboardState.eventosDia.eventosDiaState.widget.dashboardState
@@ -301,6 +312,9 @@ class ControladorAgendamento {
 
   Future<void> deletaUmAgendamento(
       Agendamento agendamento, DashboardState dashboardState) async {
+    NotificacaoController notificacaoController =
+        NotificacaoController(dashboardState.context);
+    notificacaoController.removeNotificacoes(agendamento);
     await _agendamentoDao.deleteAgendamento(agendamento);
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
     dashboardState.todosEventos.todosEventosState.atualizaLista();
@@ -310,6 +324,9 @@ class ControladorAgendamento {
 
   Future<void> deletaUmAgendamentoComEvento(
       Agendamento agendamento, DashboardState dashboardState) async {
+    NotificacaoController notificacaoController =
+        NotificacaoController(dashboardState.context);
+    notificacaoController.removeNotificacoes(agendamento);
     await _agendamentoDao.deleteAgendamento(agendamento);
     await _eventoDao.deleteEvento(agendamento.evento);
     dashboardState.eventosDia.eventosDiaState.atualizaLista();
@@ -323,8 +340,13 @@ class ControladorAgendamento {
 
   Future<void> deletaTodosAgendamentosComEvento(
       Agendamento agendamento, DashboardState dashboardState) async {
+    NotificacaoController notificacaoController =
+        NotificacaoController(dashboardState.context);
     List<Agendamento> listaAgendamentos =
         await _agendamentoDao.findByEvento(agendamento.evento);
+    listaAgendamentos.forEach((agendamento) {
+      notificacaoController.removeNotificacoes(agendamento);
+    });
     await _agendamentoDao.deleteFromEvento(agendamento.evento);
     await _eventoDao.deleteEvento(agendamento.evento);
     dashboardState.eventosDia.eventosDiaState.atualizaLista();

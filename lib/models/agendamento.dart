@@ -1,4 +1,3 @@
-
 import 'evento.dart';
 import 'evento_status.dart';
 
@@ -8,10 +7,10 @@ class Agendamento {
   final DateTime dataFinal;
   final Evento evento;
   EventoStatus eventoStatus;
-
+  List<int> notificacoes;
 
   Agendamento(this.id, this.dataInicial, this.dataFinal, this.evento,
-      this.eventoStatus);
+      this.eventoStatus, this.notificacoes);
 
   @override
   String toString() {
