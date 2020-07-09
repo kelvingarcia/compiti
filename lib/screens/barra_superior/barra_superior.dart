@@ -94,13 +94,7 @@ class _BarraSuperiorState extends State<BarraSuperior> {
                         hasTop: false,
                         icone: Icons.report_problem,
                         texto: 'Reportar problema',
-                        onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => Material(
-                              child: ReportarProblema(),
-                            ),
-                          ),
-                        ),
+                        onPressed: () => LaunchReview.launch(),
                       ),
                       ItemMenu(
                         hasTop: false,
