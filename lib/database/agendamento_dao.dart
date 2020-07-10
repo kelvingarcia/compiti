@@ -62,14 +62,13 @@ class AgendamentoDao {
       }
       final Evento evento = await _dao.find(int.parse(row[_evento].toString()));
       List<int> listaNotificacoes = List();
-      debugPrint(row[_notificacoes].toString());
-      // var listaNotificacoesString = row[_notificacoes].toString();
-      // listaNotificacoesString
-      //     .substring(1, listaNotificacoesString.length - 1)
-      //     .split(',')
-      //     .forEach((valor) {
-      //   listaNotificacoes.add(int.parse(valor));
-      // });
+      var listaNotificacoesString = row[_notificacoes].toString();
+      listaNotificacoesString
+          .substring(1, listaNotificacoesString.length - 1)
+          .split(',')
+          .forEach((valor) {
+        listaNotificacoes.add(int.parse(valor));
+      });
       final Agendamento agendamento = Agendamento(
         row[_id],
         DateTime.parse(row[_dataInicial]),

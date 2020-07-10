@@ -28,8 +28,8 @@ class NotificacaoController {
         onSelectNotification: selectNotification);
   }
 
-  Future<void> agendaNotificacao(
-      DateTime dataHora, Agendamento agendamento) async {
+  List<int> agendaNotificacao(DateTime dataHora, Agendamento agendamento) {
+    List<int> listaIds = List();
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
@@ -57,6 +57,7 @@ class NotificacaoController {
         }
       }
       int id = dataHora.hashCode + valor;
+      listaIds.add(id);
       await flutterLocalNotificationsPlugin.schedule(
         id,
         tituloNotificacao,
@@ -64,11 +65,11 @@ class NotificacaoController {
         dataHora.subtract(Duration(minutes: valor)),
         platformChannelSpecifics,
       );
-      agendamento.notificacoes.add(id);
     });
+    return listaIds;
   }
 
-  void removeNotificacoes(Agendamento agendamento) async {
+  void removeNotificacoes(Agendamento agendamento) {
     agendamento.notificacoes.forEach((id) async {
       await flutterLocalNotificationsPlugin.cancel(id);
     });

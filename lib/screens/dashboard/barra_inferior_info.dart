@@ -85,23 +85,23 @@ class BarraInferiorInfoState extends State<BarraInferiorInfo> {
         this.opcaoSnackBar = opcaoSnackBar;
         switch (opcaoSnackBar) {
           case OpcaoSnackBar.deletou_todos:
-            texto = listaAgendamentos[0].evento.titulo + ' foi deletado.';
+            texto = listaAgendamentos[0].evento.titulo + ' foi deletado';
             _visibilidadeButton = true;
             break;
           case OpcaoSnackBar.deletou_um:
-            texto = agendamento.evento.titulo + ' foi deletado.';
+            texto = agendamento.evento.titulo + ' foi deletado';
             _visibilidadeButton = true;
             break;
           case OpcaoSnackBar.editou_todos:
-            texto = listaAgendamentos[0].evento.titulo + ' foi editado.';
+            texto = listaAgendamentos[0].evento.titulo + ' foi editado';
             _visibilidadeButton = true;
             break;
           case OpcaoSnackBar.editou_um:
-            texto = agendamento.evento.titulo + ' foi editado.';
+            texto = agendamento.evento.titulo + ' foi editado';
             _visibilidadeButton = true;
             break;
           case OpcaoSnackBar.adicionou:
-            texto = agendamento.evento.titulo + ' foi adicionado.';
+            texto = agendamento.evento.titulo + ' foi adicionado';
             _visibilidadeButton = false;
             break;
         }

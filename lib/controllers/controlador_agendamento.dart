@@ -37,7 +37,7 @@ class ControladorAgendamento {
         EventoStatus.agendado,
         List(),
       );
-      await notificacaoController.agendaNotificacao(
+      agendamento.notificacoes = notificacaoController.agendaNotificacao(
         dataAgendamento.add(
           Duration(
             hours: evento.horaInicial.hour,
@@ -77,7 +77,7 @@ class ControladorAgendamento {
             EventoStatus.agendado,
             List(),
           );
-          await notificacaoController.agendaNotificacao(
+          agendamento.notificacoes = notificacaoController.agendaNotificacao(
             dataAgendamento.add(
               Duration(
                 hours: evento.horaInicial.hour,
@@ -105,7 +105,7 @@ class ControladorAgendamento {
         NotificacaoController(context);
     agendamento.id = 0;
     agendamento.notificacoes = List();
-    await notificacaoController.agendaNotificacao(
+    agendamento.notificacoes = notificacaoController.agendaNotificacao(
       agendamento.dataInicial,
       agendamento,
     );
@@ -133,7 +133,7 @@ class ControladorAgendamento {
       agendamento.notificacoes = List();
     });
     listaAgendamentos.forEach((agendamento) async {
-      await notificacaoController.agendaNotificacao(
+      agendamento.notificacoes = notificacaoController.agendaNotificacao(
         agendamento.dataInicial,
         agendamento,
       );
@@ -168,7 +168,7 @@ class ControladorAgendamento {
       EventoStatus.agendado,
       List(),
     );
-    await notificacaoController.agendaNotificacao(
+    agendamentoNew.notificacoes = notificacaoController.agendaNotificacao(
       evento.dataInicial.add(Duration(
           hours: evento.horaInicial.hour, minutes: evento.horaInicial.minute)),
       agendamentoNew,
@@ -224,7 +224,8 @@ class ControladorAgendamento {
             agendamento.eventoStatus,
             List(),
           );
-          await notificacaoController.agendaNotificacao(
+          agendamentoEditar.notificacoes =
+              notificacaoController.agendaNotificacao(
             dataInicialAgendamento,
             agendamentoEditar,
           );
@@ -268,7 +269,8 @@ class ControladorAgendamento {
               EventoStatus.agendado,
               List(),
             );
-            await notificacaoController.agendaNotificacao(
+            agendamentoEditar.notificacoes =
+                notificacaoController.agendaNotificacao(
               dataAgendamentoInicial,
               agendamentoEditar,
             );
